@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/login_screen.dart';
 import 'package:flutter_application_1/Screens/signup_screen.dart';
-import 'package:flutter_application_1/widgets/custom_scaffold.dart';
+import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/welcome_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -10,6 +10,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      showappbar: false,
       child: Column(
         children: [
           Flexible(
@@ -28,10 +29,9 @@ class WelcomeScreen extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             )),
                         TextSpan(
-                          text: "\nEnter personal details to your account",
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
+                          text: "\nManage Your Task with our App",
+                          style:
+                              TextStyle(fontSize: 20, color: Color(0xffFED36A)),
                         )
                       ],
                     ),
@@ -55,8 +55,8 @@ class WelcomeScreen extends StatelessWidget {
                         child: WelcomeButton(
                       buttonText: "sign Up",
                       destination: SignupScreen(),
-                      buttonColor: Colors.white,
-                      textbuttonColor: Colors.blueAccent,
+                      buttonColor: Color(0xffFED36A),
+                      textbuttonColor: Colors.black,
                     )),
                   ],
                 ),

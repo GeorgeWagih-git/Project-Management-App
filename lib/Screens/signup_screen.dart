@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/welcome_screen.dart';
-import 'package:flutter_application_1/widgets/custom_scaffold.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -105,6 +105,31 @@ class _SignupScreenState extends State<SignupScreen> {
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
+                            return 'Job is required';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.work),
+                          label: Text('Job'),
+                          hintText: 'Enter Job',
+                          hintStyle: TextStyle(
+                            color: const Color.fromARGB(103, 0, 0, 0),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: const Color.fromARGB(103, 0, 0, 0),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
                             return "password is requird";
                           }
                           return null;
@@ -150,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WelcomeScreen()));
+                                      builder: (context) => HomeScreen()));
                             },
                             child: Text(
                               'Personal data',
@@ -170,6 +195,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 isagree) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Processing Data')));
+                              Future.delayed(Duration(seconds: 2), () {
+                                Navigator.pushReplacement(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                              });
                             } else if (!isagree) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
@@ -196,7 +228,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             child: Text(
-                              'Sign Up wirth',
+                              'Sign Up with',
                               style: TextStyle(
                                 color: const Color.fromARGB(103, 0, 0, 0),
                               ),

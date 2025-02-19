@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/forget_password_screen.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/Screens/signup_screen.dart';
-import 'package:flutter_application_1/widgets/custom_scaffold.dart';
+import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -159,6 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Processing Data',
                                 ),
                               ));
+                              Future.delayed(Duration(seconds: 2), () {
+                                Navigator.pushReplacement(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen()));
+                              });
                             } else if (!rememberPassword) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
