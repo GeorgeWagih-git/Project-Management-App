@@ -3,40 +3,51 @@ import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
 class CustomScaffold extends StatelessWidget {
   const CustomScaffold(
-      {super.key, required this.child, this.showappbar = true});
+      {super.key,
+      required this.child,
+      this.showappbar = true,
+      this.showhomebottombar = false});
   final Widget? child;
   final bool? showappbar;
+  final bool? showhomebottombar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xff263238),
-        elevation: 0,
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            BuildNavItem(icon: Icons.home, label: "Home", isSelected: true),
-            BuildNavItem(icon: Icons.chat, label: "Chat", isSelected: false),
-            SizedBox(width: 40), // مسافة لموازنة الـ FloatingActionButton
-            BuildNavItem(
-                icon: Icons.calendar_today,
-                label: "Calendar",
-                isSelected: false),
-            BuildNavItem(
-                icon: Icons.notifications,
-                label: "Notification",
-                isSelected: false),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xffFED36A),
-        onPressed: () {},
-        child: Icon(Icons.add, color: Colors.black),
-      ),
+      bottomNavigationBar: showhomebottombar!
+          ? BottomAppBar(
+              color: Color(0xff263238),
+              elevation: 0,
+              shape: CircularNotchedRectangle(),
+              notchMargin: 8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  BuildNavItem(
+                      icon: Icons.home, label: "Home", isSelected: true),
+                  BuildNavItem(
+                      icon: Icons.chat, label: "Chat", isSelected: false),
+                  SizedBox(width: 40), // مسافة لموازنة الـ FloatingActionButton
+                  BuildNavItem(
+                      icon: Icons.calendar_today,
+                      label: "Calendar",
+                      isSelected: false),
+                  BuildNavItem(
+                      icon: Icons.notifications,
+                      label: "Notification",
+                      isSelected: false),
+                ],
+              ),
+            )
+          : null,
+      floatingActionButton: showhomebottombar!
+          ? FloatingActionButton(
+              backgroundColor: Color(0xffFED36A),
+              onPressed: () {},
+              child: Icon(Icons.add, color: Colors.black),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       appBar: showappbar!
           ? AppBar(
               elevation: 0,
