@@ -14,10 +14,9 @@ class BuildNavItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon ?? Icons.clear,
-            color: isSelected ? Colors.white : Colors.grey),
+        Icon(Icons.clear, color: isSelected ? Colors.white : Colors.grey),
         Text(
-          label!,
+          label,
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.grey,
             fontSize: 12,

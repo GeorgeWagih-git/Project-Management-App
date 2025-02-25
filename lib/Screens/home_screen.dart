@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Classes/Ongoing_tasks_list.dart';
-import 'package:flutter_application_1/Classes/tasks_list.dart';
+import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
+import 'package:flutter_application_1/Classes/projects_list.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Completed Tasks',
+                        'Completed Projects',
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Ongoing Tasks',
+                        'Ongoing Projects',
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,

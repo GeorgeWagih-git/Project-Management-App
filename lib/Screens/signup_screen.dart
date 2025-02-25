@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -16,6 +17,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      screenName: 'Sign Up',
       child: Column(
         children: [
           Expanded(
@@ -175,7 +177,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
+                                      builder: (context) =>
+                                          TaskDetailsScreen()));
                             },
                             child: Text(
                               'Personal data',

@@ -113,7 +113,7 @@ class _InlineSearchBarState extends State<InlineSearchBar> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Color(0xff455A64),
-            hintText: 'Search Task',
+            hintText: 'Search Project',
             hintStyle: TextStyle(color: Color(0xff6F8793)),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             prefixIcon: Icon(Icons.search, color: Color(0xff6F8793)),

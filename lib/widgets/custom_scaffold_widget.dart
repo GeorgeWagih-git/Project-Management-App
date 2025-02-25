@@ -5,11 +5,13 @@ class CustomScaffold extends StatelessWidget {
   const CustomScaffold(
       {super.key,
       required this.child,
+      this.screenName = '',
       this.showappbar = true,
       this.showhomebottombar = false});
   final Widget? child;
   final bool? showappbar;
   final bool? showhomebottombar;
+  final String? screenName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +52,10 @@ class CustomScaffold extends StatelessWidget {
 
       appBar: showappbar!
           ? AppBar(
+              title: Text(
+                screenName!,
+                style: TextStyle(color: Colors.white),
+              ),
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: IconThemeData(

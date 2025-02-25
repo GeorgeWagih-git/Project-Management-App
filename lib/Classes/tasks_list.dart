@@ -1,31 +1,30 @@
-import 'package:flutter_application_1/Classes/task_class.dart';
-import 'package:flutter_application_1/widgets/Completed_tasks_widget.dart';
+import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/widgets/task_container_widget.dart';
 
-List<CompletedTasksWidget> completedlist = [
-  CompletedTasksWidget(
-    task_Class: TaskClass(
-      name: 'Mobile App Wireframe',
-    ),
+List<TaskContainerWidget> tasksList = [
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'User Interviews', isdone: false)),
+  TaskContainerWidget(taskModel: TaskModel(name: 'Wireframes', isdone: false)),
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'Design System', isdone: false)),
+  TaskContainerWidget(
+    taskModel: TaskModel(name: 'Icons', isdone: false),
   ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Read Estate App Design'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Dashboard & App Design'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Complete Flutter project'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Fix bugs in the app'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Design new UI'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Test the application'),
-  ),
-  CompletedTasksWidget(
-    task_Class: TaskClass(name: 'Deploy to production'),
-  ),
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'User Interviews', isdone: false)),
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'User Interviews', isdone: false)),
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'User Interviews', isdone: false)),
+  TaskContainerWidget(
+      taskModel: TaskModel(name: 'User Interviews', isdone: false)),
 ];
+double completedPercentage() {
+  int counter = 0;
+  for (int i = 0; i < tasksList.length; i++) {
+    if (tasksList[i].taskModel.isdone!) {
+      counter++;
+    }
+  }
+  return (counter / tasksList.length);
+}

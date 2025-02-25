@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      screenName: 'Login',
       child: Column(
         children: [
           Expanded(
