@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      homeSelected: true,
       showhomebottombar: true,
       showappbar: false,
       child: Padding(

@@ -178,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          TaskDetailsScreen()));
+                                          ProjectDetailsScreen()));
                             },
                             child: Text(
                               'Personal data',
@@ -203,7 +203,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                     // ignore: use_build_context_synchronously
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
+                                        builder: (context) =>
+                                            ProjectDetailsScreen()));
                               });
                             } else if (!isagree) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

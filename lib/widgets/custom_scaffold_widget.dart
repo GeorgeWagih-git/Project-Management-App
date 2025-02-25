@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Screens/calender_screen.dart';
+import 'package:flutter_application_1/Screens/chat_screen.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/Screens/notfifcations_screen.dart';
 import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
-class CustomScaffold extends StatelessWidget {
-  const CustomScaffold(
-      {super.key,
-      required this.child,
-      this.screenName = '',
-      this.showappbar = true,
-      this.showhomebottombar = false});
+class CustomScaffold extends StatefulWidget {
+  CustomScaffold({
+    super.key,
+    required this.child,
+    this.screenName = '',
+    this.showappbar = true,
+    this.showhomebottombar = false,
+    this.homeSelected = false,
+    this.chatSelected = false,
+    this.calenderSelected = false,
+    this.notificationSelected = false,
+    this.showBackButton = true,
+  });
   final Widget? child;
   final bool? showappbar;
   final bool? showhomebottombar;
   final String? screenName;
+  bool homeSelected;
+  bool calenderSelected;
+  bool chatSelected;
+  bool notificationSelected;
+  bool showBackButton;
+
+  @override
+  State<CustomScaffold> createState() => _CustomScaffoldState();
+}
+
+class _CustomScaffoldState extends State<CustomScaffold> {
+  bool back = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: showhomebottombar!
+      bottomNavigationBar: widget.showhomebottombar!
           ? BottomAppBar(
               color: Color(0xff263238),
               elevation: 0,
@@ -24,24 +46,77 @@ class CustomScaffold extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  BuildNavItem(
-                      icon: Icons.home, label: "Home", isSelected: true),
-                  BuildNavItem(
-                      icon: Icons.chat, label: "Chat", isSelected: false),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.homeSelected = true;
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    },
+                    child: BuildNavItem(
+                      icon: Icons.home,
+                      label: "Home",
+                      isSelected: widget.homeSelected,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.chatSelected = true;
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatScreen()));
+                    },
+                    child: BuildNavItem(
+                      icon: Icons.chat,
+                      label: "Chat",
+                      isSelected: widget.chatSelected,
+                    ),
+                  ),
                   SizedBox(width: 40), // مسافة لموازنة الـ FloatingActionButton
-                  BuildNavItem(
-                      icon: Icons.calendar_today,
-                      label: "Calendar",
-                      isSelected: false),
-                  BuildNavItem(
-                      icon: Icons.notifications,
-                      label: "Notification",
-                      isSelected: false),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.calenderSelected = true;
+                      });
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CalenderScreen()));
+                    },
+                    child: BuildNavItem(
+                        icon: Icons.calendar_today,
+                        label: "Calendar",
+                        isSelected: widget.calenderSelected),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.notificationSelected = true;
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationsScreen()));
+                    },
+                    child: BuildNavItem(
+                        icon: Icons.notifications,
+                        label: "Notification",
+                        isSelected: widget.notificationSelected),
+                  ),
                 ],
               ),
             )
           : null,
-      floatingActionButton: showhomebottombar!
+      floatingActionButton: widget.showhomebottombar!
           ? FloatingActionButton(
               backgroundColor: Color(0xffFED36A),
               onPressed: () {},
@@ -50,11 +125,22 @@ class CustomScaffold extends StatelessWidget {
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      appBar: showappbar!
+      appBar: widget.showappbar!
           ? AppBar(
-              title: Text(
-                screenName!,
-                style: TextStyle(color: Colors.white),
+              automaticallyImplyLeading: false,
+              leading: widget.showBackButton
+                  ? IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        Navigator.pop(context); // الرجوع إلى الشاشة السابقة
+                      },
+                    )
+                  : null,
+              title: Center(
+                child: Text(
+                  widget.screenName!,
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -73,7 +159,7 @@ class CustomScaffold extends StatelessWidget {
             decoration: BoxDecoration(color: Color(0xff212832)),
           ),
           SafeArea(
-            child: child!,
+            child: widget.child!,
           )
         ],
       ),

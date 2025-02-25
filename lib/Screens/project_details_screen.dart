@@ -5,15 +5,15 @@ import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class TaskDetailsScreen extends StatefulWidget {
-  TaskDetailsScreen({super.key});
+class ProjectDetailsScreen extends StatefulWidget {
+  const ProjectDetailsScreen({super.key});
   //double completedPercentag = 0;
 
   @override
-  State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
+  State<ProjectDetailsScreen> createState() => _ProjectDetailsScreenState();
 }
 
-class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
+class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
