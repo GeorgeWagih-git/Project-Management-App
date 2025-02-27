@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
-import 'package:flutter_application_1/Classes/tasks_list.dart';
+import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
+import 'package:flutter_application_1/Screens/edit_tasks_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+
+String globaltaskName = '';
 
 class ProjectDetailsScreen extends StatefulWidget {
-  const ProjectDetailsScreen({super.key});
-  //double completedPercentag = 0;
-
+  const ProjectDetailsScreen({super.key, required this.projectClass});
+  final ProjectClass projectClass;
   @override
   State<ProjectDetailsScreen> createState() => _ProjectDetailsScreenState();
 }
 
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
+  final TextEditingController _taskController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -28,7 +33,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Real Estate App Design',
+                    widget.projectClass.name!,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -56,7 +61,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 fontSize: 11, color: Color(0xff8CAAB9)),
                           ),
                           Text(
-                            '20 June',
+                            "${widget.projectClass.day}${widget.projectClass.month}",
                             style: TextStyle(fontSize: 17, color: Colors.white),
                           ),
                         ],
@@ -118,28 +123,142 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
-                        child: CircularPercentIndicator(
-                            progressColor: Color(0xffFED36A),
-                            radius: 30,
-                            percent: completedPercentage(),
-                            center: Text(
-                              "${(completedPercentage() * 100).toInt()}%",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 11),
-                            )),
+                        child: Consumer<TaskModel>(
+                          builder: (context, model, child) {
+                            return CircularPercentIndicator(
+                                progressColor: Color(0xffFED36A),
+                                radius: 50,
+                                percent:
+                                    model.completedPercentagewithprovider(),
+                                center: Text(
+                                  "${(model.completedPercentagewithprovider() * 100)}%",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ));
+                          },
+                        ),
                       )
                     ],
                   ),
                   SizedBox(height: 30),
-                  Text(
-                    'All Tasks',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'All Tasks',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          MaterialButton(
+                              minWidth: 20,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              color: Color(0xffFED36A),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  backgroundColor: Color(0xff212832),
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          ListTile(
+                                            title: Text(
+                                              "Add New Task",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(
+                                                  context); // إغلاق القائمة
+                                            },
+                                          ),
+                                          TextField(
+                                            controller: _taskController,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            decoration: InputDecoration(
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white),
+                                              labelText: "Task Name ",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          25)),
+                                            ),
+                                            autofocus: true,
+                                          ),
+                                          SizedBox(
+                                              height:
+                                                  16), // مسافة بين الحقل والزر
+                                          Consumer<TaskModel>(
+                                              builder: (context, model, child) {
+                                            return MaterialButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0)),
+                                              color: Color(0xffFED36A),
+                                              onPressed: () {
+                                                // إضافة المهمة هنا
+                                                if (_taskController
+                                                    .text.isNotEmpty) {
+                                                  model.add(TaskItem(
+                                                      name: _taskController
+                                                          .text));
+                                                  _taskController.clear();
+                                                  Navigator.pop(
+                                                      context); // 🟢 مسح الحقل بعد الإضافة
+                                                }
+
+                                                // إغلاق الواجهة
+                                              },
+                                              child: Text('Add'),
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Icon(
+                                Icons.add,
+                              )),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          MaterialButton(
+                            minWidth: 20,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            color: Color(0xffFED36A),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return EditTasksScreen();
+                                  },
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.edit),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                 ],
               ),
             ),
-            TaskListView(),
+            TaskListView(
+              showcheckbox: true,
+            ),
           ],
         ),
       ),

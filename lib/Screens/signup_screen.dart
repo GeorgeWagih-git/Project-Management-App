@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/home_screen.dart';
-import 'package:flutter_application_1/Screens/project_details_screen.dart';
+import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -173,13 +172,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProjectDetailsScreen()));
-                            },
+                            onTap: () {},
                             child: Text(
                               'Personal data',
                               style: TextStyle(
@@ -203,8 +196,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     // ignore: use_build_context_synchronously
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProjectDetailsScreen()));
+                                        builder: (context) => WelcomeScreen()));
                               });
                             } else if (!isagree) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

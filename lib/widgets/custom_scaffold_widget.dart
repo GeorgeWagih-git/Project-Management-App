@@ -5,6 +5,9 @@ import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/Screens/notfifcations_screen.dart';
 import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
+String globalProjectName = '';
+
+// ignore: must_be_immutable
 class CustomScaffold extends StatefulWidget {
   CustomScaffold({
     super.key,
@@ -33,6 +36,14 @@ class CustomScaffold extends StatefulWidget {
 }
 
 class _CustomScaffoldState extends State<CustomScaffold> {
+  final TextEditingController _projectController = TextEditingController();
+
+  @override
+  void dispose() {
+    _projectController.dispose();
+    super.dispose();
+  }
+
   bool back = false;
   @override
   Widget build(BuildContext context) {
@@ -119,7 +130,55 @@ class _CustomScaffoldState extends State<CustomScaffold> {
       floatingActionButton: widget.showhomebottombar!
           ? FloatingActionButton(
               backgroundColor: Color(0xffFED36A),
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  backgroundColor: Color(0xff212832),
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: Text(
+                              "Add New Project",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {
+                              Navigator.pop(context); // إغلاق القائمة
+                            },
+                          ),
+                          TextField(
+                            controller: _projectController,
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              labelStyle: TextStyle(color: Colors.white),
+                              labelText: "Project Name ",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25)),
+                            ),
+                            autofocus: true,
+                          ),
+                          SizedBox(height: 16), // مسافة بين الحقل والزر
+                          MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            color: Color(0xffFED36A),
+                            onPressed: () {
+                              // إضافة المهمة هنا
+                              Navigator.pop(context);
+                              globalProjectName = _projectController.text;
+                              // إغلاق الواجهة
+                            },
+                            child: Text('Add'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
               child: Icon(Icons.add, color: Colors.black),
             )
           : null,
@@ -139,7 +198,8 @@ class _CustomScaffoldState extends State<CustomScaffold> {
               title: Center(
                 child: Text(
                   widget.screenName!,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               elevation: 0,
