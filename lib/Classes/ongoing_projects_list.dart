@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/widgets/ongoing_projects_widget.dart';
+import 'package:provider/provider.dart';
 
 class OngoingTasksList extends StatelessWidget {
-  OngoingTasksList({super.key});
-  final List<OngoingProjectsWidget> ongoinglist = [
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Read Estate App Design'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Dashboard & App Design'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Complete Flutter project'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Fix bugs in the app'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Design new UI'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Test the application'),
-    ),
-    OngoingProjectsWidget(
-      projectClass: ProjectClass(name: 'Deploy to production'),
-    ),
-  ];
+  const OngoingTasksList({super.key});
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(childCount: ongoinglist.length,
-            // ignore: non_constant_identifier_names
-            (context, Index) {
-      return ongoinglist[Index];
-    }));
+    return Consumer<ProjectModel>(builder: (context, value, child) {
+      if (value.ongoinglist.isNotEmpty) {
+        return SliverList(
+            delegate:
+                SliverChildBuilderDelegate(childCount: value.ongoinglist.length,
+                    // ignore: non_constant_identifier_names
+                    (context, Index) {
+          return OngoingProjectsWidget(
+              projectClass: value
+                  .ongoinglist[Index]); // ✅ تحويل `ProjectClass` إلى Widget
+        }));
+      } else {
+        return SliverToBoxAdapter(
+          child: Container(
+            height: 150,
+            child: Center(
+              child: Text(
+                'No Ongoing Projects Yet !',
+                style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
+              ),
+            ),
+          ),
+        );
+      }
+    });
   }
 }

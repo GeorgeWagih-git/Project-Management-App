@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:provider/provider.dart';
 
@@ -7,10 +8,13 @@ class TaskContainerWidget extends StatefulWidget {
   TaskContainerWidget(
       {super.key,
       required this.taskitem,
+      required this.project,
       this.showcheckbox = false,
       this.showremoveicon = false,
       this.showrenameicon = false});
   final TaskItem taskitem;
+  final ProjectClass project;
+
   bool showcheckbox;
   bool showremoveicon;
   bool showrenameicon;
@@ -50,12 +54,19 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
               Consumer<TaskModel>(
                 builder: (context, model, child) {
                   return Checkbox(
-                      activeColor: Color(0xffFED36A),
-                      checkColor: Colors.black,
-                      value: widget.taskitem.isdone,
-                      onChanged: (bool? value) {
-                        model.toggleTaskStatus(widget.taskitem);
+                    activeColor: Color(0xffFED36A),
+                    checkColor: Colors.black,
+                    value: widget.taskitem.isdone,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        widget.taskitem.isdone = value ?? false;
                       });
+
+                      // 🔥 تحديث حالة المشروع بعد تعديل المهمة
+                      Provider.of<ProjectModel>(context, listen: false)
+                          .toggleProjectStatus(widget.project);
+                    },
+                  );
                 },
               ),
             if (widget.showremoveicon)
@@ -67,7 +78,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                       return MaterialButton(
                           minWidth: 30,
                           onPressed: () {
-                            model.delete(widget.taskitem);
+                            model.deleteTask(widget.taskitem);
                           },
                           child: Icon(
                             Icons.delete,

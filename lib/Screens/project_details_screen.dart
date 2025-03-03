@@ -18,7 +18,15 @@ class ProjectDetailsScreen extends StatefulWidget {
 }
 
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
+  final TextEditingController _projectController = TextEditingController();
   final TextEditingController _taskController = TextEditingController();
+  void updateTaskStatus() {
+    setState(() {
+      Provider.of<ProjectModel>(context, listen: false)
+          .toggleProjectStatus(widget.projectClass);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -32,12 +40,127 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.projectClass.name!,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.projectClass.name!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            overflow: TextOverflow.ellipsis,
+                          ), // إضافة نقاط (...) إذا تجاوز النص المساحة
+                          maxLines: 1,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          MaterialButton(
+                            minWidth: 20,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            color: Color(0xffFED36A),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Color(0xff212832),
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      height: 300,
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            title: Text(
+                                              'Rename Project',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(
+                                                  context); // إغلاق القائمة
+                                            },
+                                          ),
+                                          TextField(
+                                            controller: _projectController,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            decoration: InputDecoration(
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white),
+                                              labelText: "Project Name ",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          25)),
+                                            ),
+                                            autofocus: true,
+                                          ),
+                                          SizedBox(height: 16),
+                                          Consumer<ProjectModel>(
+                                            builder: (context, model, child) {
+                                              return MaterialButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0)),
+                                                color: Color(0xffFED36A),
+                                                onPressed: () {
+                                                  // إضافة المهمة هنا
+                                                  if (_projectController
+                                                      .text.isNotEmpty) {
+                                                    setState(() {
+                                                      widget.projectClass
+                                                          .renameProject(
+                                                              _projectController
+                                                                  .text); // ✅ إعادة التسمية
+                                                    });
+
+                                                    _projectController.clear();
+                                                    Navigator.pop(
+                                                        context); // 🟢 مسح الحقل بعد الإضافة
+                                                  }
+                                                  Navigator.pop(context);
+
+                                                  // إغلاق الواجهة
+                                                },
+                                                child: Text('Rename'),
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: Icon(Icons.edit),
+                          ),
+                          SizedBox(width: 15),
+                          Consumer<ProjectModel>(
+                            builder: (context, model, child) {
+                              return MaterialButton(
+                                  minWidth: 20,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  color: Color(0xffFED36A),
+                                  onPressed: () {
+                                    model.deleteFromOngoingList(
+                                        widget.projectClass);
+                                    _projectController.clear();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                  ));
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   SizedBox(height: 30),
                   Row(
@@ -61,7 +184,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 fontSize: 11, color: Color(0xff8CAAB9)),
                           ),
                           Text(
-                            "${widget.projectClass.day}${widget.projectClass.month}",
+                            "${widget.projectClass.day} ${widget.projectClass.month}",
                             style: TextStyle(fontSize: 17, color: Colors.white),
                           ),
                         ],
@@ -124,20 +247,33 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
                         child: Consumer<TaskModel>(
-                          builder: (context, model, child) {
+                          builder: (context, taskModel, child) {
+                            double progress = widget.projectClass
+                                .completedPercentage(); // ✅ استخدام الدالة الجديدة
+
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (progress >= 1.0) {
+                                setState(() {
+                                  Provider.of<ProjectModel>(context,
+                                          listen: false)
+                                      .toggleProjectStatus(widget.projectClass);
+                                });
+                              }
+                            });
+
                             return CircularPercentIndicator(
-                                progressColor: Color(0xffFED36A),
-                                radius: 50,
-                                percent:
-                                    model.completedPercentagewithprovider(),
-                                center: Text(
-                                  "${(model.completedPercentagewithprovider() * 100)}%",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ));
+                              progressColor: Color(0xffFED36A),
+                              radius: 50,
+                              percent: progress,
+                              center: Text(
+                                "${(progress * 100).toStringAsFixed(0)}%",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            );
                           },
                         ),
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(height: 30),
@@ -192,34 +328,37 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                             ),
                                             autofocus: true,
                                           ),
-                                          SizedBox(
-                                              height:
-                                                  16), // مسافة بين الحقل والزر
                                           Consumer<TaskModel>(
-                                              builder: (context, model, child) {
-                                            return MaterialButton(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0)),
-                                              color: Color(0xffFED36A),
-                                              onPressed: () {
-                                                // إضافة المهمة هنا
-                                                if (_taskController
-                                                    .text.isNotEmpty) {
-                                                  model.add(TaskItem(
-                                                      name: _taskController
-                                                          .text));
-                                                  _taskController.clear();
-                                                  Navigator.pop(
-                                                      context); // 🟢 مسح الحقل بعد الإضافة
-                                                }
+                                            builder: (context, model, child) {
+                                              return MaterialButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0)),
+                                                color: Color(0xffFED36A),
+                                                onPressed: () {
+                                                  if (_taskController
+                                                      .text.isNotEmpty) {
+                                                    setState(() {
+                                                      widget.projectClass.tasks
+                                                          .add(TaskItem(
+                                                              name: _taskController
+                                                                  .text)); // ✅ إضافة المهمة للمشروع مباشرة
+                                                    });
 
-                                                // إغلاق الواجهة
-                                              },
-                                              child: Text('Add'),
-                                            );
-                                          }),
+                                                    _taskController
+                                                        .clear(); // مسح النص بعد الإضافة
+                                                    Navigator.pop(
+                                                        context); // إغلاق النافذة
+                                                  }
+                                                },
+                                                child: Text('Add'),
+                                              );
+                                            },
+                                          ),
+
+                                          // مسافة بين الحقل والزر
+                                          SizedBox(height: 16),
                                         ],
                                       ),
                                     );
@@ -241,7 +380,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return EditTasksScreen();
+                                    return EditTasksScreen(
+                                      projectClass: widget.projectClass,
+                                    );
                                   },
                                 ),
                               );
@@ -257,6 +398,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
             ),
             TaskListView(
+              tasks: widget
+                  .projectClass.tasks, // ✅ الآن يتم تمرير `List<TaskItem>`
               showcheckbox: true,
             ),
           ],

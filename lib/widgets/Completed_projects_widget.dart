@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +20,10 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
       builder: (context, model, child) {
         return GestureDetector(
           onTap: () {
-            widget.projectClass.isselected = !widget.projectClass.isselected;
-            model.toggleTaskStatus(widget.projectClass);
+            setState(() {
+              widget.projectClass.isselected = true; // ✅ يتم التحديد عند النقر
+            });
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -28,33 +31,39 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                     ProjectDetailsScreen(projectClass: widget.projectClass),
               ),
             ).then((_) {
-              // إعادة التحديد إلى false عند الرجوع
               setState(() {
-                widget.projectClass.isselected = false;
+                widget.projectClass.isselected =
+                    false; // ✅ يتم إلغاء التحديد بعد الرجوع
               });
             });
           },
           child: Container(
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(right: 4),
+            margin: EdgeInsets.only(right: 8),
             width: 183,
             height: 175,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(18)),
               color: widget.projectClass.isselected
                   ? Color(0xffFED36A)
                   : Color(0xff455A64),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   widget.projectClass.name ?? "Unavailable",
                   style: TextStyle(
-                      color: widget.projectClass.isselected
-                          ? Colors.black
-                          : Colors.white,
-                      fontSize: 21),
+                    color: widget.projectClass.isselected
+                        ? Colors.black
+                        : Colors.white,
+                    fontSize: 21,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 2,
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +91,62 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                           itemCount: personImages.length,
                         ))
                   ],
-                )
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.projectClass.completedPercentage() == 1
+                          ? 'Completed'
+                          : "Not Completed",
+                      style: TextStyle(
+                          color: widget.projectClass.isselected
+                              ? Colors.black
+                              : Colors.white,
+                          fontSize: 11),
+                    ),
+                    Text(
+                      "${(widget.projectClass.completedPercentage() * 100).toStringAsFixed(0)}%",
+                      style: TextStyle(
+                          color: widget.projectClass.isselected
+                              ? Colors.black
+                              : Colors.white,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+                Consumer<TaskModel>(
+                  builder: (context, model, child) {
+                    return Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.transparent,
+                      ),
+                      child: LinearProgressIndicator(
+                        borderRadius: BorderRadius.circular(25),
+                        minHeight: 8,
+                        color: widget.projectClass.isselected
+                            ? Colors.black
+                            : Color(0xffFED36A),
+                        backgroundColor: Colors.transparent,
+                        value: widget.projectClass.completedPercentage(),
+                        semanticsLabel: ((widget.projectClass
+                                            .completedPercentage() *
+                                        100) >
+                                    0.1 ||
+                                (widget.projectClass.completedPercentage() *
+                                        100) ==
+                                    0.1)
+                            ? "${(widget.projectClass.completedPercentage() * 100)}%"
+                            : "0%",
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),

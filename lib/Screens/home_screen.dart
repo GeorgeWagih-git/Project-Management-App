@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
-import 'package:flutter_application_1/Classes/projects_list.dart';
+import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/widgets/add_projrct_button.dart';
+import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String projectname = 'No Name';
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -96,12 +100,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 175,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return completedlist[index];
+                    child: Consumer<ProjectModel>(
+                      builder: (context, value, child) {
+                        if (value.completedlist.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No Completed Projects Yet !',
+                              style: TextStyle(
+                                  color: Color(0xffFED36A), fontSize: 25),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return CompletedTasksWidget(
+                                  projectClass: value.completedlist[
+                                      index]); // ✅ تحويل `ProjectClass` إلى Widget
+                            },
+                            itemCount: value.completedlist.length,
+                          );
+                        }
                       },
-                      itemCount: completedlist.length,
                     ),
                   ),
                 ),
@@ -118,6 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
+                      SizedBox(
+                        width: 60,
+                      ),
+                      AddProjectButton(),
                       Text(
                         'See all',
                         style:

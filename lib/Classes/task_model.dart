@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
 
 class TaskModel extends ChangeNotifier {
-  List<TaskItem> tasksList = [
-    TaskItem(name: 'First Task'),
-  ];
+  List<TaskItem> tasksList = [];
 
   double completedPercentagewithprovider() {
-    int counter = 0;
-    for (int i = 0; i < tasksList.length; i++) {
-      if (tasksList[i].isdone) {
-        counter++;
-      }
-    }
-    return (counter / tasksList.length);
+    if (tasksList.isEmpty) return 0;
+
+    int completedTasks = tasksList.where((task) => task.isdone).length;
+    double percentage = completedTasks / tasksList.length;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners(); // تحديث الواجهة بعد حساب النسبة
+    });
+
+    return percentage;
   }
 
-  void add(TaskItem item) {
+  void addTask(TaskItem item) {
     tasksList.add(item);
-    notifyListeners();
+    notifyListeners(); // تحديث الواجهة بعد الإضافة
   }
 
-  void delete(TaskItem item) {
+  void deleteTask(TaskItem item) {
     tasksList.remove(item);
     notifyListeners();
   }
 
   void toggleTaskStatus(TaskItem task) {
-    task.isdone = !task.isdone; // عكس الحالة
+    task.isdone = !task.isdone;
     notifyListeners();
   }
 
   void renameTask(TaskItem task, String newName) {
     task.name = newName;
-    notifyListeners(); // تحديث الواجهة
+    notifyListeners();
   }
 }
 

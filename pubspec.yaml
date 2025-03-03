@@ -41,6 +41,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   percent_indicator: ^4.2.4
   provider: ^6.1.2
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:
