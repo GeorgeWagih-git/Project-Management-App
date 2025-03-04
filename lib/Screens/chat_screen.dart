@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -75,6 +76,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       screenName: "Messages",
+      chatSelected: true,
       showhomebottombar: true,
       showBackButton: false,
       child: Padding(
@@ -109,9 +111,13 @@ class ChatScreenState extends State<ChatScreen> {
                   bool isSelected = selectedIndex == index;
                   return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              InsideChatScreen(name: message["name"]!),
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
