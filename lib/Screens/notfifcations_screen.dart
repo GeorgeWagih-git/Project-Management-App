@@ -61,6 +61,7 @@ class NotificationsScreenState extends State<NotificationsScreen> {
 
     return CustomScaffold(
       screenName: "Notifications",
+      notificationSelected: true,
       showBackButton: false,
       showhomebottombar: true,
       child: Column(
@@ -144,7 +145,7 @@ class NotificationsScreenState extends State<NotificationsScreen> {
                                       Text(
                                         notification['time']!,
                                         style: const TextStyle(
-                                          color: Colors.white70,
+                                          color: Colors.white,
                                           fontSize: 12,
                                         ),
                                       ),
