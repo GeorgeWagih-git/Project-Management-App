@@ -1,0 +1,2 @@
+D:/App Managment  Graduation Project Project/Seond/Project-Management-App/android/app/.cxx/Debug/w15z5b16/x86/CMakeFiles/edit_cache.dir
+D:/App Managment  Graduation Project Project/Seond/Project-Management-App/android/app/.cxx/Debug/w15z5b16/x86/CMakeFiles/rebuild_cache.dir
