@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 175,
-                    child: Consumer<ProjectModel>(
+                    child: Consumer<ProjectClass>(
                       builder: (context, value, child) {
                         if (value.completedlist.isEmpty) {
                           return Center(

@@ -22,7 +22,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final TextEditingController _taskController = TextEditingController();
   void updateTaskStatus() {
     setState(() {
-      Provider.of<ProjectModel>(context, listen: false)
+      Provider.of<ProjectClass>(context, listen: false)
           .toggleProjectStatus(widget.projectClass);
     });
   }
@@ -45,7 +45,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.projectClass.name!,
+                          widget.projectClass.name,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                             autofocus: true,
                                           ),
                                           SizedBox(height: 16),
-                                          Consumer<ProjectModel>(
+                                          Consumer<ProjectClass>(
                                             builder: (context, model, child) {
                                               return MaterialButton(
                                                 shape: RoundedRectangleBorder(
@@ -123,7 +123,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                                     Navigator.pop(
                                                         context); // 🟢 مسح الحقل بعد الإضافة
                                                   }
-                                                  Navigator.pop(context);
 
                                                   // إغلاق الواجهة
                                                 },
@@ -139,7 +138,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             child: Icon(Icons.edit),
                           ),
                           SizedBox(width: 15),
-                          Consumer<ProjectModel>(
+                          Consumer<ProjectClass>(
                             builder: (context, model, child) {
                               return MaterialButton(
                                   minWidth: 20,
@@ -148,8 +147,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                           BorderRadius.circular(20.0)),
                                   color: Color(0xffFED36A),
                                   onPressed: () {
-                                    model.deleteFromOngoingList(
-                                        widget.projectClass);
+                                    model.deleteProject(widget.projectClass);
                                     _projectController.clear();
                                     Navigator.pop(context);
                                   },
@@ -246,27 +244,15 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 20.0),
-                        child: Consumer<TaskModel>(
-                          builder: (context, taskModel, child) {
-                            double progress = widget.projectClass
-                                .completedPercentage(); // ✅ استخدام الدالة الجديدة
-
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (progress >= 1.0) {
-                                setState(() {
-                                  Provider.of<ProjectModel>(context,
-                                          listen: false)
-                                      .toggleProjectStatus(widget.projectClass);
-                                });
-                              }
-                            });
-
+                        child: Consumer<ProjectClass>(
+                          builder: (context, projectClass, child) {
                             return CircularPercentIndicator(
                               progressColor: Color(0xffFED36A),
                               radius: 50,
-                              percent: progress,
+                              percent:
+                                  widget.projectClass.completedPercentage(),
                               center: Text(
-                                "${(progress * 100).toStringAsFixed(0)}%",
+                                "${(widget.projectClass.completedPercentage() * 100).toStringAsFixed(0)}%",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
@@ -341,7 +327,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                                       .text.isNotEmpty) {
                                                     setState(() {
                                                       widget.projectClass.tasks
-                                                          .add(TaskItem(
+                                                          .add(TaskModel(
                                                               name: _taskController
                                                                   .text)); // ✅ إضافة المهمة للمشروع مباشرة
                                                     });
@@ -397,7 +383,18 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 ],
               ),
             ),
+            /*Consumer<ProjectClass>(
+              builder: (context, value, child) {
+                return TaskListView(
+                  project: widget.projectClass,
+                  tasks: widget
+                      .projectClass.tasks, // ✅ الآن يتم تمرير `List<TaskItem>`
+                  showcheckbox: true,
+                );
+              },
+            ),*/
             TaskListView(
+              project: widget.projectClass,
               tasks: widget
                   .projectClass.tasks, // ✅ الآن يتم تمرير `List<TaskItem>`
               showcheckbox: true,

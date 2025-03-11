@@ -23,6 +23,7 @@ class _EditTasksScreenState extends State<EditTasksScreen> {
           physics: BouncingScrollPhysics(),
           slivers: [
             TaskListView(
+              project: widget.projectClass,
               tasks: widget.projectClass.tasks, // ✅ تمرير القائمة الصحيحة
               showremoveicon: true,
               showrenameicon: true,

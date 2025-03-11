@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/project_class.dart';
 
 class TaskModel extends ChangeNotifier {
-  List<TaskItem> tasksList = [];
+  ProjectClass project = ProjectClass();
 
-  double completedPercentagewithprovider() {
-    if (tasksList.isEmpty) return 0;
+  String name;
+  bool isDone = false;
 
-    int completedTasks = tasksList.where((task) => task.isdone).length;
-    double percentage = completedTasks / tasksList.length;
+  TaskModel({String? name}) : name = name ?? "No Name Added";
+
+  double completedPercentage() {
+    if (project.tasks.isEmpty) return 0;
+
+    int completedTasks = project.tasks.where((task) => task.isDone).length;
+    double percentage = completedTasks / project.tasks.length;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners(); // تحديث الواجهة بعد حساب النسبة
@@ -15,30 +21,4 @@ class TaskModel extends ChangeNotifier {
 
     return percentage;
   }
-
-  void addTask(TaskItem item) {
-    tasksList.add(item);
-    notifyListeners(); // تحديث الواجهة بعد الإضافة
-  }
-
-  void deleteTask(TaskItem item) {
-    tasksList.remove(item);
-    notifyListeners();
-  }
-
-  void toggleTaskStatus(TaskItem task) {
-    task.isdone = !task.isdone;
-    notifyListeners();
-  }
-
-  void renameTask(TaskItem task, String newName) {
-    task.name = newName;
-    notifyListeners();
-  }
-}
-
-class TaskItem {
-  String name;
-  bool isdone = false;
-  TaskItem({required this.name});
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
-import 'package:flutter_application_1/widgets/ongoing_projects_widget.dart';
 import 'package:provider/provider.dart';
 
 class AddProjectButton extends StatelessWidget {
@@ -89,7 +88,7 @@ class AddProjectButton extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16), // مسافة بين الحقل والزر
-                  Consumer<ProjectModel>(
+                  Consumer<ProjectClass>(
                     builder: (context, value, child) {
                       return MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -108,13 +107,13 @@ class AddProjectButton extends StatelessWidget {
                               month: _projectControllermonth.text,
                             );
 
-                            OngoingProjectsWidget newOngoingProject =
+                            /*OngoingProjectsWidget newOngoingProject =
                                 OngoingProjectsWidget(
                               projectClass: newProject,
-                            );
+                            );*/
 
                             // إضافة المشروع الجديد إلى القائمة
-                            value.addToOngoingList(
+                            value.addProject(
                                 newProject); // ✅ إضافة المشروع ككائن `ProjectClass` فقط
 
                             // إغلاق الواجهة

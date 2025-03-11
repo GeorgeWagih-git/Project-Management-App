@@ -6,21 +6,24 @@ import './task_model.dart';
 
 // ignore: must_be_immutable
 class TaskListView extends StatelessWidget {
-  TaskListView(
-      {super.key,
-      this.showcheckbox = false,
-      this.showremoveicon = false,
-      this.showrenameicon = false,
-      required this.tasks});
+  TaskListView({
+    super.key,
+    this.showcheckbox = false,
+    this.showremoveicon = false,
+    this.showrenameicon = false,
+    required this.project,
+    required this.tasks,
+  });
   bool showcheckbox;
   bool showremoveicon;
   bool showrenameicon;
-  final List<TaskItem> tasks; // ✅ يستقبل List<TaskItem> بدلاً من TaskModel
+  ProjectClass project;
+  final List<TaskModel> tasks; // ✅ يستقبل List<TaskItem> بدلاً من TaskModel
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskModel>(
-      builder: (context, task, child) {
+    return Consumer<ProjectClass>(
+      builder: (context, model, child) {
         if (tasks.isEmpty) {
           return SliverToBoxAdapter(
             child: Center(
@@ -37,7 +40,7 @@ class TaskListView extends StatelessWidget {
               // ignore: non_constant_identifier_names
               (context, Index) {
                 return TaskContainerWidget(
-                  project: ProjectClass(name: tasks[Index].name),
+                  project: project,
                   showcheckbox: showcheckbox,
                   showremoveicon: showremoveicon,
                   showrenameicon: showrenameicon,

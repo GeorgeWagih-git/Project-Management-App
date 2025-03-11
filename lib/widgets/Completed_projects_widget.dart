@@ -16,26 +16,32 @@ class CompletedTasksWidget extends StatefulWidget {
 class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectModel>(
-      builder: (context, model, child) {
+    return Consumer<ProjectClass>(
+      builder: (context, value, child) {
         return GestureDetector(
           onTap: () {
-            setState(() {
-              widget.projectClass.isselected = true; // ✅ يتم التحديد عند النقر
-            });
+            try {
+              widget.projectClass.isSelected = true;
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    ProjectDetailsScreen(projectClass: widget.projectClass),
-              ),
-            ).then((_) {
-              setState(() {
-                widget.projectClass.isselected =
-                    false; // ✅ يتم إلغاء التحديد بعد الرجوع
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProjectDetailsScreen(projectClass: widget.projectClass),
+                ),
+              ).then((_) {
+                if (mounted) {
+                  // التأكد أن الودجت لا يزال موجودًا
+                  setState(() {
+                    widget.projectClass.isSelected = false;
+                    value.toggleProjectStatus(widget.projectClass);
+                  });
+                }
               });
-            });
+            } catch (e, stacktrace) {
+              print("Error: $e");
+              print("Stacktrace: $stacktrace");
+            }
           },
           child: Container(
             padding: EdgeInsets.all(10),
@@ -44,7 +50,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
             height: 175,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(18)),
-              color: widget.projectClass.isselected
+              color: widget.projectClass.isSelected
                   ? Color(0xffFED36A)
                   : Color(0xff455A64),
             ),
@@ -52,9 +58,9 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.projectClass.name ?? "Unavailable",
+                  widget.projectClass.name,
                   style: TextStyle(
-                    color: widget.projectClass.isselected
+                    color: widget.projectClass.isSelected
                         ? Colors.black
                         : Colors.white,
                     fontSize: 21,
@@ -71,7 +77,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                     Text(
                       'Team members',
                       style: TextStyle(
-                          color: widget.projectClass.isselected
+                          color: widget.projectClass.isSelected
                               ? Colors.black
                               : Colors.white,
                           fontSize: 11),
@@ -103,7 +109,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                           ? 'Completed'
                           : "Not Completed",
                       style: TextStyle(
-                          color: widget.projectClass.isselected
+                          color: widget.projectClass.isSelected
                               ? Colors.black
                               : Colors.white,
                           fontSize: 11),
@@ -111,7 +117,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                     Text(
                       "${(widget.projectClass.completedPercentage() * 100).toStringAsFixed(0)}%",
                       style: TextStyle(
-                          color: widget.projectClass.isselected
+                          color: widget.projectClass.isSelected
                               ? Colors.black
                               : Colors.white,
                           fontSize: 11),
@@ -129,7 +135,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(25),
                         minHeight: 8,
-                        color: widget.projectClass.isselected
+                        color: widget.projectClass.isSelected
                             ? Colors.black
                             : Color(0xffFED36A),
                         backgroundColor: Colors.transparent,

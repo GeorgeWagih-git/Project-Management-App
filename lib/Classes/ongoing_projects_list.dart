@@ -7,7 +7,7 @@ class OngoingTasksList extends StatelessWidget {
   const OngoingTasksList({super.key});
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectModel>(builder: (context, value, child) {
+    return Consumer<ProjectClass>(builder: (context, value, child) {
       if (value.ongoinglist.isNotEmpty) {
         return SliverList(
             delegate:
@@ -20,7 +20,7 @@ class OngoingTasksList extends StatelessWidget {
         }));
       } else {
         return SliverToBoxAdapter(
-          child: Container(
+          child: SizedBox(
             height: 150,
             child: Center(
               child: Text(

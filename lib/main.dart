@@ -9,7 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TaskModel()),
-        ChangeNotifierProvider(create: (context) => ProjectModel()),
+        ChangeNotifierProvider(create: (context) => ProjectClass()),
       ],
       child: ProjectManagement(),
     ),

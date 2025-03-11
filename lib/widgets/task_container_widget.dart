@@ -5,19 +5,22 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class TaskContainerWidget extends StatefulWidget {
-  TaskContainerWidget(
-      {super.key,
-      required this.taskitem,
-      required this.project,
-      this.showcheckbox = false,
-      this.showremoveicon = false,
-      this.showrenameicon = false});
-  final TaskItem taskitem;
-  final ProjectClass project;
+  TaskContainerWidget({
+    super.key,
+    required this.taskitem,
+    required this.project, // ✅ إضافة المشروع كمُعامل إجباري
+    this.showcheckbox = false,
+    this.showremoveicon = false,
+    this.showrenameicon = false,
+  });
+
+  final TaskModel taskitem;
+  final ProjectClass project; // ✅ تخزين المشروع المرتبط بهذه المهمة
 
   bool showcheckbox;
   bool showremoveicon;
   bool showrenameicon;
+
   @override
   State<TaskContainerWidget> createState() => _TaskContainerWidgetState();
 }
@@ -51,30 +54,24 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
               ),
             ),
             if (widget.showcheckbox)
-              Consumer<TaskModel>(
+              Consumer<ProjectClass>(
                 builder: (context, model, child) {
                   return Checkbox(
-                    activeColor: Color(0xffFED36A),
-                    checkColor: Colors.black,
-                    value: widget.taskitem.isdone,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        widget.taskitem.isdone = value ?? false;
+                      activeColor: Color(0xffFED36A),
+                      checkColor: Colors.black,
+                      value: widget.taskitem.isDone,
+                      onChanged: (bool? value) {
+                        model.toggleTaskStatus(widget.taskitem);
                       });
-
-                      // 🔥 تحديث حالة المشروع بعد تعديل المهمة
-                      Provider.of<ProjectModel>(context, listen: false)
-                          .toggleProjectStatus(widget.project);
-                    },
-                  );
                 },
               ),
             if (widget.showremoveicon)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Consumer<TaskModel>(
+                  Consumer<ProjectClass>(
                     builder: (context, model, child) {
+                      model.tasks = widget.project.tasks;
                       return MaterialButton(
                           minWidth: 30,
                           onPressed: () {
@@ -128,7 +125,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                         SizedBox(
                                             height:
                                                 16), // مسافة بين الحقل والزر
-                                        Consumer<TaskModel>(
+                                        Consumer<ProjectClass>(
                                             builder: (context, model, child) {
                                           return MaterialButton(
                                             shape: RoundedRectangleBorder(
