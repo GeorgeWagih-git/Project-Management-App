@@ -75,7 +75,32 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                       return MaterialButton(
                           minWidth: 30,
                           onPressed: () {
-                            model.deleteTask(widget.taskitem);
+                            //model.deleteTask(widget.taskitem);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Confirm Delete'),
+                                  content: Text(
+                                      "Are you sure you want to delete this task?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        model.deleteTask(widget.taskitem);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Icon(
                             Icons.delete,
@@ -90,67 +115,77 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                             minWidth: 30,
                             onPressed: () {
                               showModalBottomSheet(
+                                isScrollControlled: true,
                                 backgroundColor: Color(0xff212832),
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return Container(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          title: Text(
-                                            "Rename Task",
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom,
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          ListTile(
+                                            title: Text(
+                                              "Rename Task",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(
+                                                  context); // إغلاق القائمة
+                                            },
+                                          ),
+                                          TextField(
+                                            controller: _taskController,
                                             style:
                                                 TextStyle(color: Colors.white),
+                                            decoration: InputDecoration(
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white),
+                                              labelText: "Task Name ",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          25)),
+                                            ),
+                                            autofocus: true,
                                           ),
-                                          onTap: () {
-                                            Navigator.pop(
-                                                context); // إغلاق القائمة
-                                          },
-                                        ),
-                                        TextField(
-                                          controller: _taskController,
-                                          style: TextStyle(color: Colors.white),
-                                          decoration: InputDecoration(
-                                            labelStyle:
-                                                TextStyle(color: Colors.white),
-                                            labelText: "Task Name ",
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(25)),
-                                          ),
-                                          autofocus: true,
-                                        ),
-                                        SizedBox(
-                                            height:
-                                                16), // مسافة بين الحقل والزر
-                                        Consumer<ProjectClass>(
-                                            builder: (context, model, child) {
-                                          return MaterialButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0)),
-                                            color: Color(0xffFED36A),
-                                            onPressed: () {
-                                              // إضافة المهمة هنا
-                                              if (_taskController
-                                                  .text.isNotEmpty) {
-                                                model.renameTask(
-                                                    widget.taskitem,
-                                                    _taskController.text);
-                                                _taskController.clear();
-                                                Navigator.pop(
-                                                    context); // 🟢 مسح الحقل بعد الإضافة
-                                              }
+                                          SizedBox(
+                                              height:
+                                                  16), // مسافة بين الحقل والزر
+                                          Consumer<ProjectClass>(
+                                              builder: (context, model, child) {
+                                            return MaterialButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0)),
+                                              color: Color(0xffFED36A),
+                                              onPressed: () {
+                                                // إضافة المهمة هنا
+                                                if (_taskController
+                                                    .text.isNotEmpty) {
+                                                  model.renameTask(
+                                                      widget.taskitem,
+                                                      _taskController.text);
+                                                  _taskController.clear();
+                                                  Navigator.pop(
+                                                      context); // 🟢 مسح الحقل بعد الإضافة
+                                                }
 
-                                              // إغلاق الواجهة
-                                            },
-                                            child: Text('Rename'),
-                                          );
-                                        }),
-                                      ],
+                                                // إغلاق الواجهة
+                                              },
+                                              child: Text('Rename'),
+                                            );
+                                          }),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

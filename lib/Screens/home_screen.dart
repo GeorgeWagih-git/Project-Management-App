@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
 import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
@@ -14,12 +15,36 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
+  bool isReturning = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // يتم استدعاء هذه الدالة عند الرجوع إلى الصفحة الرئيسية
+    setState(() {
+      isReturning = false; // تحديث المتغير وإعادة بناء الواجهة
+    });
+  }
+
   String projectname = 'No Name';
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       homeSelected: true,
+      chatSelected: isReturning,
+      calenderSelected: isReturning,
+      notificationSelected: isReturning,
       showhomebottombar: true,
       showappbar: false,
       child: Padding(
@@ -62,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: 370, child: InlineSearchBar()),
+                    SizedBox(width: 300, child: InlineSearchBar()),
                     Container(
                       decoration: BoxDecoration(
                         color: Color(0xffFED36A),

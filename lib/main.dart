@@ -4,6 +4,9 @@ import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import './Classes/task_model.dart';
 
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
 void main() {
   runApp(
     MultiProvider(
@@ -24,6 +27,7 @@ class ProjectManagement extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       home: WelcomeScreen(),
     );
   }

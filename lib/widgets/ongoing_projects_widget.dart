@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
-import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +39,9 @@ class _OngoingProjectsWidgetState extends State<OngoingProjectsWidget> {
                 }
               });
             } catch (e, stacktrace) {
+              // ignore: avoid_print
               print("Error: $e");
+              // ignore: avoid_print
               print("Stacktrace: $stacktrace");
             }
           },

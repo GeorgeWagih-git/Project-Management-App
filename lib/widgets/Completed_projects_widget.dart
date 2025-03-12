@@ -39,7 +39,9 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                 }
               });
             } catch (e, stacktrace) {
+              // ignore: avoid_print
               print("Error: $e");
+              // ignore: avoid_print
               print("Stacktrace: $stacktrace");
             }
           },

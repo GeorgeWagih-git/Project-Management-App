@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -9,7 +10,29 @@ class NotificationsScreen extends StatefulWidget {
   NotificationsScreenState createState() => NotificationsScreenState();
 }
 
-class NotificationsScreenState extends State<NotificationsScreen> {
+class NotificationsScreenState extends State<NotificationsScreen>
+    with RouteAware {
+  bool isReturning = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // يتم استدعاء هذه الدالة عند الرجوع إلى الصفحة الرئيسية
+    setState(() {
+      isReturning = false; // تحديث المتغير وإعادة بناء الواجهة
+    });
+  }
+
   List<Map<String, String>> notifications = [
     {
       'id': '1',
@@ -63,6 +86,10 @@ class NotificationsScreenState extends State<NotificationsScreen> {
       screenName: "Notifications",
       showBackButton: false,
       showhomebottombar: true,
+      notificationSelected: true,
+      homeSelected: isReturning,
+      chatSelected: isReturning,
+      calenderSelected: isReturning,
       child: Column(
         children: [
           Padding(

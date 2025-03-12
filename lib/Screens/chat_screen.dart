@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -8,7 +9,31 @@ class ChatScreen extends StatefulWidget {
   ChatScreenState createState() => ChatScreenState();
 }
 
-class ChatScreenState extends State<ChatScreen> {
+class ChatScreenState extends State<ChatScreen> with RouteAware {
+  bool isReturning = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _searchController.removeListener(_filterMessages);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // يتم استدعاء هذه الدالة عند الرجوع إلى الصفحة الرئيسية
+    setState(() {
+      isReturning = false; // تحديث المتغير وإعادة بناء الواجهة
+    });
+  }
+
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> allMessages = [
     {
@@ -65,11 +90,11 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   @override
-  void dispose() {
+  /*void dispose() {
     _searchController.removeListener(_filterMessages);
     _searchController.dispose();
     super.dispose();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +102,10 @@ class ChatScreenState extends State<ChatScreen> {
       screenName: "Messages",
       showhomebottombar: true,
       showBackButton: false,
+      chatSelected: true,
+      homeSelected: isReturning,
+      calenderSelected: isReturning,
+      notificationSelected: isReturning,
       child: Padding(
         padding: const EdgeInsets.only(
             bottom: 0.0), // Adjust padding to avoid overlapping with navbar

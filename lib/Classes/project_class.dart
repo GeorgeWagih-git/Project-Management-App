@@ -66,6 +66,7 @@ class ProjectClass extends ChangeNotifier {
     task.isDone = !task.isDone;
     notifyListeners(); // ✅ تحديث الواجهة بعد تغيير المهمة
 
+    // ignore: avoid_print
     print("📌 تحديث حالة المهمة: ${task.name}, isDone: ${task.isDone}");
 
     // ✅ استدعاء تحديث حالة المشروع فورًا
@@ -96,9 +97,13 @@ class ProjectClass extends ChangeNotifier {
         ongoinglist.add(project);
       }
     }
+    // ignore: avoid_print
     print(ongoinglist);
+    // ignore: avoid_print
     print(completedlist);
+    // ignore: avoid_print
     print(ongoinglist);
+    // ignore: avoid_print
     print(completedlist);
     notifyListeners();
   }
