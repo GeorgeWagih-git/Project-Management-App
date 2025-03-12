@@ -100,7 +100,16 @@ class _OngoingProjectsWidgetState extends State<OngoingProjectsWidget> {
                             ),
                           ),
                           Text(
-                            'Due on : ${widget.projectClass.day} ${widget.projectClass.month}',
+                            'StartUp : ${widget.projectClass.day}/${widget.projectClass.month}/${widget.projectClass.year}',
+                            style: TextStyle(
+                              color: widget.projectClass.isSelected
+                                  ? Colors.black
+                                  : Colors.white,
+                              fontSize: 11,
+                            ),
+                          ),
+                          Text(
+                            'DeadLine : ${widget.projectClass.deadday}/${widget.projectClass.deadmonth}/${widget.projectClass.deadyear}',
                             style: TextStyle(
                               color: widget.projectClass.isSelected
                                   ? Colors.black

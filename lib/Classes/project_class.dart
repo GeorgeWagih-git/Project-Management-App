@@ -8,13 +8,31 @@ class ProjectClass extends ChangeNotifier {
   String name;
   int day;
   String month;
+  int year;
+  int deadday;
+  String deadmonth;
+  int deadyear;
+  String projectDetails;
   bool isSelected = false;
   List<TaskModel> tasks = [];
 
-  ProjectClass({int? day, String? month, String? name})
-      : day = day ?? 1,
+  ProjectClass({
+    int? day,
+    String? month,
+    String? name,
+    int? year,
+    int? deadday,
+    String? deadmonth,
+    int? deadyear,
+    String? projectDetails,
+  })  : day = day ?? 1,
         month = month ?? "Jan",
-        name = name ?? "No Name Added";
+        name = name ?? "No Name Added",
+        year = year ?? 2025,
+        deadday = deadday ?? 1,
+        deadmonth = deadmonth ?? "Jan",
+        deadyear = deadyear ?? 2025,
+        projectDetails = projectDetails ?? "No Discription yet !";
 
   @override
   bool operator ==(Object other) =>
@@ -34,6 +52,11 @@ class ProjectClass extends ChangeNotifier {
 
   void renameProject(String newName) {
     name = newName;
+    notifyListeners();
+  }
+
+  void editDetails(String newDetails) {
+    projectDetails = newDetails;
     notifyListeners();
   }
 

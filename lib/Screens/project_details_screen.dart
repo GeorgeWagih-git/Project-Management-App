@@ -20,6 +20,7 @@ class ProjectDetailsScreen extends StatefulWidget {
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final TextEditingController _projectController = TextEditingController();
   final TextEditingController _taskController = TextEditingController();
+  final TextEditingController _description = TextEditingController();
   void updateTaskStatus() {
     setState(() {
       Provider.of<ProjectClass>(context, listen: false)
@@ -156,9 +157,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                           BorderRadius.circular(20.0)),
                                   color: Color(0xffFED36A),
                                   onPressed: () {
-                                    /*model.deleteProject(widget.projectClass);
-                                    _projectController.clear();
-                                    Navigator.pop(context);*/
                                     showDialog(
                                       context: context,
                                       builder: (context) {
@@ -201,8 +199,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        width: 47,
-                        height: 47,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(color: Color(0xffFED36A)),
                         child: Icon(Icons.calendar_month),
                       ),
@@ -213,12 +211,21 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Date',
+                            'StartUp Date',
                             style: TextStyle(
                                 fontSize: 11, color: Color(0xff8CAAB9)),
                           ),
                           Text(
-                            "${widget.projectClass.day} ${widget.projectClass.month}",
+                            "${widget.projectClass.day} ${widget.projectClass.month}/${widget.projectClass.year}",
+                            style: TextStyle(fontSize: 17, color: Colors.white),
+                          ),
+                          Text(
+                            'Dead Date',
+                            style: TextStyle(
+                                fontSize: 11, color: Color(0xff8CAAB9)),
+                          ),
+                          Text(
+                            "${widget.projectClass.deadday} ${widget.projectClass.deadmonth}/${widget.projectClass.deadyear}",
                             style: TextStyle(fontSize: 17, color: Colors.white),
                           ),
                         ],
@@ -226,9 +233,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       SizedBox(
                         width: 50,
                       ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
                       Container(
-                        width: 47,
-                        height: 47,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(color: Color(0xffFED36A)),
                         child: Icon(Icons.people),
                       ),
@@ -262,12 +274,128 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     ],
                   ),
                   SizedBox(height: 30),
-                  Text(
-                    'Project Details',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Project Details',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      MaterialButton(
+                        minWidth: 20,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        color: Color(0xffFED36A),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Color(0xff212832),
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: Container(
+                                    margin: EdgeInsets.all(20),
+                                    height: 400,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'Edit Project Discription',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller: _description,
+                                          style: TextStyle(color: Colors.white),
+                                          decoration: InputDecoration(
+                                            labelStyle:
+                                                TextStyle(color: Colors.white),
+                                            labelText: "New Dicription ",
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
+                                          ),
+                                          autofocus: true,
+                                          maxLines: null,
+                                          keyboardType: TextInputType.multiline,
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        Consumer<ProjectClass>(
+                                          builder: (context, value, child) {
+                                            return MaterialButton(
+                                              minWidth: 20,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0)),
+                                              color: Color(0xffFED36A),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                          'Edit Project Description'),
+                                                      content: Text(
+                                                          'Are you sure you want to Edit this project Description?'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text('Cancel'),
+                                                        ),
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              if (_description
+                                                                  .text
+                                                                  .isNotEmpty) {
+                                                                setState(() {
+                                                                  widget
+                                                                      .projectClass
+                                                                      .editDetails(
+                                                                          _description
+                                                                              .text);
+                                                                  _description
+                                                                      .clear();
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
+                                                              }
+                                                            },
+                                                            child: Text('Edit'))
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text('Edit'),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                        child: Icon(Icons.edit_note),
+                      ),
+                    ],
                   ),
+                  SizedBox(height: 15),
                   Text(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled",
+                    widget.projectClass.projectDetails,
                     style: TextStyle(color: Color(0xffBCCFD8), fontSize: 12),
                   ),
                   SizedBox(height: 30),
