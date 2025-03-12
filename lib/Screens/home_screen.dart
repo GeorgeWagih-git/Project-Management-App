@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/projects_list.dart';
+import 'package:flutter_application_1/Screens/profile_screen.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
@@ -50,7 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        Image.asset('assets/person.png')
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfileScreen()),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(
+                              40), // Matches the CircleAvatar shape
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.blue,
+                            child: Image.asset('assets/person.png'),
+                          ),
+                        )
                       ],
                     ),
                   ),
