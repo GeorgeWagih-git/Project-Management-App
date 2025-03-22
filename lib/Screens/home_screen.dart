@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/projects_list.dart';
 import 'package:flutter_application_1/Screens/profile_screen.dart';
+import 'package:flutter_application_1/Screens/settings_screen.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
@@ -80,7 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color(0xffFED36A),
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SettingsScreen()),
+                          );
+                        },
                         icon: Icon(Icons.settings),
                       ),
                     )
