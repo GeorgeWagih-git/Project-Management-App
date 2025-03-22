@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/build_stat_box.dart';
 import 'package:flutter_application_1/widgets/build_button_option.dart';
+import 'package:flutter_application_1/Screens/settings_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -35,7 +41,10 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 45),
                   Text(
                     'George Wagih',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   SizedBox(height: 5),
                   Container(
@@ -101,9 +110,12 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  buildButtonOption(Icons.edit, 'Edit Profile'),
-                  buildButtonOption(Icons.settings, 'Settings'),
-                  buildButtonOption(Icons.logout, 'Logout', isLogout: true),
+                  buildButtonOption(Icons.settings, 'Settings', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsScreen()),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -116,7 +128,8 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: AssetImage('assets/person.png'), // Change accordingly
+                  backgroundImage:
+                      AssetImage('assets/person.png'), // Change accordingly
                 ),
               ],
             ),
@@ -125,8 +138,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-
-
-  
 }
