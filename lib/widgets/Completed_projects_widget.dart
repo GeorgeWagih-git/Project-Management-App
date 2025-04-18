@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
-import 'package:flutter_application_1/Screens/project_details_screen.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -16,34 +18,34 @@ class CompletedTasksWidget extends StatefulWidget {
 class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectClass>(
-      builder: (context, value, child) {
+    return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+      builder: (context, state) {
         return GestureDetector(
           onTap: () {
-            try {
-              widget.projectClass.isSelected = true;
+            // try {
+            //   // widget.projectClass.isSelected = true;
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ProjectDetailsScreen(projectClass: widget.projectClass),
-                ),
-              ).then((_) {
-                if (mounted) {
-                  // التأكد أن الودجت لا يزال موجودًا
-                  setState(() {
-                    widget.projectClass.isSelected = false;
-                    value.toggleProjectStatus(widget.projectClass);
-                  });
-                }
-              });
-            } catch (e, stacktrace) {
-              // ignore: avoid_print
-              print("Error: $e");
-              // ignore: avoid_print
-              print("Stacktrace: $stacktrace");
-            }
+            //   // Navigator.push(
+            //   //   context,
+            //   //   MaterialPageRoute(
+            //   //     builder: (context) =>
+            //   //         ProjectDetailsScreen(projectClass: widget.projectClass),
+            //   //   ),
+            //   // ).then((_) {
+            //   //   // if (mounted) {
+            //   //   //   // التأكد أن الودجت لا يزال موجودًا
+            //   //   //   setState(() {
+            //   //   //     widget.projectClass.isSelected = false;
+            //   //   //     value.toggleProjectStatus(widget.projectClass);
+            //   //   //   });
+            //   //   // }
+            //   // });
+            // } catch (e, stacktrace) {
+            //   // ignore: avoid_print
+            //   print("Error: $e");
+            //   // ignore: avoid_print
+            //   print("Stacktrace: $stacktrace");
+            // }
           },
           child: Container(
             padding: EdgeInsets.all(10),
@@ -88,7 +90,6 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                         height: 20,
                         width: 81,
                         child: ListView.builder(
-                          //shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return Image.asset(
@@ -107,9 +108,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.projectClass.completedPercentage() == 1
-                          ? 'Completed'
-                          : "Not Completed",
+                      "Not Completed",
                       style: TextStyle(
                           color: widget.projectClass.isSelected
                               ? Colors.black
@@ -117,7 +116,7 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                           fontSize: 11),
                     ),
                     Text(
-                      "${(widget.projectClass.completedPercentage() * 100).toStringAsFixed(0)}%",
+                      "0%",
                       style: TextStyle(
                           color: widget.projectClass.isSelected
                               ? Colors.black
@@ -126,8 +125,8 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                     ),
                   ],
                 ),
-                Consumer<TaskModel>(
-                  builder: (context, model, child) {
+                BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+                  builder: (context, state) {
                     return Container(
                       height: 10,
                       decoration: BoxDecoration(
@@ -141,16 +140,18 @@ class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
                             ? Colors.black
                             : Color(0xffFED36A),
                         backgroundColor: Colors.transparent,
-                        value: widget.projectClass.completedPercentage(),
-                        semanticsLabel: ((widget.projectClass
-                                            .completedPercentage() *
-                                        100) >
-                                    0.1 ||
-                                (widget.projectClass.completedPercentage() *
-                                        100) ==
-                                    0.1)
-                            ? "${(widget.projectClass.completedPercentage() * 100)}%"
-                            : "0%",
+                        value: 0.0,
+                        semanticsLabel: "0%",
+                        // widget.projectClass.completedPercentage(),
+                        // semanticsLabel: ((widget.projectClass
+                        //                     .completedPercentage() *
+                        //                 100) >
+                        //             0.1 ||
+                        //         (widget.projectClass.completedPercentage() *
+                        //                 100) ==
+                        //             0.1)
+                        //     ? "${(widget.projectClass.completedPercentage() * 100)}%"
+                        //     : "0%",
                       ),
                     );
                   },

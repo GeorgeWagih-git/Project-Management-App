@@ -1,0 +1,2 @@
+C:/Users/hp/Desktop/graduation V2/Project-Management-App/android/app/.cxx/Debug/2s3k2j4u/x86/CMakeFiles/edit_cache.dir
+C:/Users/hp/Desktop/graduation V2/Project-Management-App/android/app/.cxx/Debug/2s3k2j4u/x86/CMakeFiles/rebuild_cache.dir

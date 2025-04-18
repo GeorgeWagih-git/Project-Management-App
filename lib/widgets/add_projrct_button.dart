@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddProjectButton extends StatelessWidget {
-  AddProjectButton({super.key});
-
-  final TextEditingController _projectControllername = TextEditingController();
-  final TextEditingController _projectControllerday = TextEditingController();
-  final TextEditingController _projectControllermonth = TextEditingController();
-  final TextEditingController _projectControlleryear = TextEditingController();
-  final TextEditingController _projectControllerDiscription =
-      TextEditingController();
-  final TextEditingController _projectControllerdayDead =
-      TextEditingController();
-  final TextEditingController _projectControllermonthDead =
-      TextEditingController();
-  final TextEditingController _projectControlleryearDead =
-      TextEditingController();
-
+  const AddProjectButton({super.key});
   @override
   Widget build(BuildContext context) {
+    var ongoingCubit = OngoingProjectCubit.get(context);
     return MaterialButton(
       minWidth: 20,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -38,230 +27,174 @@ class AddProjectButton extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          "Add New Project",
-                          style: TextStyle(color: Colors.white),
+                  child: Form(
+                    key: ongoingCubit.ongoingFormKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            "Add New Project",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                      ),
-                      TextField(
-                        controller: _projectControllername,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          labelText: "Project Name ",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                        ),
-                        autofocus: true,
-                      ),
-                      SizedBox(height: 16),
-                      ListTile(
-                        title: Text(
-                          "Startup Time",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              controller: _projectControllerday,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Day ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              controller: _projectControllermonth,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Month ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              controller: _projectControlleryear,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Year ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      ListTile(
-                        title: Text(
-                          "DeadLine Time",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              controller: _projectControllerdayDead,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Day ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              controller: _projectControllermonthDead,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Month ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              controller: _projectControlleryearDead,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Year ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
-                              autofocus: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                      ListTile(
-                        title: Text(
-                          "Project Details",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: TextField(
-                          controller: _projectControllerDiscription,
+                        TextFormField(
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "required";
+                            }
+                            return null;
+                          },
+                          controller: ongoingCubit.projectControllername,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             labelStyle: TextStyle(color: Colors.white),
-                            labelText: "Disctiption ",
+                            labelText: "Project Name ",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25)),
                           ),
                           autofocus: true,
-                          maxLines: null,
-                          keyboardType: TextInputType.multiline,
                         ),
-                      ),
-                      SizedBox(height: 16), // مسافة بين الحقل والزر
-                      Consumer<ProjectClass>(
-                        builder: (context, value, child) {
-                          return MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            color: Color(0xffFED36A),
-                            onPressed: () {
-                              String inputday = _projectControllerday.text;
-                              int numberday = 1;
-                              if (inputday.isNotEmpty) {
-                                numberday = int.parse(inputday);
-                              }
-                              String inputyear = _projectControlleryear.text;
-                              int numberyear = 1;
-                              if (inputyear.isNotEmpty) {
-                                numberyear = int.parse(inputyear);
-                              }
-                              ////////////////////////////////////////////////
-                              String inputdeadday =
-                                  _projectControllerdayDead.text;
-                              int numberdeadday = 1;
-                              if (inputdeadday.isNotEmpty) {
-                                numberdeadday = int.parse(inputdeadday);
-                              }
-                              String inputdeadyear =
-                                  _projectControlleryearDead.text;
-                              int numberdeadyear = 1;
-                              if (inputdeadyear.isNotEmpty) {
-                                numberdeadyear = int.parse(inputdeadyear);
-                              }
-                              /////////////////////////////////////////////////////
-                              if (_projectControllername.text.isNotEmpty) {
-                                ProjectClass newProject = ProjectClass(
-                                  name: _projectControllername.text,
-                                  day: numberday,
-                                  month: _projectControllermonth.text,
-                                  year: numberyear,
-                                  deadday: numberdeadday,
-                                  deadmonth: _projectControllermonthDead.text,
-                                  deadyear: numberdeadyear,
-                                  projectDetails:
-                                      _projectControllerDiscription.text,
-                                );
+                        SizedBox(height: 16),
+                        ListTile(
+                          title: Text(
+                            "Startup Time",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        StartUpDate(),
 
-                                // إضافة المشروع الجديد إلى القائمة
-                                value.addProject(
-                                    newProject); // ✅ إضافة المشروع ككائن `ProjectClass` فقط
-
-                                // إغلاق الواجهة
-                                Navigator.pop(context);
+                        ListTile(
+                          title: Text(
+                            "DeadLine Time",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "required";
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller:
+                                    ongoingCubit.projectControllerdayDead,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  labelText: "Day ",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25)),
+                                ),
+                                autofocus: true,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "required";
+                                  }
+                                  return null;
+                                },
+                                controller:
+                                    ongoingCubit.projectControllermonthDead,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  labelText: "Month ",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25)),
+                                ),
+                                autofocus: true,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "required";
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller:
+                                    ongoingCubit.projectControlleryearDead,
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  labelText: "Year ",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25)),
+                                ),
+                                autofocus: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                        ListTile(
+                          title: Text(
+                            "Project Details",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "required";
                               }
+                              return null;
                             },
-                            child: Text('Add'),
-                          );
-                        },
-                      ),
-                    ],
+                            controller:
+                                ongoingCubit.projectControllerDiscription,
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              labelStyle: TextStyle(color: Colors.white),
+                              labelText: "Disctiption ",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25)),
+                            ),
+                            autofocus: true,
+                            maxLines: null,
+                            keyboardType: TextInputType.multiline,
+                          ),
+                        ),
+                        SizedBox(height: 16), // مسافة بين الحقل والزر
+                        BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+                          builder: (context, state) {
+                            return MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              color: Color(0xffFED36A),
+                              onPressed: () {
+                                if (ongoingCubit.ongoingFormKey.currentState!
+                                    .validate()) {
+                                  ongoingCubit.addProjects();
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: Text('Add'),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -270,6 +203,91 @@ class AddProjectButton extends StatelessWidget {
         );
       },
       child: Icon(Icons.add, color: Colors.black),
+    );
+  }
+}
+
+class StartUpDate extends StatelessWidget {
+  const StartUpDate({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var ongoingCubit = OngoingProjectCubit.get(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        // TimePickerDialog(initialTime: TimeOfDay.now())
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "required";
+              }
+              return null;
+            },
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            controller: ongoingCubit.projectControllerday,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.white),
+              labelText: "Day ",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+            ),
+            autofocus: true,
+          ),
+        ),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "required";
+              }
+              return null;
+            },
+            controller: ongoingCubit.projectControllermonth,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.white),
+              labelText: "Month ",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+            ),
+            autofocus: true,
+          ),
+        ),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "required";
+              }
+              return null;
+            },
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            controller: ongoingCubit.projectControlleryear,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.white),
+              labelText: "Year ",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+            ),
+            autofocus: true,
+          ),
+        ),
+      ],
     );
   }
 }

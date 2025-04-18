@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Cubits/project_cubit.dart';
+import 'package:flutter_application_1/Cubits/project_state.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
 import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -125,25 +130,26 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                   child: SizedBox(
                     width: double.infinity,
                     height: 175,
-                    child: Consumer<ProjectClass>(
-                      builder: (context, value, child) {
-                        if (value.completedlist.isEmpty) {
+                    child:
+                        BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+                      builder: (context, state) {
+                        if (state is OngoingSuccessfulState) {
+                          return ListView.builder(
+                            itemCount: state.project.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return CompletedTasksWidget(
+                                projectClass: state.project[index],
+                              );
+                            },
+                          );
+                        } else {
                           return Center(
                             child: Text(
                               'No Completed Projects Yet !',
                               style: TextStyle(
                                   color: Color(0xffFED36A), fontSize: 25),
                             ),
-                          );
-                        } else {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return CompletedTasksWidget(
-                                  projectClass: value.completedlist[
-                                      index]); // ✅ تحويل `ProjectClass` إلى Widget
-                            },
-                            itemCount: value.completedlist.length,
                           );
                         }
                       },

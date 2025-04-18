@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 
-class TaskModel extends ChangeNotifier {
-  ProjectClass project = ProjectClass();
+class TaskModel {
+  ProjectClass project = ProjectClass(tasks: []);
 
   String name;
-  bool isDone = false;
+  bool isDone;
 
-  TaskModel({String? name}) : name = name ?? "No Name Added";
+  TaskModel({String? name, bool? isDone})
+      : name = name ?? "No Name Added",
+        isDone = isDone ?? false;
 
   double completedPercentage() {
     if (project.tasks.isEmpty) return 0;
@@ -15,10 +16,17 @@ class TaskModel extends ChangeNotifier {
     int completedTasks = project.tasks.where((task) => task.isDone).length;
     double percentage = completedTasks / project.tasks.length;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners(); // تحديث الواجهة بعد حساب النسبة
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   notifyListeners(); // تحديث الواجهة بعد حساب النسبة
+    // });
 
     return percentage;
+  }
+
+  TaskModel copyWith({String? name, bool? isDone}) {
+    return TaskModel(
+      name: name ?? this.name,
+      isDone: isDone ?? this.isDone,
+    );
   }
 }

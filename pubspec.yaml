@@ -42,6 +42,7 @@ dependencies:
   percent_indicator: ^4.2.4
   provider: ^6.1.2
   collection: ^1.19.1
+  flutter_bloc: ^9.1.0
 
 dev_dependencies:
   flutter_test:

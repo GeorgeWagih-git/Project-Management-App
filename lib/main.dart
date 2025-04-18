@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Cubits/project_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import './Classes/task_model.dart';
 
@@ -9,13 +12,8 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => TaskModel()),
-        ChangeNotifierProvider(create: (context) => ProjectClass()),
-      ],
-      child: ProjectManagement(),
-    ),
+    BlocProvider(
+        create: (context) => OngoingProjectCubit(), child: ProjectManagement()),
   );
 }
 
