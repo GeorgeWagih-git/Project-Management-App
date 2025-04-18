@@ -5,8 +5,7 @@ import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
-import 'package:flutter_application_1/Cubits/project_cubit.dart';
-import 'package:flutter_application_1/Cubits/project_state.dart';
+
 import 'package:flutter_application_1/Screens/edit_tasks_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

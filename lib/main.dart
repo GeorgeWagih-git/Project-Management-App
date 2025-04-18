@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
-import 'package:flutter_application_1/Cubits/project_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';

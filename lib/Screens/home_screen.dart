@@ -3,8 +3,7 @@ import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
-import 'package:flutter_application_1/Cubits/project_cubit.dart';
-import 'package:flutter_application_1/Cubits/project_state.dart';
+
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
 import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
