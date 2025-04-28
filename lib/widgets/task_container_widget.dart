@@ -5,7 +5,6 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class TaskContainerWidget extends StatefulWidget {
@@ -57,7 +56,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                   padding: const EdgeInsets.only(left: 18.0),
                   child: Center(
                     child: Text(
-                      'Hello',
+                      widget.taskitem.name,
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
@@ -68,10 +67,10 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                     checkColor: Colors.black,
                     value: widget.taskitem.isDone,
                     onChanged: (bool? value) {
-                      // context.read<ProjectCubit>().toggleTaskStatus(
-                      //       projectIndex,
-                      //       taskIndex,
-                      //     );
+                      widget.taskitem.isDone = value ?? false;
+
+                      OngoingProjectCubit.get(context)
+                          .transformProject(widget.project);
                     },
                   ),
                 if (widget.showremoveicon)

@@ -30,12 +30,41 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
   final TextEditingController description = TextEditingController();
   List<ProjectClass> projects = [];
+  List<ProjectClass> Completedprojects = [];
+  int completedPercentage(ProjectClass model) {
+    if (model.tasks.isEmpty) {
+      return 0;
+    }
+    int completed = model.tasks.where((task) => task.isDone).length;
+    int finalnum = ((completed / model.tasks.length) * 100).toInt();
+    emit(OngoingSuccessfulState(project: projects));
+
+    return finalnum;
+  }
+
+  void transformProject(ProjectClass model) {
+    if (completedPercentage(model) == 100) {
+      deleteProjects(model);
+      addCompletedProjects(model);
+    }
+    if (Completedprojects.contains(model) && completedPercentage(model) < 100) {
+      deleteCompletedProjects(model);
+      transformOngingProjects(model);
+    }
+    emit(CompleteduccessfulState(completedproject: Completedprojects));
+  }
+
   void getProjects() {
     emit(OngoingSuccessfulState(project: projects));
   }
 
   void deleteProjects(ProjectClass model) {
     projects.remove(model);
+    emit(OngoingSuccessfulState(project: projects));
+  }
+
+  void deleteCompletedProjects(ProjectClass model) {
+    Completedprojects.remove(model);
     emit(OngoingSuccessfulState(project: projects));
   }
 
@@ -53,6 +82,21 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     );
     projects.add(model);
     emit(OngoingSuccessfulState(project: projects));
+  }
+
+  void addCompletedProjects(ProjectClass model) {
+    if (!Completedprojects.contains(model) &&
+        completedPercentage(model) == 100) {
+      Completedprojects.add(model);
+      emit(OngoingSuccessfulState(project: projects));
+    }
+  }
+
+  void transformOngingProjects(ProjectClass model) {
+    if (!projects.contains(model)) {
+      projects.add(model);
+      emit(OngoingSuccessfulState(project: projects));
+    }
   }
 
   void editProject(

@@ -14,6 +14,12 @@ class OngoingSuccessfulState extends OngoingProjectStates {
   OngoingSuccessfulState({required this.project});
 }
 
+class CompleteduccessfulState extends OngoingProjectStates {
+  final List<ProjectClass> completedproject;
+
+  CompleteduccessfulState({required this.completedproject});
+}
+
 class OngoingAddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
   final ProjectClass project;
 

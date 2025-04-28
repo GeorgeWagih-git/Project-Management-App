@@ -5,8 +5,7 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/widgets/task_container_widget.dart';
-import 'package:flutter_application_1/Cubits/project_cubit.dart';
-import 'package:flutter_application_1/Cubits/project_state.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './task_model.dart';
 
@@ -36,7 +35,9 @@ class TaskListView extends StatelessWidget {
             // ignore: non_constant_identifier_names
             (context, Index) {
               return TaskContainerWidget(
-                  taskitem: project.tasks[Index], project: project);
+                  showcheckbox: true,
+                  taskitem: project.tasks[Index],
+                  project: project);
             },
           ),
         );

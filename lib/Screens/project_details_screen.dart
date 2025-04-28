@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
-import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_application_1/Screens/edit_tasks_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:provider/provider.dart';
 
 String globaltaskName = '';
 
@@ -25,6 +23,8 @@ class ProjectDetailsScreen extends StatelessWidget {
       screenName: 'Project Details',
       child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
+          var completedPercentage =
+              onGoingCubit.completedPercentage(projectClass);
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
             child: CustomScrollView(
@@ -409,12 +409,9 @@ class ProjectDetailsScreen extends StatelessWidget {
                               child: CircularPercentIndicator(
                                 progressColor: Color(0xffFED36A),
                                 radius: 50,
-                                // percent: context
-                                //     .read<ProjectCubit>()
-                                //     .calculateCompletionPercentage(
-                                //         widget.projectClass),
+                                percent: (completedPercentage / 100).toDouble(),
                                 center: Text(
-                                  "59%",
+                                  "${completedPercentage.toString()}%",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),

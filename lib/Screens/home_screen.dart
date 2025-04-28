@@ -132,13 +132,15 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                     child:
                         BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
                       builder: (context, state) {
-                        if (state is OngoingSuccessfulState) {
+                        var completedprojects =
+                            OngoingProjectCubit.get(context).Completedprojects;
+                        if (completedprojects.isNotEmpty) {
                           return ListView.builder(
-                            itemCount: state.project.length,
+                            itemCount: completedprojects.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return CompletedTasksWidget(
-                                projectClass: state.project[index],
+                                projectClass: completedprojects[index],
                               );
                             },
                           );
