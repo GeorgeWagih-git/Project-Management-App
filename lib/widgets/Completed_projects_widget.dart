@@ -7,15 +7,14 @@ import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
-class CompletedTasksWidget extends StatefulWidget {
-  const CompletedTasksWidget({super.key, required this.projectClass});
+class completedTasksWidget extends StatefulWidget {
+  const completedTasksWidget({super.key, required this.projectClass});
   final ProjectClass projectClass;
   @override
-  State<CompletedTasksWidget> createState() => _CompletedTasksWidgetState();
+  State<completedTasksWidget> createState() => _completedTasksWidgetState();
 }
 
-class _CompletedTasksWidgetState extends State<CompletedTasksWidget> {
+class _completedTasksWidgetState extends State<completedTasksWidget> {
   get projectClass => null;
 
   @override

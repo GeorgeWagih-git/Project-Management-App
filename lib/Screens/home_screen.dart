@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
-import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 
@@ -10,7 +9,6 @@ import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -133,13 +131,13 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                         BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
                       builder: (context, state) {
                         var completedprojects =
-                            OngoingProjectCubit.get(context).Completedprojects;
+                            OngoingProjectCubit.get(context).completedprojects;
                         if (completedprojects.isNotEmpty) {
                           return ListView.builder(
                             itemCount: completedprojects.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return CompletedTasksWidget(
+                              return completedTasksWidget(
                                 projectClass: completedprojects[index],
                               );
                             },

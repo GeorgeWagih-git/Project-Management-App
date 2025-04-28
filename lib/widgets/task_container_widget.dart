@@ -29,8 +29,6 @@ class TaskContainerWidget extends StatefulWidget {
 }
 
 class _TaskContainerWidgetState extends State<TaskContainerWidget> {
-  final TextEditingController _taskController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(

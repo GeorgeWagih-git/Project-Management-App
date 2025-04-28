@@ -12,6 +12,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 String globaltaskName = '';
 
+// ignore: must_be_immutable
 class ProjectDetailsScreen extends StatelessWidget {
   ProjectDetailsScreen({super.key, required this.projectClass});
   ProjectClass projectClass;
@@ -507,8 +508,6 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                                 projectRelatedToTask:
                                                                     projectClass);
                                                         Navigator.pop(context);
-                                                        print(
-                                                            projectClass.tasks);
                                                       }
                                                     },
                                                     child: Text('Add'),
@@ -557,7 +556,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                TaskListView(
+                TaskListview(
                   project: projectClass,
                   showcheckbox: true,
                 ),

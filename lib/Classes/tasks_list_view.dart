@@ -7,10 +7,10 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/widgets/task_container_widget.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './task_model.dart';
 
-class TaskListView extends StatelessWidget {
-  TaskListView({
+// ignore: must_be_immutable
+class TaskListview extends StatelessWidget {
+  TaskListview({
     super.key,
     this.showcheckbox = false,
     this.showremoveicon = false,
