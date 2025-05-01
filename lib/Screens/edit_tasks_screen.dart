@@ -24,8 +24,8 @@ class _EditTasksScreenState extends State<EditTasksScreen> {
           slivers: [
             TaskListview(
               project: widget.projectClass,
-              showremoveicon: true,
-              showrenameicon: true,
+              showremoveiconinlist: true,
+              showrenameiconinlist: true,
             ),
           ],
         ),

@@ -42,6 +42,12 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     return finalnum;
   }
 
+  void editProjectDescription(
+      {required ProjectClass model, required String newDescription}) {
+    model.projectDetails = newDescription;
+    emit(OngoingSuccessfulState(project: projects));
+  }
+
   void transformProject(ProjectClass model) {
     if (completedPercentage(model) == 100) {
       deleteProjects(model);
@@ -59,12 +65,21 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   void deleteProjects(ProjectClass model) {
-    projects.remove(model);
+    if (projects.contains(model)) {
+      projects.remove(model);
+    } else if (completedprojects.contains(model)) {
+      completedprojects.remove(model);
+    }
     emit(OngoingSuccessfulState(project: projects));
   }
 
   void deleteCompletedProjects(ProjectClass model) {
     completedprojects.remove(model);
+    emit(OngoingSuccessfulState(project: projects));
+  }
+
+  void renameProject({required ProjectClass model, required String newname}) {
+    model.name = newname;
     emit(OngoingSuccessfulState(project: projects));
   }
 
@@ -118,6 +133,15 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   void deleteTaskIntoProject(
       {required TaskModel task, required ProjectClass projectRelatedToTask}) {
     projectRelatedToTask.tasks.remove(task);
+    emit(OngoingAddTaskIntoProjectSuccessfulState(
+        project: projectRelatedToTask));
+  }
+
+  void renameTaskName(
+      {required ProjectClass projectRelatedToTask,
+      required TaskModel model,
+      required String newName}) {
+    model.name = newName;
     emit(OngoingAddTaskIntoProjectSuccessfulState(
         project: projectRelatedToTask));
   }

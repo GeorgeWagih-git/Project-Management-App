@@ -59,50 +59,140 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                     ),
                   ),
                 ),
-                if (widget.showcheckbox)
-                  Checkbox(
-                    activeColor: Color(0xffFED36A),
-                    checkColor: Colors.black,
-                    value: widget.taskitem.isDone,
-                    onChanged: (bool? value) {
-                      widget.taskitem.isDone = value ?? false;
+                Row(
+                  children: [
+                    if (widget.showcheckbox)
+                      Checkbox(
+                        activeColor: Color(0xffFED36A),
+                        checkColor: Colors.black,
+                        value: widget.taskitem.isDone,
+                        onChanged: (bool? value) {
+                          widget.taskitem.isDone = value ?? false;
 
-                      OngoingProjectCubit.get(context)
-                          .transformProject(widget.project);
-                    },
-                  ),
-                if (widget.showremoveicon)
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.white),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Confirm Delete'),
-                          content: Text(
-                              "Are you sure you want to delete this task?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Cancel'),
+                          OngoingProjectCubit.get(context)
+                              .transformProject(widget.project);
+                        },
+                      ),
+                    if (widget.showremoveicon)
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.white),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('Confirm Delete'),
+                              content: Text(
+                                  "Are you sure you want to delete this task?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    OngoingProjectCubit.get(context)
+                                        .deleteTaskIntoProject(
+                                            task: widget.taskitem,
+                                            projectRelatedToTask:
+                                                widget.project);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Delete'),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () {
-                                // context
-                                //     .read<ProjectCubit>()
-                                //     .deleteTaskFromProject(
-                                //       projectIndex,
-                                //       widget.taskitem,
-                                //     );
-                                Navigator.pop(context);
-                              },
-                              child: Text('Delete'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+                    if (widget.showrenameicon)
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Colors.white),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              backgroundColor: Color(0xff212832),
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom,
+                                  ),
+                                  child: Container(
+                                    height: 300,
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                            'Rename Task Name',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context); // إغلاق القائمة
+                                          },
+                                        ),
+                                        TextFormField(
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return "required";
+                                            }
+                                            return null;
+                                          },
+                                          controller:
+                                              OngoingProjectCubit.get(context)
+                                                  .taskController,
+                                          style: TextStyle(color: Colors.white),
+                                          decoration: InputDecoration(
+                                            labelStyle:
+                                                TextStyle(color: Colors.white),
+                                            labelText: "Task new Name ",
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
+                                          ),
+                                          autofocus: true,
+                                        ),
+                                        SizedBox(height: 16),
+                                        MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          color: Color(0xffFED36A),
+                                          onPressed: () {
+                                            // إضافة المهمة هنا
+                                            if (OngoingProjectCubit.get(context)
+                                                .taskController
+                                                .text
+                                                .isNotEmpty) {
+                                              OngoingProjectCubit.get(context)
+                                                  .renameTaskName(
+                                                      projectRelatedToTask:
+                                                          widget.project,
+                                                      model: widget.taskitem,
+                                                      newName:
+                                                          OngoingProjectCubit
+                                                                  .get(context)
+                                                              .taskController
+                                                              .text);
+
+                                              Navigator.pop(context);
+                                            }
+                                          },
+                                          child: Text('Rename'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                      ),
+                  ],
+                )
               ],
             ),
           ),

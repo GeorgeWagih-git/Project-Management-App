@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                             itemCount: completedprojects.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return completedTasksWidget(
+                              return CompletedProjectssWidget(
                                 projectClass: completedprojects[index],
                               );
                             },

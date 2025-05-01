@@ -7,14 +7,15 @@ import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class completedTasksWidget extends StatefulWidget {
-  const completedTasksWidget({super.key, required this.projectClass});
+class CompletedProjectssWidget extends StatefulWidget {
+  const CompletedProjectssWidget({super.key, required this.projectClass});
   final ProjectClass projectClass;
   @override
-  State<completedTasksWidget> createState() => _completedTasksWidgetState();
+  State<CompletedProjectssWidget> createState() =>
+      _CompletedProjectssWidgetState();
 }
 
-class _completedTasksWidgetState extends State<completedTasksWidget> {
+class _CompletedProjectssWidgetState extends State<CompletedProjectssWidget> {
   get projectClass => null;
 
   @override

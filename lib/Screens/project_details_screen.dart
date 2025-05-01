@@ -129,21 +129,14 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                           .projectController
                                                           .text
                                                           .isNotEmpty) {
-                                                        // setState(() {
-                                                        //   widget.projectClass
-                                                        //       .renameProject(
-                                                        //           .projectController
-                                                        //               .text); // ✅ إعادة التسمية
-                                                        // });
+                                                        onGoingCubit.renameProject(
+                                                            model: projectClass,
+                                                            newname: onGoingCubit
+                                                                .projectController
+                                                                .text);
 
-                                                        onGoingCubit
-                                                            .projectController
-                                                            .clear();
-                                                        Navigator.pop(
-                                                            context); // 🟢 مسح الحقل بعد الإضافة
+                                                        Navigator.pop(context);
                                                       }
-
-                                                      // إغلاق الواجهة
                                                     },
                                                     child: Text('Rename'),
                                                   ),
@@ -179,6 +172,8 @@ class ProjectDetailsScreen extends StatelessWidget {
                                               ),
                                               TextButton(
                                                   onPressed: () {
+                                                    onGoingCubit.deleteProjects(
+                                                        projectClass);
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
                                                   },
@@ -370,7 +365,24 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                                 Text('Cancel'),
                                                           ),
                                                           TextButton(
-                                                            onPressed: () {},
+                                                            onPressed: () {
+                                                              if (onGoingCubit
+                                                                  .description
+                                                                  .text
+                                                                  .isNotEmpty) {
+                                                                onGoingCubit.editProjectDescription(
+                                                                    model:
+                                                                        projectClass,
+                                                                    newDescription:
+                                                                        onGoingCubit
+                                                                            .description
+                                                                            .text);
+                                                                Navigator.pop(
+                                                                    context);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }
+                                                            },
                                                             child: Text('Edit'),
                                                           )
                                                         ],
@@ -507,13 +519,14 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                             .addTaskIntoProject(
                                                                 projectRelatedToTask:
                                                                     projectClass);
+                                                        onGoingCubit
+                                                            .transformProject(
+                                                                projectClass);
                                                         Navigator.pop(context);
                                                       }
                                                     },
                                                     child: Text('Add'),
                                                   ),
-
-                                                  // مسافة بين الحقل والزر
                                                   SizedBox(height: 16),
                                                 ],
                                               ),
@@ -558,7 +571,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                 ),
                 TaskListview(
                   project: projectClass,
-                  showcheckbox: true,
+                  showcheckboxinlist: true,
                 ),
               ],
             ),

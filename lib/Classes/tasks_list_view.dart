@@ -12,14 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TaskListview extends StatelessWidget {
   TaskListview({
     super.key,
-    this.showcheckbox = false,
-    this.showremoveicon = false,
-    this.showrenameicon = false,
+    this.showcheckboxinlist = false,
+    this.showremoveiconinlist = false,
+    this.showrenameiconinlist = false,
     required this.project,
   });
-  bool showcheckbox;
-  bool showremoveicon;
-  bool showrenameicon;
+  bool showcheckboxinlist;
+  bool showremoveiconinlist;
+  bool showrenameiconinlist;
   ProjectClass project;
   // ✅ يستقبل List<TaskItem> بدلاً من TaskModel
   @override
@@ -35,7 +35,9 @@ class TaskListview extends StatelessWidget {
             // ignore: non_constant_identifier_names
             (context, Index) {
               return TaskContainerWidget(
-                  showcheckbox: true,
+                  showcheckbox: showcheckboxinlist,
+                  showremoveicon: showremoveiconinlist,
+                  showrenameicon: showrenameiconinlist,
                   taskitem: project.tasks[Index],
                   project: project);
             },
