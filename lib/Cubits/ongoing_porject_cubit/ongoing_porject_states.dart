@@ -6,7 +6,11 @@ class OngoingInitialState extends OngoingProjectStates {}
 
 class OngoingLoadingState extends OngoingProjectStates {}
 
-class OngoingErrorState extends OngoingProjectStates {}
+class OngoingErrorState extends OngoingProjectStates {
+  final String errMessege;
+
+  OngoingErrorState({required this.errMessege});
+}
 
 class OngoingSuccessfulState extends OngoingProjectStates {
   final List<ProjectClass> project;

@@ -2,12 +2,16 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/core/api/api_consumer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
-  OngoingProjectCubit() : super(OngoingInitialState());
+  OngoingProjectCubit(this.api) : super(OngoingInitialState());
   static OngoingProjectCubit get(BuildContext context) =>
       BlocProvider.of(context);
+  final ApiConsumer api;
+  final TextEditingController signInEmail = TextEditingController();
+  final TextEditingController signInPassword = TextEditingController();
   final TextEditingController projectControllername = TextEditingController();
   final TextEditingController projectControllerday = TextEditingController();
   final TextEditingController projectControllermonth = TextEditingController();
@@ -155,4 +159,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(OngoingAddTaskIntoProjectSuccessfulState(
         project: projectRelatedToTask));
   }
+
+  /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
+  signIn() async {}
 }

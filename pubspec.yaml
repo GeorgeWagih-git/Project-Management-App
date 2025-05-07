@@ -43,6 +43,7 @@ dependencies:
   provider: ^6.1.2
   collection: ^1.19.1
   flutter_bloc: ^9.1.0
+  dio: ^5.8.0+1
 
 dev_dependencies:
   flutter_test:
