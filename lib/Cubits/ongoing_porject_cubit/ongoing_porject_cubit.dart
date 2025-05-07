@@ -3,6 +3,8 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/core/api/api_consumer.dart';
+import 'package:flutter_application_1/core/api/endpoints.dart';
+import 'package:flutter_application_1/core/errors/exceptions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
@@ -161,5 +163,19 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
-  signIn() async {}
+  signIn() async {
+    try {
+      emit(OngoingLoadingState());
+      final response = await api.post(
+        Endpoint.signIn,
+        data: {
+          ApiKey.email: signInEmail.text,
+          ApiKey.password: signInPassword.text,
+        },
+      );
+      emit(OngoingSuccessfulState(project: projects));
+    } on ServerException catch (e) {
+      emit(OngoingErrorState(errMessege: e.errModel.toString()));
+    }
+  }
 }
