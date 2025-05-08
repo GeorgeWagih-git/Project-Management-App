@@ -2,30 +2,56 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 
 abstract class OngoingProjectStates {}
 
-class OngoingInitialState extends OngoingProjectStates {}
+class ProjectsInitialState extends OngoingProjectStates {}
 
-class OngoingLoadingState extends OngoingProjectStates {}
+class ProjectsLoadingState extends OngoingProjectStates {}
 
-class OngoingErrorState extends OngoingProjectStates {
+class ProjectsErrorState extends OngoingProjectStates {
   final String errMessege;
 
-  OngoingErrorState({required this.errMessege});
+  ProjectsErrorState({required this.errMessege});
 }
 
-class OngoingSuccessfulState extends OngoingProjectStates {
+class ProjectsSuccessfulState extends OngoingProjectStates {
   final List<ProjectClass> project;
 
-  OngoingSuccessfulState({required this.project});
+  ProjectsSuccessfulState({required this.project});
 }
 
-class CompleteduccessfulState extends OngoingProjectStates {
-  final List<ProjectClass> completedproject;
-
-  CompleteduccessfulState({required this.completedproject});
-}
-
-class OngoingAddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
+class AddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
   final ProjectClass project;
 
-  OngoingAddTaskIntoProjectSuccessfulState({required this.project});
+  AddTaskIntoProjectSuccessfulState({required this.project});
+}
+
+/////////////////////////////////////////////////
+final class SignInSuccess extends OngoingProjectStates {}
+
+final class SignInLoading extends OngoingProjectStates {}
+
+final class SignInFailure extends OngoingProjectStates {
+  final String errMessage;
+
+  SignInFailure({required this.errMessage});
+}
+
+//////////////////////////////////////////////////
+class UploadProfilePicture extends OngoingProjectStates {}
+
+final class SignUpSuccess extends OngoingProjectStates {}
+
+final class SignUpLoading extends OngoingProjectStates {}
+
+final class SignUpFailure extends OngoingProjectStates {
+  final String errMessage;
+
+  SignUpFailure({required this.errMessage});
+}
+
+///////////////////////////////////////////////
+
+class CompletedProjectsuccessfulState extends OngoingProjectStates {
+  final List<ProjectClass> completedproject;
+
+  CompletedProjectsuccessfulState({required this.completedproject});
 }

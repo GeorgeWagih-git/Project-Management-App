@@ -10,7 +10,7 @@ class OngoingTasksList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
-      if (state is OngoingSuccessfulState) {
+      if (state is ProjectsSuccessfulState) {
         return SliverList(
             delegate: SliverChildBuilderDelegate(
                 childCount: state.project.length, (context, index) {

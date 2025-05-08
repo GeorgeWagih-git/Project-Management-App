@@ -27,7 +27,7 @@ class TaskListview extends StatelessWidget {
     log(project.tasks.toString());
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
-      if (state is OngoingSuccessfulState) {
+      if (state is ProjectsSuccessfulState) {
         log(state.project.toString());
         return SliverList(
           delegate: SliverChildBuilderDelegate(

@@ -5,15 +5,35 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/core/api/api_consumer.dart';
 import 'package:flutter_application_1/core/api/endpoints.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
+import 'package:flutter_application_1/core/functions/upload_image_to_api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
-  OngoingProjectCubit(this.api) : super(OngoingInitialState());
+  OngoingProjectCubit(this.api) : super(ProjectsInitialState());
   static OngoingProjectCubit get(BuildContext context) =>
       BlocProvider.of(context);
   final ApiConsumer api;
+  //Sign in Form key
+  GlobalKey<FormState> signInFormKey = GlobalKey();
+  //Sign in email
   final TextEditingController signInEmail = TextEditingController();
+  //Sign in password
   final TextEditingController signInPassword = TextEditingController();
+  //Sign Up Form key
+  GlobalKey<FormState> signUpFormKey = GlobalKey();
+  //Profile Pic
+  XFile? profilePic;
+  //Sign up name
+  TextEditingController signUpName = TextEditingController();
+  //Sign up phone number
+  TextEditingController signUpPhoneNumber = TextEditingController();
+  //Sign up email
+  TextEditingController signUpEmail = TextEditingController();
+  //Sign up password
+  TextEditingController signUpPassword = TextEditingController();
+  //Sign up confirm password
+  TextEditingController confirmPassword = TextEditingController();
   final TextEditingController projectControllername = TextEditingController();
   final TextEditingController projectControllerday = TextEditingController();
   final TextEditingController projectControllermonth = TextEditingController();
@@ -43,7 +63,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     }
     int completed = model.tasks.where((task) => task.isDone).length;
     int finalnum = ((completed / model.tasks.length) * 100).toInt();
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
 
     return finalnum;
   }
@@ -51,7 +71,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   void editProjectDescription(
       {required ProjectClass model, required String newDescription}) {
     model.projectDetails = newDescription;
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void transformProject(ProjectClass model) {
@@ -63,11 +83,11 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       deleteCompletedProjects(model);
       transformOngingProjects(model);
     }
-    emit(CompleteduccessfulState(completedproject: completedprojects));
+    emit(CompletedProjectsuccessfulState(completedproject: completedprojects));
   }
 
   void getProjects() {
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void deleteProjects(ProjectClass model) {
@@ -76,17 +96,17 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     } else if (completedprojects.contains(model)) {
       completedprojects.remove(model);
     }
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void deleteCompletedProjects(ProjectClass model) {
     completedprojects.remove(model);
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void renameProject({required ProjectClass model, required String newname}) {
     model.name = newname;
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void addProjects() {
@@ -102,21 +122,21 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       year: int.parse(projectControlleryear.text),
     );
     projects.add(model);
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void addCompletedProjects(ProjectClass model) {
     if (!completedprojects.contains(model) &&
         completedPercentage(model) == 100) {
       completedprojects.add(model);
-      emit(OngoingSuccessfulState(project: projects));
+      emit(ProjectsSuccessfulState(project: projects));
     }
   }
 
   void transformOngingProjects(ProjectClass model) {
     if (!projects.contains(model)) {
       projects.add(model);
-      emit(OngoingSuccessfulState(project: projects));
+      emit(ProjectsSuccessfulState(project: projects));
     }
   }
 
@@ -124,14 +144,14 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       {required ProjectClass newModel, required ProjectClass oldModel}) {
     projects.remove(oldModel);
     projects.add(newModel);
-    emit(OngoingSuccessfulState(project: projects));
+    emit(ProjectsSuccessfulState(project: projects));
   }
 
   void addTaskIntoProject({required ProjectClass projectRelatedToTask}) {
     var task = TaskModel(isDone: false, name: taskController.text);
     projectRelatedToTask.tasks.add(task);
     emit(
-      OngoingAddTaskIntoProjectSuccessfulState(project: projectRelatedToTask),
+      AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask),
     );
     getProjects();
   }
@@ -139,8 +159,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   void deleteTaskIntoProject(
       {required TaskModel task, required ProjectClass projectRelatedToTask}) {
     projectRelatedToTask.tasks.remove(task);
-    emit(OngoingAddTaskIntoProjectSuccessfulState(
-        project: projectRelatedToTask));
+    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
   void renameTaskName(
@@ -148,8 +167,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       required TaskModel model,
       required String newName}) {
     model.name = newName;
-    emit(OngoingAddTaskIntoProjectSuccessfulState(
-        project: projectRelatedToTask));
+    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
   void editTaskIntoProject(
@@ -158,24 +176,51 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       required ProjectClass projectRelatedToTask}) {
     projectRelatedToTask.tasks.remove(oldTask);
     projectRelatedToTask.tasks.add(newTask);
-    emit(OngoingAddTaskIntoProjectSuccessfulState(
-        project: projectRelatedToTask));
+    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
   signIn() async {
     try {
-      emit(OngoingLoadingState());
-      final response = await api.post(
+      emit(SignInLoading());
+      await api.post(
         Endpoint.signIn,
         data: {
           ApiKey.email: signInEmail.text,
           ApiKey.password: signInPassword.text,
         },
       );
-      emit(OngoingSuccessfulState(project: projects));
+      emit(SignInSuccess());
     } on ServerException catch (e) {
-      emit(OngoingErrorState(errMessege: e.errModel.toString()));
+      emit(SignInFailure(errMessage: e.errModel.errorMessage));
+    }
+  }
+
+  uploadProfilePic(XFile image) {
+    profilePic = image;
+    emit(UploadProfilePicture());
+  }
+
+  signUp() async {
+    try {
+      emit(SignUpLoading());
+      await api.post(
+        Endpoint.signUp,
+        isFormData: true,
+        data: {
+          ApiKey.name: signUpName.text,
+          ApiKey.email: signUpEmail.text,
+          ApiKey.phone: signUpPhoneNumber.text,
+          ApiKey.password: signUpPassword.text,
+          ApiKey.confirmPassword: confirmPassword.text,
+          ApiKey.location:
+              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
+          ApiKey.profilePic: await uploadImageToApi(profilePic!),
+        },
+      );
+      emit(SignUpSuccess());
+    } on ServerException catch (e) {
+      emit(SignUpFailure(errMessage: e.errModel.errorMessage));
     }
   }
 }

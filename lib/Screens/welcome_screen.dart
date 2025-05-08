@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/login_screen.dart';
+import 'package:flutter_application_1/Screens/signin_screen.dart';
 import 'package:flutter_application_1/Screens/signup_screen.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/welcome_button.dart';
@@ -47,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                     Expanded(
                         child: WelcomeButton(
                       buttonText: 'Log  in',
-                      destination: LoginScreen(),
+                      destination: SigninScreen(),
                       buttonColor: Colors.transparent,
                       textbuttonColor: Colors.white,
                     )),
