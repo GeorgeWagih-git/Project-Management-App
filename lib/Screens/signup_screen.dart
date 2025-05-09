@@ -5,6 +5,7 @@ import 'package:flutter_application_1/widgets/already_have_an_account.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:flutter_application_1/widgets/page_header.dart';
 import 'package:flutter_application_1/widgets/pick_image_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,6 +48,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: context.read<OngoingProjectCubit>().signUpName,
                 ),
                 const SizedBox(height: 16),
+                CustomInputField(
+                  labelText: 'User Name',
+                  hintText: 'Your user name',
+                  isDense: true,
+                  controller:
+                      context.read<OngoingProjectCubit>().signUpUserName,
+                ),
+                const SizedBox(height: 16),
                 //!Email
                 CustomInputField(
                   labelText: 'Email',
@@ -75,7 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       context.read<OngoingProjectCubit>().signUpPassword,
                 ),
                 //! Confirm Password
-                CustomInputField(
+                /*CustomInputField(
                   labelText: 'Confirm Password',
                   hintText: 'Confirm Your password',
                   isDense: true,
@@ -83,6 +92,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   suffixIcon: true,
                   controller:
                       context.read<OngoingProjectCubit>().confirmPassword,
+                ),
+                const SizedBox(height: 22),*/
+                CustomInputField(
+                  labelText: 'Your Bio',
+                  hintText: 'bio',
+                  isDense: true,
+                  controller: context.read<OngoingProjectCubit>().bio,
                 ),
                 const SizedBox(height: 22),
                 //!Sign Up Button

@@ -1,11 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/core/api/api_consumer.dart';
 import 'package:flutter_application_1/core/api/endpoints.dart';
 import 'package:flutter_application_1/core/errors/exceptions.dart';
-import 'package:flutter_application_1/core/functions/upload_image_to_api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,15 +25,27 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   GlobalKey<FormState> signUpFormKey = GlobalKey();
   //Profile Pic
   XFile? profilePic;
+  void uploadProfilePic(XFile pickedFile) {
+    profilePic = pickedFile;
+    emit(OngoingProjectImageSelected()); // تأكد من وجود هذا الستيت
+  }
+
   //Sign up name
   TextEditingController signUpName = TextEditingController();
+  //Sign up username
+  TextEditingController signUpUserName = TextEditingController();
   //Sign up phone number
   TextEditingController signUpPhoneNumber = TextEditingController();
   //Sign up email
   TextEditingController signUpEmail = TextEditingController();
+  // sign up bio
+  TextEditingController bio = TextEditingController();
   //Sign up password
   TextEditingController signUpPassword = TextEditingController();
   //Sign up confirm password
+  // usermodel
+  UserModel? userModel;
+
   TextEditingController confirmPassword = TextEditingController();
   final TextEditingController projectControllername = TextEditingController();
   final TextEditingController projectControllerday = TextEditingController();
@@ -192,35 +205,48 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       );
       emit(SignInSuccess());
     } on ServerException catch (e) {
-      emit(SignInFailure(errMessage: e.errModel.errorMessage));
+      emit(SignInFailure(errMessage: e.errModel.message));
     }
-  }
-
-  uploadProfilePic(XFile image) {
-    profilePic = image;
-    emit(UploadProfilePicture());
   }
 
   signUp() async {
     try {
       emit(SignUpLoading());
+      final imageFile = profilePic;
+      final fileName =
+          imageFile != null ? imageFile.path.split('/').last : null;
       await api.post(
         Endpoint.signUp,
         isFormData: true,
         data: {
           ApiKey.name: signUpName.text,
+          ApiKey.username: signUpUserName.text,
           ApiKey.email: signUpEmail.text,
           ApiKey.phone: signUpPhoneNumber.text,
-          ApiKey.password: signUpPassword.text,
-          ApiKey.confirmPassword: confirmPassword.text,
-          ApiKey.location:
-              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
-          ApiKey.profilePic: await uploadImageToApi(profilePic!),
+          ApiKey.signUpPassword: signUpPassword.text,
+          ApiKey.bio: bio.text,
+          // ApiKey.profilePic: await uploadImageToApi(profilePic!),
+          if (imageFile != null)
+            ApiKey.profilePic: await MultipartFile.fromFile(
+              imageFile.path,
+              filename: fileName,
+            ),
         },
       );
       emit(SignUpSuccess());
     } on ServerException catch (e) {
-      emit(SignUpFailure(errMessage: e.errModel.errorMessage));
+      emit(SignUpFailure(errMessage: e.errModel.message));
+    }
+  }
+
+  Future<void> getUserData() async {
+    try {
+      emit(GetUserDataLoading());
+      final response = await api.get(Endpoint.getUserData);
+      userModel = UserModel.formJson(response['data']);
+      emit(GetUserDatasuccessful(user: userModel!));
+    } on ServerException catch (e) {
+      emit(GetUserDataFailure(errMessage: e.errModel.message));
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_application_1/core/errors/error_model.dart';
 
@@ -22,7 +24,25 @@ void handleDioExceptions(DioException e) {
     case DioExceptionType.connectionError:
       throw ServerException(errModel: ErrorModel.fromJson(e.response!.data));
     case DioExceptionType.unknown:
-      throw ServerException(errModel: ErrorModel.fromJson(e.response!.data));
+      final data = e.response?.data;
+      Map<String, dynamic> errorJson;
+
+      if (data is Map<String, dynamic>) {
+        errorJson = data;
+      } else if (data is String) {
+        try {
+          errorJson = jsonDecode(data);
+        } catch (e) {
+          errorJson = {'message': data};
+        }
+      } else {
+        errorJson = {'message': 'Unknown error'};
+      }
+
+      throw ServerException(
+        errModel: ErrorModel.fromJson(errorJson),
+      );
+
     case DioExceptionType.badResponse:
       switch (e.response?.statusCode) {
         case 400: // Bad request

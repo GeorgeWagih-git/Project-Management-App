@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)!);
+    OngoingProjectCubit.get(context).getUserData();
   }
 
   @override
@@ -42,150 +43,164 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
   String projectname = 'No Name';
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      homeSelected: true,
-      chatSelected: isReturning,
-      calenderSelected: isReturning,
-      notificationSelected: isReturning,
-      showhomebottombar: true,
-      showappbar: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12.0, 12, 12, 0),
-        child: CustomScrollView(physics: BouncingScrollPhysics(), slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 80,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+    return BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          final userModel = OngoingProjectCubit.get(context).userModel;
+          return CustomScaffold(
+            homeSelected: true,
+            chatSelected: isReturning,
+            calenderSelected: isReturning,
+            notificationSelected: isReturning,
+            showhomebottombar: true,
+            showappbar: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12.0, 12, 12, 0),
+              child:
+                  CustomScrollView(physics: BouncingScrollPhysics(), slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 80,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Welcome Back!',
+                                    style: TextStyle(color: Color(0xffFED36A)),
+                                  ),
+                                  Text(
+                                    userModel?.name ?? 'Loading...',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 25),
+                                  ),
+                                ],
+                              ),
+                              userModel?.profilePic != null &&
+                                      userModel!.profilePic.isNotEmpty
+                                  ? CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(userModel.profilePic),
+                                      radius: 25,
+                                    )
+                                  : Image.asset('assets/person.png'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(width: 300, child: InlineSearchBar()),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xffFED36A),
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.settings),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 25),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Welcome Back!',
-                              style: TextStyle(color: Color(0xffFED36A)),
+                              'Completed Projects',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'George Wagih',
+                              'See all',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
+                                  fontSize: 18, color: Color(0xffFED36A)),
                             ),
                           ],
                         ),
-                        Image.asset('assets/person.png')
-                      ],
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(width: 300, child: InlineSearchBar()),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffFED36A),
                       ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.settings),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Completed Projects',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'See all',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xffFED36A)),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12, top: 12),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 175,
-                    child:
-                        BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
-                      builder: (context, state) {
-                        var completedprojects =
-                            OngoingProjectCubit.get(context).completedprojects;
-                        if (completedprojects.isNotEmpty) {
-                          return ListView.builder(
-                            itemCount: completedprojects.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return CompletedProjectssWidget(
-                                projectClass: completedprojects[index],
-                              );
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 12),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 175,
+                          child: BlocBuilder<OngoingProjectCubit,
+                              OngoingProjectStates>(
+                            builder: (context, state) {
+                              var completedprojects =
+                                  OngoingProjectCubit.get(context)
+                                      .completedprojects;
+                              if (completedprojects.isNotEmpty) {
+                                return ListView.builder(
+                                  itemCount: completedprojects.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    return CompletedProjectssWidget(
+                                      projectClass: completedprojects[index],
+                                    );
+                                  },
+                                );
+                              } else {
+                                return Center(
+                                  child: Text(
+                                    'No Completed Projects Yet !',
+                                    style: TextStyle(
+                                        color: Color(0xffFED36A), fontSize: 25),
+                                  ),
+                                );
+                              }
                             },
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              'No Completed Projects Yet !',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 25),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Ongoing Projects',
                               style: TextStyle(
-                                  color: Color(0xffFED36A), fontSize: 25),
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Ongoing Projects',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      AddProjectButton(),
-                      Text(
-                        'See all',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xffFED36A)),
+                            SizedBox(
+                              width: 60,
+                            ),
+                            AddProjectButton(),
+                            Text(
+                              'See all',
+                              style: TextStyle(
+                                  fontSize: 18, color: Color(0xffFED36A)),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
+                OngoingTasksList(),
+              ]),
             ),
-          ),
-          OngoingTasksList(),
-        ]),
-      ),
-    );
+          );
+        });
   }
 }

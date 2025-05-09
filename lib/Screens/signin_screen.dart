@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -16,12 +18,13 @@ class SigninScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return CustomScaffold(
-      screenName: 'Login',
+      screenName: 'Sign In',
       child: BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
         listener: (context, state) {
           if (state is SignInSuccess) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text("succefull")));
+            navigateTo(context, HomeScreen());
           } else if (state is SignInFailure) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errMessage)));

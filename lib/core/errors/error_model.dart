@@ -1,14 +1,16 @@
 import 'package:flutter_application_1/core/api/endpoints.dart';
 
 class ErrorModel {
-  final int status;
-  final String errorMessage;
+  final String message;
 
-  ErrorModel({required this.status, required this.errorMessage});
+  ErrorModel({required this.message});
   factory ErrorModel.fromJson(Map<String, dynamic> jsonData) {
+    print('⚠️ ErrorModel received this json: $jsonData');
+
+    final dynamic messageValue = jsonData[ApiKey.message];
+
     return ErrorModel(
-      status: jsonData[ApiKey.status],
-      errorMessage: jsonData[ApiKey.errorMessage],
+      message: messageValue?.toString() ?? 'Unexpected error',
     );
   }
 }

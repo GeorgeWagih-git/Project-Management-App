@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 
 abstract class OngoingProjectStates {}
 
@@ -40,6 +41,8 @@ class UploadProfilePicture extends OngoingProjectStates {}
 
 final class SignUpSuccess extends OngoingProjectStates {}
 
+final class OngoingProjectImageSelected extends OngoingProjectStates {}
+
 final class SignUpLoading extends OngoingProjectStates {}
 
 final class SignUpFailure extends OngoingProjectStates {
@@ -48,6 +51,20 @@ final class SignUpFailure extends OngoingProjectStates {
   SignUpFailure({required this.errMessage});
 }
 
+///////////////////////////////////////////////
+final class GetUserDatasuccessful extends OngoingProjectStates {
+  final UserModel user;
+
+  GetUserDatasuccessful({required this.user});
+}
+
+final class GetUserDataLoading extends OngoingProjectStates {}
+
+final class GetUserDataFailure extends OngoingProjectStates {
+  final String errMessage;
+
+  GetUserDataFailure({required this.errMessage});
+}
 ///////////////////////////////////////////////
 
 class CompletedProjectsuccessfulState extends OngoingProjectStates {
