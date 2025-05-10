@@ -163,7 +163,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
-  Future<void> createProject({
+  Future<void> createProjectonDatabase({
     required String name,
     required String description,
     required DateTime deadline,
@@ -174,7 +174,8 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
 
-      final response = await api.post(
+      // final response =
+      await api.post(
         Endpoint.createProject,
         data: {
           "name": name,
@@ -186,8 +187,36 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
           'Content-Type': 'application/json',
         },
       );
+      await fetchAllProjects(); // ✅ هتجيب أحدث المشاريع بعد الإضافة
 
       emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
+
+  Future<void> fetchAllProjects() async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final response = await api.get(
+        Endpoint.getallProjects,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      print("RESPONSE DATA: $response");
+
+      final List<ProjectClass> fetchedProjects = (response as List)
+          .map((item) => ProjectClass.fromJson(item))
+          .toList();
+
+      projects = fetchedProjects;
+      emit(ProjectsSuccessfulState(project: projects));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }

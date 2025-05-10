@@ -3,6 +3,7 @@ abstract class ApiConsumer {
     String path, {
     Object? data,
     Map<String, dynamic>? queryData,
+    Map<String, String>? headers,
   });
   Future<dynamic> post(
     String path, {

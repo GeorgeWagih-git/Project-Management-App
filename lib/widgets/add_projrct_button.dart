@@ -203,7 +203,7 @@ class AddProjectButton extends StatelessWidget {
                                   final DateTime deadline =
                                       DateTime(year, month, day);
 
-                                  ongoingCubit.createProject(
+                                  ongoingCubit.createProjectonDatabase(
                                     name:
                                         ongoingCubit.projectControllername.text,
                                     description: ongoingCubit

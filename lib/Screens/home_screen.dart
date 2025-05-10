@@ -13,7 +13,6 @@ import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
   void initState() {
     super.initState();
     loadUserData();
+    OngoingProjectCubit.get(context).fetchAllProjects();
   }
 
   void loadUserData() async {
@@ -155,7 +155,12 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     await AppPrefs.logout();
 
                                     if (mounted) {
-                                      navigateTo(context, SigninScreen());
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => SigninScreen()),
+                                        (route) => false,
+                                      );
                                     }
                                   }
                                 },

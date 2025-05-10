@@ -30,4 +30,13 @@ class ProjectClass {
       deadline: deadline ?? this.deadline,
     );
   }
+
+  factory ProjectClass.fromJson(Map<String, dynamic> json) {
+    return ProjectClass(
+      name: json['name'],
+      projectDetails: json['descriptions'],
+      deadline: DateTime.parse(json['deadline']),
+      tasks: [],
+    );
+  }
 }

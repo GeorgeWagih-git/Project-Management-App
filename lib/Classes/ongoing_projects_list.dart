@@ -34,28 +34,3 @@ class OngoingTasksList extends StatelessWidget {
     });
   }
 }
-
-      //   );
-      // if (value.ongoinglist.isNotEmpty) {
-      //   return SliverList(
-      //       delegate:
-      //           SliverChildBuilderDelegate(childCount: value.ongoinglist.length,
-      //               // ignore: non_constant_identifier_names
-      //               (context, Index) {
-      //     return OngoingProjectsWidget(
-      //         projectClass: value
-      //             .ongoinglist[Index]); // ✅ تحويل `ProjectClass` إلى Widget
-      //   }));
-      // } else {
-      //   return SliverToBoxAdapter(
-      //     child: SizedBox(
-      //       height: 150,
-      //       child: Center(
-      //         child: Text(
-      //           'No Ongoing Projects Yet !',
-      //           style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
-      //         ),
-      //       ),
-      //     ),
-      //   );
-      // }

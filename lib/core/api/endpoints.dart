@@ -3,6 +3,8 @@ class Endpoint {
   static String signIn = "/api/User/Login";
   static String signUp = "/api/User/register";
   static String createProject = "/api/Project/CreateProject";
+  static String getallProjects = "/api/Project/GetAllProjects";
+  static String getmyProjects = "/api/Project/GetMyProjects";
   static String getUserDataEndPoint(id) {
     return "user/get-user/$id";
   }
