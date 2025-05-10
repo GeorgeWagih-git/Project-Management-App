@@ -1,29 +1,30 @@
 import 'task_model.dart';
 
 class ProjectClass {
+  int id; // ✅ رقم المشروع
   String name;
-
   DateTime deadline;
-
   String projectDetails;
   bool isSelected = false;
   List<TaskModel> tasks;
 
   ProjectClass({
+    required this.id, // ✅ مطلوب
     required this.tasks,
     required this.deadline,
-    String? name,
-    String? projectDetails,
-  })  : name = name ?? "No Name Added",
-        projectDetails = projectDetails ?? "No Discription yet !";
+    required this.name,
+    required this.projectDetails,
+  });
 
   ProjectClass copyWith({
+    int? id,
     String? name,
     List<TaskModel>? tasks,
     String? projectDetails,
     DateTime? deadline,
   }) {
     return ProjectClass(
+      id: id ?? this.id,
       name: name ?? this.name,
       tasks: tasks ?? this.tasks,
       projectDetails: projectDetails ?? this.projectDetails,
@@ -33,10 +34,20 @@ class ProjectClass {
 
   factory ProjectClass.fromJson(Map<String, dynamic> json) {
     return ProjectClass(
-      name: json['name'],
-      projectDetails: json['descriptions'],
+      id: json['id'], // ✅ جاي من الـ API
+      name: json['name'] ?? 'No Name',
+      projectDetails: json['descriptions'] ?? 'No Description',
       deadline: DateTime.parse(json['deadline']),
-      tasks: [],
+      tasks: [], // هيتملوا لاحقًا لما تجيب الـ Tasks
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'descriptions': projectDetails,
+      'deadline': deadline.toIso8601String(),
+    };
   }
 }

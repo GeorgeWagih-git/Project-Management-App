@@ -4,9 +4,7 @@ import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/signin_screen.dart';
-import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
-
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
 import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
@@ -37,9 +35,8 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
 
   @override
   void didPopNext() {
-    // يتم استدعاء هذه الدالة عند الرجوع إلى الصفحة الرئيسية
     setState(() {
-      isReturning = false; // تحديث المتغير وإعادة بناء الواجهة
+      isReturning = false;
     });
   }
 
@@ -158,7 +155,8 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                       Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => SigninScreen()),
+                                            builder: (_) =>
+                                                const SigninScreen()),
                                         (route) => false,
                                       );
                                     }

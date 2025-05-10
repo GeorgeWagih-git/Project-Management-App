@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
@@ -26,6 +27,8 @@ class ProjectDetailsScreen extends StatelessWidget {
         builder: (context, state) {
           var completedPercentage =
               onGoingCubit.completedPercentage(projectClass);
+          final project = projectClass; // أو اللي جاي من Bloc
+          final projectId = project.id;
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
             child: CustomScrollView(
@@ -485,8 +488,8 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                       }
                                                       return null;
                                                     },
-                                                    controller: onGoingCubit
-                                                        .taskController,
+                                                    controller:
+                                                        onGoingCubit.tasKTitle,
                                                     style: TextStyle(
                                                         color: Colors.white),
                                                     decoration: InputDecoration(
@@ -502,30 +505,280 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                     ),
                                                     autofocus: true,
                                                   ),
-                                                  MaterialButton(
-                                                    shape:
-                                                        RoundedRectangleBorder(
+                                                  ListTile(
+                                                    title: Text(
+                                                      "DeadLine Time",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 100,
+                                                        child: TextFormField(
+                                                          validator: (value) {
+                                                            if (value!
+                                                                .isEmpty) {
+                                                              return "required";
+                                                            }
+                                                            return null;
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                          ],
+                                                          controller:
+                                                              onGoingCubit
+                                                                  .tasKDay,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelStyle:
+                                                                TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                            labelText: "Day ",
+                                                            border: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            25)),
+                                                          ),
+                                                          autofocus: true,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 100,
+                                                        child: TextFormField(
+                                                          validator: (value) {
+                                                            if (value!
+                                                                .isEmpty) {
+                                                              return "required";
+                                                            }
+                                                            return null;
+                                                          },
+                                                          controller:
+                                                              onGoingCubit
+                                                                  .tasKMonth,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelStyle:
+                                                                TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                            labelText: "Month ",
+                                                            border: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            25)),
+                                                          ),
+                                                          autofocus: true,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 100,
+                                                        child: TextFormField(
+                                                          validator: (value) {
+                                                            if (value!
+                                                                .isEmpty) {
+                                                              return "required";
+                                                            }
+                                                            return null;
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                          ],
+                                                          controller:
+                                                              onGoingCubit
+                                                                  .tasKYear,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelStyle:
+                                                                TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                            labelText: "Year ",
+                                                            border: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            25)),
+                                                          ),
+                                                          autofocus: true,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 50,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: TextFormField(
+                                                      validator: (value) {
+                                                        if (value!.isEmpty) {
+                                                          return "required";
+                                                        }
+                                                        return null;
+                                                      },
+                                                      controller: onGoingCubit
+                                                          .tasKdescription,
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelStyle: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        labelText:
+                                                            "Disciption ",
+                                                        border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        25)),
+                                                      ),
+                                                      autofocus: true,
+                                                      maxLines: null,
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 50,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 300,
+                                                        child: TextFormField(
+                                                          validator: (value) {
+                                                            if (value!
+                                                                .isEmpty) {
+                                                              return "required";
+                                                            }
+                                                            return null;
+                                                          },
+                                                          controller: onGoingCubit
+                                                              .tasKAssignedTo,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            labelStyle:
+                                                                TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                            labelText:
+                                                                "Assigned To ",
+                                                            border: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            25)),
+                                                          ),
+                                                          autofocus: true,
+                                                        ),
+                                                      ),
+                                                      MaterialButton(
+                                                        shape: RoundedRectangleBorder(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         20.0)),
-                                                    color: Color(0xffFED36A),
-                                                    onPressed: () {
-                                                      if (onGoingCubit
-                                                          .taskController
-                                                          .text
-                                                          .isNotEmpty) {
-                                                        onGoingCubit
-                                                            .addTaskIntoProject(
-                                                                projectRelatedToTask:
-                                                                    projectClass);
-                                                        onGoingCubit
-                                                            .transformProject(
-                                                                projectClass);
-                                                        Navigator.pop(context);
-                                                      }
-                                                    },
-                                                    child: Text('Add'),
+                                                        color:
+                                                            Color(0xffFED36A),
+                                                        onPressed: () {
+                                                          if (onGoingCubit.tasKTitle.text.isNotEmpty &&
+                                                              onGoingCubit
+                                                                  .tasKDay
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              onGoingCubit
+                                                                  .tasKMonth
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              onGoingCubit
+                                                                  .tasKYear
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              onGoingCubit
+                                                                  .tasKdescription
+                                                                  .text
+                                                                  .isNotEmpty &&
+                                                              onGoingCubit
+                                                                  .tasKAssignedTo
+                                                                  .text
+                                                                  .isNotEmpty) {
+                                                            final int day =
+                                                                int.parse(
+                                                                    onGoingCubit
+                                                                        .tasKDay
+                                                                        .text);
+                                                            final int month =
+                                                                int.parse(
+                                                                    onGoingCubit
+                                                                        .tasKMonth
+                                                                        .text);
+                                                            final int year =
+                                                                int.parse(
+                                                                    onGoingCubit
+                                                                        .tasKYear
+                                                                        .text);
+
+                                                            final DateTime
+                                                                deadline =
+                                                                DateTime(year,
+                                                                    month, day);
+                                                            onGoingCubit.createTaskOnServer(
+                                                                title:
+                                                                    onGoingCubit
+                                                                        .tasKTitle
+                                                                        .text,
+                                                                description:
+                                                                    onGoingCubit
+                                                                        .tasKdescription
+                                                                        .text,
+                                                                deadline:
+                                                                    deadline,
+                                                                projectId:
+                                                                    projectId,
+                                                                assignedTo:
+                                                                    onGoingCubit
+                                                                        .tasKAssignedTo
+                                                                        .text);
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        },
+                                                        child: Text('Add'),
+                                                      ),
+                                                    ],
                                                   ),
                                                   SizedBox(height: 16),
                                                 ],

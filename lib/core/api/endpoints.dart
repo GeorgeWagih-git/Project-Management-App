@@ -5,6 +5,7 @@ class Endpoint {
   static String createProject = "/api/Project/CreateProject";
   static String getallProjects = "/api/Project/GetAllProjects";
   static String getmyProjects = "/api/Project/GetMyProjects";
+  static String createTask = "/api/Task/CreateTask";
   static String getUserDataEndPoint(id) {
     return "user/get-user/$id";
   }

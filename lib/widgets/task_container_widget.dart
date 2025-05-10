@@ -11,14 +11,14 @@ class TaskContainerWidget extends StatefulWidget {
   TaskContainerWidget({
     super.key,
     required this.taskitem,
-    required this.project, // ✅ إضافة المشروع كمُعامل إجباري
+    required this.project,
     this.showcheckbox = false,
     this.showremoveicon = false,
     this.showrenameicon = false,
   });
 
   final TaskModel taskitem;
-  final ProjectClass project; // ✅ تخزين المشروع المرتبط بهذه المهمة
+  final ProjectClass project;
 
   bool showcheckbox;
   bool showremoveicon;
@@ -54,7 +54,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                   padding: const EdgeInsets.only(left: 18.0),
                   child: Center(
                     child: Text(
-                      widget.taskitem.name,
+                      widget.taskitem.title,
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
@@ -144,7 +144,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                           },
                                           controller:
                                               OngoingProjectCubit.get(context)
-                                                  .taskController,
+                                                  .tasKTitle,
                                           style: TextStyle(color: Colors.white),
                                           decoration: InputDecoration(
                                             labelStyle:
@@ -165,7 +165,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                           onPressed: () {
                                             // إضافة المهمة هنا
                                             if (OngoingProjectCubit.get(context)
-                                                .taskController
+                                                .tasKTitle
                                                 .text
                                                 .isNotEmpty) {
                                               OngoingProjectCubit.get(context)
@@ -176,7 +176,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                                       newName:
                                                           OngoingProjectCubit
                                                                   .get(context)
-                                                              .taskController
+                                                              .tasKTitle
                                                               .text);
 
                                               Navigator.pop(context);

@@ -13,7 +13,6 @@ class SignInCubit extends Cubit<SignInStates> {
   static SignInCubit get(BuildContext context) => BlocProvider.of(context);
   final ApiConsumer api;
   //Sign in Form key
-  GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
   final TextEditingController signInEmail = TextEditingController();
   //Sign in password

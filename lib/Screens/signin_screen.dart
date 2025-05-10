@@ -12,8 +12,15 @@ import 'package:flutter_application_1/widgets/forget_password_widget.dart';
 import 'package:flutter_application_1/widgets/page_header.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
+
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
+  GlobalKey<FormState> signInFormKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,7 @@ class SigninScreen extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Form(
-                      key: context.read<SignInCubit>().signInFormKey,
+                      key: signInFormKey,
                       child: Column(
                         children: [
                           //!Email

@@ -35,7 +35,12 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
   final TextEditingController projectController = TextEditingController();
 
-  final TextEditingController taskController = TextEditingController();
+  final TextEditingController tasKTitle = TextEditingController();
+  final TextEditingController tasKdescription = TextEditingController();
+  final TextEditingController tasKDay = TextEditingController();
+  final TextEditingController tasKMonth = TextEditingController();
+  final TextEditingController tasKYear = TextEditingController();
+  final TextEditingController tasKAssignedTo = TextEditingController();
 
   final TextEditingController description = TextEditingController();
   List<ProjectClass> projects = [];
@@ -130,14 +135,14 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(ProjectsSuccessfulState(project: projects));
   }
 
-  void addTaskIntoProject({required ProjectClass projectRelatedToTask}) {
-    var task = TaskModel(isDone: false, name: taskController.text);
-    projectRelatedToTask.tasks.add(task);
-    emit(
-      AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask),
-    );
-    getProjects();
-  }
+  // void addTaskIntoProject({required ProjectClass projectRelatedToTask}) {
+  //   var task = TaskModel(isDone: false, name: taskController.text);
+  //   projectRelatedToTask.tasks.add(task);
+  //   emit(
+  //     AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask),
+  //   );
+  //   getProjects();
+  // }
 
   void deleteTaskIntoProject(
       {required TaskModel task, required ProjectClass projectRelatedToTask}) {
@@ -149,7 +154,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       {required ProjectClass projectRelatedToTask,
       required TaskModel model,
       required String newName}) {
-    model.name = newName;
+    model.title = newName;
     emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
@@ -217,6 +222,41 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
       projects = fetchedProjects;
       emit(ProjectsSuccessfulState(project: projects));
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  Future<void> createTaskOnServer({
+    required String title,
+    required String description,
+    required DateTime deadline,
+    required int projectId,
+    required String assignedTo,
+  }) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.post(
+        Endpoint.createTask,
+        data: {
+          "title": title,
+          "description": description,
+          "deadline": deadline.toIso8601String(),
+          "projectId": projectId,
+          "assignedTo": assignedTo,
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      emit(ProjectCreateSuccess());
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
