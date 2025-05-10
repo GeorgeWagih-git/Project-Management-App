@@ -5,7 +5,6 @@ import 'package:flutter_application_1/widgets/already_have_an_account.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
-import 'package:flutter_application_1/widgets/page_header.dart';
 import 'package:flutter_application_1/widgets/pick_image_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

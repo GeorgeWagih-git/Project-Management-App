@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)!);
-    OngoingProjectCubit.get(context).getUserData();
   }
 
   @override

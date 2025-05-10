@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
+import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_states.dart';
+
 import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
@@ -19,7 +20,7 @@ class SigninScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return CustomScaffold(
       screenName: 'Sign In',
-      child: BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+      child: BlocConsumer<SignInCubit, SignInStates>(
         listener: (context, state) {
           if (state is SignInSuccess) {
             ScaffoldMessenger.of(context)
@@ -44,15 +45,14 @@ class SigninScreen extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Form(
-                      key: context.read<OngoingProjectCubit>().signInFormKey,
+                      key: context.read<SignInCubit>().signInFormKey,
                       child: Column(
                         children: [
                           //!Email
                           CustomInputField(
                             labelText: 'Email',
                             hintText: 'Your email',
-                            controller:
-                                context.read<OngoingProjectCubit>().signInEmail,
+                            controller: context.read<SignInCubit>().signInEmail,
                           ),
                           const SizedBox(height: 16),
                           //!Password
@@ -61,9 +61,8 @@ class SigninScreen extends StatelessWidget {
                             hintText: 'Your password',
                             obscureText: true,
                             suffixIcon: true,
-                            controller: context
-                                .read<OngoingProjectCubit>()
-                                .signInPassword,
+                            controller:
+                                context.read<SignInCubit>().signInPassword,
                           ),
                           const SizedBox(height: 16),
                           //! Forget password?
@@ -75,9 +74,7 @@ class SigninScreen extends StatelessWidget {
                               : CustomFormButton(
                                   innerText: 'Sign In',
                                   onPressed: () {
-                                    context
-                                        .read<OngoingProjectCubit>()
-                                        .signIn();
+                                    context.read<SignInCubit>().signIn();
                                   },
                                 ),
                           const SizedBox(height: 18),

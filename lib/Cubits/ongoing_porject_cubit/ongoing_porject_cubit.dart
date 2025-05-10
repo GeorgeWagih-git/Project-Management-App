@@ -15,12 +15,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   static OngoingProjectCubit get(BuildContext context) =>
       BlocProvider.of(context);
   final ApiConsumer api;
-  //Sign in Form key
-  GlobalKey<FormState> signInFormKey = GlobalKey();
-  //Sign in email
-  final TextEditingController signInEmail = TextEditingController();
-  //Sign in password
-  final TextEditingController signInPassword = TextEditingController();
+
   //Sign Up Form key
   GlobalKey<FormState> signUpFormKey = GlobalKey();
   //Profile Pic
@@ -193,21 +188,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
-  signIn() async {
-    try {
-      emit(SignInLoading());
-      await api.post(
-        Endpoint.signIn,
-        data: {
-          ApiKey.email: signInEmail.text,
-          ApiKey.password: signInPassword.text,
-        },
-      );
-      emit(SignInSuccess());
-    } on ServerException catch (e) {
-      emit(SignInFailure(errMessage: e.errModel.message));
-    }
-  }
 
   signUp() async {
     try {
@@ -236,17 +216,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       emit(SignUpSuccess());
     } on ServerException catch (e) {
       emit(SignUpFailure(errMessage: e.errModel.message));
-    }
-  }
-
-  Future<void> getUserData() async {
-    try {
-      emit(GetUserDataLoading());
-      final response = await api.get(Endpoint.getUserData);
-      userModel = UserModel.formJson(response['data']);
-      emit(GetUserDatasuccessful(user: userModel!));
-    } on ServerException catch (e) {
-      emit(GetUserDataFailure(errMessage: e.errModel.message));
     }
   }
 }

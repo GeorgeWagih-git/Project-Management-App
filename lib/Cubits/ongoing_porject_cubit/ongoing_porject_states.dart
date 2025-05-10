@@ -26,15 +26,15 @@ class AddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
 }
 
 /////////////////////////////////////////////////
-final class SignInSuccess extends OngoingProjectStates {}
+// final class SignInSuccess extends OngoingProjectStates {}
 
-final class SignInLoading extends OngoingProjectStates {}
+// final class SignInLoading extends OngoingProjectStates {}
 
-final class SignInFailure extends OngoingProjectStates {
-  final String errMessage;
+// final class SignInFailure extends OngoingProjectStates {
+//   final String errMessage;
 
-  SignInFailure({required this.errMessage});
-}
+//   SignInFailure({required this.errMessage});
+// }
 
 //////////////////////////////////////////////////
 class UploadProfilePicture extends OngoingProjectStates {}

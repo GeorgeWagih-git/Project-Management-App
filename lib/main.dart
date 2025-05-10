@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:flutter_application_1/core/api/dio_consumer.dart';
@@ -10,9 +11,18 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 void main() {
   runApp(
-    BlocProvider(
-        create: (context) => OngoingProjectCubit(DioConsumer(dio: Dio())),
-        child: ProjectManagement()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => OngoingProjectCubit(DioConsumer(dio: Dio())),
+        ),
+        BlocProvider(
+          create: (context) =>
+              SignInCubit(DioConsumer(dio: Dio())), // الكوبيت الجديد
+        ),
+      ],
+      child: ProjectManagement(),
+    ),
   );
 }
 
