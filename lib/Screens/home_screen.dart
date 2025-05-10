@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
     setState(() {
       isReturning = false;
     });
+    OngoingProjectCubit.get(context).fetchAllProjects();
   }
 
   UserModel? user;
