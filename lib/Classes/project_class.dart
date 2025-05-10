@@ -5,56 +5,61 @@ class ProjectClass {
   // List<ProjectClass> completedlist = [];
 
   String name;
-  int day;
-  String month;
-  int year;
-  int deadday;
-  String deadmonth;
-  int deadyear;
+  // int day;
+  // String month;
+  // int year;
+  // int deadday;
+  // String deadmonth;
+  // int deadyear;
+  DateTime deadline;
+
   String projectDetails;
   bool isSelected = false;
   List<TaskModel> tasks;
 
   ProjectClass({
     required this.tasks,
-    int? day,
-    String? month,
+    required this.deadline,
     String? name,
-    int? year,
-    int? deadday,
-    String? deadmonth,
-    int? deadyear,
+    // int? day,
+    // String? month,
+    // int? year,
+    // int? deadday,
+    // String? deadmonth,
+    // int? deadyear,
     String? projectDetails,
-  })  : day = day ?? DateTime.now().day,
-        month = month ?? DateTime.now().month.toString(),
-        name = name ?? "No Name Added",
-        year = year ?? DateTime.now().year,
-        deadday = deadday ?? 1,
-        deadmonth = deadmonth ?? "Jan",
-        deadyear = deadyear ?? DateTime.now().year,
+  })  : name = name ?? "No Name Added",
+        // day = day ?? DateTime.now().day,
+        // month = month ?? DateTime.now().month.toString(),
+        // year = year ?? DateTime.now().year,
+        // deadday = deadday ?? 1,
+        // deadmonth = deadmonth ?? "Jan",
+        // deadyear = deadyear ?? DateTime.now().year,
         projectDetails = projectDetails ?? "No Discription yet !";
 
   ProjectClass copyWith({
     String? name,
     List<TaskModel>? tasks,
     String? projectDetails,
-    int? day,
-    String? month,
-    int? year,
-    int? deadday,
-    String? deadmonth,
-    int? deadyear,
+    // int? day,
+    // String? month,
+    // int? year,
+    // int? deadday,
+    // String? deadmonth,
+    // int? deadyear,
+    DateTime? deadline,
   }) {
     return ProjectClass(
       name: name ?? this.name,
       tasks: tasks ?? this.tasks,
       projectDetails: projectDetails ?? this.projectDetails,
-      day: day ?? this.day,
-      month: month ?? this.month,
-      year: year ?? this.year,
-      deadday: deadday ?? this.deadday,
-      deadmonth: deadmonth ?? this.deadmonth,
-      deadyear: deadyear ?? this.deadyear,
+      deadline: deadline ?? this.deadline,
+      // day: day ?? this.day,
+      // month: month ?? this.month,
+      // year: year ?? this.year,
+      // deadday: deadday ?? this.deadday,
+      // deadmonth: deadmonth ?? this.deadmonth,
+      // deadyear: deadyear ?? this.deadyear,
     );
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter_application_1/Classes/project_class.dart';
 
 class TaskModel {
-  ProjectClass project = ProjectClass(tasks: []);
+  ProjectClass project = ProjectClass(tasks: [], deadline: DateTime.now());
 
   String name;
   bool isDone;

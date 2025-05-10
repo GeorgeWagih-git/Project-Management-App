@@ -55,13 +55,13 @@ class AddProjectButton extends StatelessWidget {
                           autofocus: true,
                         ),
                         SizedBox(height: 16),
-                        ListTile(
+                        /*ListTile(
                           title: Text(
                             "Startup Time",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        StartUpDate(),
+                        StartUpDate(),*/
 
                         ListTile(
                           title: Text(
@@ -165,7 +165,7 @@ class AddProjectButton extends StatelessWidget {
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.white),
-                              labelText: "Disctiption ",
+                              labelText: "Disciption ",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25)),
                             ),
@@ -175,7 +175,16 @@ class AddProjectButton extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 16), // مسافة بين الحقل والزر
-                        BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+                        BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+                          listener: (context, state) {
+                            if (state is ProjectCreateSuccess) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Success")));
+                            } else if (state is ProjectCreateFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.errMessage)));
+                            }
+                          },
                           builder: (context, state) {
                             return MaterialButton(
                               shape: RoundedRectangleBorder(
@@ -184,8 +193,27 @@ class AddProjectButton extends StatelessWidget {
                               onPressed: () {
                                 if (ongoingCubit.ongoingFormKey.currentState!
                                     .validate()) {
-                                  ongoingCubit.addProjects();
+                                  final int day = int.parse(ongoingCubit
+                                      .projectControllerdayDead.text);
+                                  final int month = int.parse(ongoingCubit
+                                      .projectControllermonthDead.text);
+                                  final int year = int.parse(ongoingCubit
+                                      .projectControlleryearDead.text);
+
+                                  final DateTime deadline =
+                                      DateTime(year, month, day);
+
+                                  ongoingCubit.createProject(
+                                    name:
+                                        ongoingCubit.projectControllername.text,
+                                    description: ongoingCubit
+                                        .projectControllerDiscription.text,
+                                    deadline: deadline,
+                                  );
+
                                   Navigator.pop(context);
+                                  print(
+                                      '${ongoingCubit.projectControllername.text} and ${deadline}');
                                 }
                               },
                               child: Text('Add'),
@@ -202,91 +230,6 @@ class AddProjectButton extends StatelessWidget {
         );
       },
       child: Icon(Icons.add, color: Colors.black),
-    );
-  }
-}
-
-class StartUpDate extends StatelessWidget {
-  const StartUpDate({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var ongoingCubit = OngoingProjectCubit.get(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        // TimePickerDialog(initialTime: TimeOfDay.now())
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "required";
-              }
-              return null;
-            },
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            controller: ongoingCubit.projectControllerday,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              labelStyle: TextStyle(color: Colors.white),
-              labelText: "Day ",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-            ),
-            autofocus: true,
-          ),
-        ),
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "required";
-              }
-              return null;
-            },
-            controller: ongoingCubit.projectControllermonth,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              labelStyle: TextStyle(color: Colors.white),
-              labelText: "Month ",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-            ),
-            autofocus: true,
-          ),
-        ),
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "required";
-              }
-              return null;
-            },
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            controller: ongoingCubit.projectControlleryear,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              labelStyle: TextStyle(color: Colors.white),
-              labelText: "Year ",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-            ),
-            autofocus: true,
-          ),
-        ),
-      ],
     );
   }
 }

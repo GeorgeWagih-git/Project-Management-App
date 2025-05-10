@@ -4,7 +4,9 @@ import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/core/api/api_consumer.dart';
+import 'package:flutter_application_1/core/api/endpoints.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   OngoingProjectCubit(this.api) : super(ProjectsInitialState());
@@ -16,9 +18,9 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
   TextEditingController confirmPassword = TextEditingController();
   final TextEditingController projectControllername = TextEditingController();
-  final TextEditingController projectControllerday = TextEditingController();
-  final TextEditingController projectControllermonth = TextEditingController();
-  final TextEditingController projectControlleryear = TextEditingController();
+  // final TextEditingController projectControllerday = TextEditingController();
+  // final TextEditingController projectControllermonth = TextEditingController();
+  // final TextEditingController projectControlleryear = TextEditingController();
   final TextEditingController projectControllerDiscription =
       TextEditingController();
   final TextEditingController projectControllerdayDead =
@@ -90,7 +92,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(ProjectsSuccessfulState(project: projects));
   }
 
-  void addProjects() {
+  /*void addProjects() {
     var model = ProjectClass(
       tasks: [],
       day: int.parse(projectControllerday.text),
@@ -104,7 +106,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     );
     projects.add(model);
     emit(ProjectsSuccessfulState(project: projects));
-  }
+  }*/
 
   void addCompletedProjects(ProjectClass model) {
     if (!completedprojects.contains(model) &&
@@ -161,4 +163,33 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
+  Future<void> createProject({
+    required String name,
+    required String description,
+    required DateTime deadline,
+  }) async {
+    try {
+      emit(ProjectCreateLoading()); // حالة تحميل، اعملها عندك لو مش موجودة
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final response = await api.post(
+        Endpoint.createProject,
+        data: {
+          "name": name,
+          "descriptions": description,
+          "deadline": deadline.toIso8601String(), // بصيغة JSON
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
 }

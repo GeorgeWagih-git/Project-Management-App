@@ -29,4 +29,9 @@ class AppPrefs {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // أو prefs.remove('token') لحذف عنصر واحد
   }
+
+  static Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
 }

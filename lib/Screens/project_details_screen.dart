@@ -207,23 +207,23 @@ class ProjectDetailsScreen extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'StartUp Date',
-                                  style: TextStyle(
-                                      fontSize: 11, color: Color(0xff8CAAB9)),
-                                ),
-                                Text(
-                                  "${projectClass.day} ${projectClass.month}/${projectClass.year}",
-                                  style: TextStyle(
-                                      fontSize: 17, color: Colors.white),
-                                ),
+                                // Text(
+                                //   'StartUp Date',
+                                //   style: TextStyle(
+                                //       fontSize: 11, color: Color(0xff8CAAB9)),
+                                // ),
+                                // Text(
+                                //   "${projectClass.day} ${projectClass.month}/${projectClass.year}",
+                                //   style: TextStyle(
+                                //       fontSize: 17, color: Colors.white),
+                                // ),
                                 Text(
                                   'Dead Date',
                                   style: TextStyle(
                                       fontSize: 11, color: Color(0xff8CAAB9)),
                                 ),
                                 Text(
-                                  "${projectClass.deadday} ${projectClass.deadmonth}/${projectClass.deadyear}",
+                                  "${projectClass.deadline}",
                                   style: TextStyle(
                                       fontSize: 17, color: Colors.white),
                                 ),

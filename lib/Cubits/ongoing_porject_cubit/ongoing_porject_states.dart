@@ -1,5 +1,4 @@
 import 'package:flutter_application_1/Classes/project_class.dart';
-import 'package:flutter_application_1/Classes/user_model.dart';
 
 abstract class OngoingProjectStates {}
 
@@ -27,18 +26,14 @@ class AddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
 
 //////////////////////////////////////////////////
 
-final class GetUserDatasuccessful extends OngoingProjectStates {
-  final UserModel user;
+final class ProjectCreateLoading extends OngoingProjectStates {}
 
-  GetUserDatasuccessful({required this.user});
-}
+final class ProjectCreateSuccess extends OngoingProjectStates {}
 
-final class GetUserDataLoading extends OngoingProjectStates {}
-
-final class GetUserDataFailure extends OngoingProjectStates {
+final class ProjectCreateFailure extends OngoingProjectStates {
   final String errMessage;
 
-  GetUserDataFailure({required this.errMessage});
+  ProjectCreateFailure({required this.errMessage});
 }
 ///////////////////////////////////////////////
 

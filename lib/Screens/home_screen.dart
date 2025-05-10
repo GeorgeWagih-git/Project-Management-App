@@ -3,6 +3,8 @@ import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Screens/signin_screen.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 
 import 'package:flutter_application_1/main.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_application_1/widgets/completed_projects_widget.dart';
 import 'package:flutter_application_1/widgets/inline_search_bar.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -122,14 +125,42 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                         children: [
                           SizedBox(width: 300, child: InlineSearchBar()),
                           Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xffFED36A),
-                            ),
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.settings),
-                            ),
-                          )
+                              decoration: BoxDecoration(
+                                color: Color(0xffFED36A),
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  bool confirm = await showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('logout confirmation'),
+                                      content: const Text(
+                                          'are you sure ypu want to logout ?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: const Text('cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          child: const Text('log out'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    await AppPrefs.logout();
+
+                                    if (mounted) {
+                                      navigateTo(context, SigninScreen());
+                                    }
+                                  }
+                                },
+                                icon: const Icon(Icons.logout),
+                              ))
                         ],
                       ),
                       SizedBox(height: 25),
