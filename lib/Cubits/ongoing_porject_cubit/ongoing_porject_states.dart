@@ -25,33 +25,8 @@ class AddTaskIntoProjectSuccessfulState extends OngoingProjectStates {
   AddTaskIntoProjectSuccessfulState({required this.project});
 }
 
-/////////////////////////////////////////////////
-// final class SignInSuccess extends OngoingProjectStates {}
-
-// final class SignInLoading extends OngoingProjectStates {}
-
-// final class SignInFailure extends OngoingProjectStates {
-//   final String errMessage;
-
-//   SignInFailure({required this.errMessage});
-// }
-
 //////////////////////////////////////////////////
-class UploadProfilePicture extends OngoingProjectStates {}
 
-final class SignUpSuccess extends OngoingProjectStates {}
-
-final class OngoingProjectImageSelected extends OngoingProjectStates {}
-
-final class SignUpLoading extends OngoingProjectStates {}
-
-final class SignUpFailure extends OngoingProjectStates {
-  final String errMessage;
-
-  SignUpFailure({required this.errMessage});
-}
-
-///////////////////////////////////////////////
 final class GetUserDatasuccessful extends OngoingProjectStates {
   final UserModel user;
 

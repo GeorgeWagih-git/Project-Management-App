@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
+import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,13 +11,13 @@ class PickImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+    return BlocConsumer<SignUpCubit, SignUpStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return SizedBox(
           width: 130,
           height: 130,
-          child: context.read<OngoingProjectCubit>().profilePic == null
+          child: context.read<SignUpCubit>().profilePic == null
               ? CircleAvatar(
                   backgroundColor: Colors.grey.shade200,
                   backgroundImage: const AssetImage(
@@ -48,7 +48,7 @@ class PickImageWidget extends StatelessWidget {
                                     .then(
                                       // ignore: use_build_context_synchronously
                                       (value) => context
-                                          .read<OngoingProjectCubit>()
+                                          .read<SignUpCubit>()
                                           .uploadProfilePic(value!),
                                     );
                               },
@@ -66,7 +66,7 @@ class PickImageWidget extends StatelessWidget {
                 )
               : CircleAvatar(
                   backgroundImage: FileImage(
-                    File(context.read<OngoingProjectCubit>().profilePic!.path),
+                    File(context.read<SignUpCubit>().profilePic!.path),
                   ),
                 ),
         );

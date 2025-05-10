@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
-import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
+import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_states.dart';
+
 import 'package:flutter_application_1/widgets/already_have_an_account.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
@@ -18,8 +19,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
-        listener: (context, state) {
+    return BlocConsumer<SignUpCubit, SignUpStates>(listener: (context, state) {
       if (state is SignUpSuccess) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Please confirm your email")));
@@ -32,7 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
         screenName: 'Sign Up',
         child: SingleChildScrollView(
           child: Form(
-            key: context.read<OngoingProjectCubit>().signUpFormKey,
+            key: context.read<SignUpCubit>().signUpFormKey,
             child: Column(
               children: [
                 //const PageHeader(),
@@ -44,15 +44,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   labelText: 'Name',
                   hintText: 'Your name',
                   isDense: true,
-                  controller: context.read<OngoingProjectCubit>().signUpName,
+                  controller: context.read<SignUpCubit>().signUpName,
                 ),
                 const SizedBox(height: 16),
                 CustomInputField(
                   labelText: 'User Name',
                   hintText: 'Your user name',
                   isDense: true,
-                  controller:
-                      context.read<OngoingProjectCubit>().signUpUserName,
+                  controller: context.read<SignUpCubit>().signUpUserName,
                 ),
                 const SizedBox(height: 16),
                 //!Email
@@ -60,7 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   labelText: 'Email',
                   hintText: 'Your email',
                   isDense: true,
-                  controller: context.read<OngoingProjectCubit>().signUpEmail,
+                  controller: context.read<SignUpCubit>().signUpEmail,
                 ),
                 const SizedBox(height: 16),
                 //! Phone Number
@@ -68,8 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   labelText: 'Phone number',
                   hintText: 'Your phone number ex:01234567890',
                   isDense: true,
-                  controller:
-                      context.read<OngoingProjectCubit>().signUpPhoneNumber,
+                  controller: context.read<SignUpCubit>().signUpPhoneNumber,
                 ),
                 const SizedBox(height: 16),
                 //! Password
@@ -79,25 +77,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   isDense: true,
                   obscureText: true,
                   suffixIcon: true,
-                  controller:
-                      context.read<OngoingProjectCubit>().signUpPassword,
+                  controller: context.read<SignUpCubit>().signUpPassword,
                 ),
-                //! Confirm Password
-                /*CustomInputField(
-                  labelText: 'Confirm Password',
-                  hintText: 'Confirm Your password',
-                  isDense: true,
-                  obscureText: true,
-                  suffixIcon: true,
-                  controller:
-                      context.read<OngoingProjectCubit>().confirmPassword,
-                ),
-                const SizedBox(height: 22),*/
+
                 CustomInputField(
                   labelText: 'Your Bio',
                   hintText: 'bio',
                   isDense: true,
-                  controller: context.read<OngoingProjectCubit>().bio,
+                  controller: context.read<SignUpCubit>().bio,
                 ),
                 const SizedBox(height: 22),
                 //!Sign Up Button
@@ -106,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     : CustomFormButton(
                         innerText: 'Signup',
                         onPressed: () {
-                          context.read<OngoingProjectCubit>().signUp();
+                          context.read<SignUpCubit>().signUp();
                         },
                       ),
                 const SizedBox(height: 18),

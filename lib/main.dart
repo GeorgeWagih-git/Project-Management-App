@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
@@ -19,6 +20,9 @@ void main() {
         BlocProvider(
           create: (context) =>
               SignInCubit(DioConsumer(dio: Dio())), // الكوبيت الجديد
+        ),
+        BlocProvider(
+          create: (context) => SignUpCubit(DioConsumer(dio: Dio())),
         ),
       ],
       child: ProjectManagement(),
