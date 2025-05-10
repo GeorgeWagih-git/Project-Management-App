@@ -2,7 +2,7 @@ class Endpoint {
   static String baseUrl = "https://frankly-refined-escargot.ngrok-free.app";
   static String signIn = "/api/User/Login";
   static String signUp = "/api/User/register";
-  static String createProject = "api/Project/CreateProject";
+  static String createProject = "/api/Project/CreateProject";
   static String getUserDataEndPoint(id) {
     return "user/get-user/$id";
   }
