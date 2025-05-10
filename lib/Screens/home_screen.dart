@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/core/shared_perfs.dart';
 
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
@@ -39,13 +41,26 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
     });
   }
 
+  UserModel? user;
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    final loadedUser = await AppPrefs.getUser();
+    setState(() {
+      user = loadedUser;
+    });
+  }
+
   String projectname = 'No Name';
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
         listener: (context, state) {},
         builder: (context, state) {
-          final userModel = OngoingProjectCubit.get(context).userModel;
           return CustomScaffold(
             homeSelected: true,
             chatSelected: isReturning,
@@ -78,22 +93,26 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     style: TextStyle(color: Color(0xffFED36A)),
                                   ),
                                   Text(
-                                    userModel?.name ?? 'Loading...',
+                                    user?.fullName ?? 'Loading...',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ],
                               ),
-                              userModel?.profilePic != null &&
-                                      userModel!.profilePic.isNotEmpty
+                              user?.imageUrl != null
                                   ? CircleAvatar(
+                                      radius: 30,
                                       backgroundImage:
-                                          NetworkImage(userModel.profilePic),
-                                      radius: 25,
+                                          NetworkImage(user!.imageUrl!),
                                     )
-                                  : Image.asset('assets/person.png'),
+                                  : CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage:
+                                          AssetImage('assets/person.png'),
+                                    ),
                             ],
                           ),
                         ),

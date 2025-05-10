@@ -1,32 +1,43 @@
-import 'package:flutter_application_1/core/api/endpoints.dart';
-
 class UserModel {
-  final String name;
-  final String userName;
-  final String bio;
   final String id;
-  final String profilePic;
+  final String fullName;
+  final String userName;
   final String email;
-  final String phone;
+  final String? phoneNumber;
+  final String? bio;
+  final String? imageUrl;
 
   UserModel({
-    required this.profilePic,
-    required this.bio,
     required this.id,
+    required this.fullName,
     required this.userName,
     required this.email,
-    required this.phone,
-    required this.name,
+    this.phoneNumber,
+    this.bio,
+    this.imageUrl,
   });
-  factory UserModel.formJson(Map<String, dynamic> jsonData) {
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      profilePic: jsonData[ApiKey.profilePic] ?? 'error',
-      email: jsonData[ApiKey.email] ?? 'error to get Email',
-      phone: jsonData[ApiKey.phone] ?? 'error to get phoneNumber',
-      name: jsonData[ApiKey.name] ?? 'error to get Name',
-      bio: jsonData[ApiKey.bio] ?? 'error to get bio',
-      id: jsonData[ApiKey.id] ?? 'error to get id',
-      userName: jsonData[ApiKey.username] ?? 'error to get user name',
+      id: json['id'],
+      fullName: json['fullName'],
+      userName: json['userName'],
+      email: json['email'],
+      phoneNumber: json['phoneNumber'],
+      bio: json['bio'],
+      imageUrl: json['imageUrl'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'userName': userName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'bio': bio,
+      'imageUrl': imageUrl,
+    };
   }
 }
