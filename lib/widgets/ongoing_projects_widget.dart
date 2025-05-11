@@ -76,15 +76,6 @@ class OngoingProjectsWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        /*Text(
-                          'StartUp : ${projectClass.day}/${projectClass.month}/${projectClass.year}',
-                          style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                            fontSize: 11,
-                          ),
-                        ),*/
                         Text(
                           'DeadLine : ${projectClass.deadline}',
                           style: TextStyle(

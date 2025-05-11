@@ -18,9 +18,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
   TextEditingController confirmPassword = TextEditingController();
   final TextEditingController projectControllername = TextEditingController();
-  // final TextEditingController projectControllerday = TextEditingController();
-  // final TextEditingController projectControllermonth = TextEditingController();
-  // final TextEditingController projectControlleryear = TextEditingController();
+
   final TextEditingController projectControllerDiscription =
       TextEditingController();
   final TextEditingController projectControllerdayDead =
