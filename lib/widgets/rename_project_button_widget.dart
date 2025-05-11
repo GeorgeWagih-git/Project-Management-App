@@ -131,12 +131,18 @@ class RenameProjectButtonWidget extends StatelessWidget {
                                 int.parse(deadlineDayController.text),
                               );
 
-                              onGoingCubit.updateProject(
+                              onGoingCubit
+                                  .updateProject(
                                 id: widget.projectClass.id,
                                 name: nameController.text,
                                 description: descriptionController.text,
                                 deadline: updatedDeadline,
-                              );
+                              )
+                                  .then((_) {
+                                // ✅ بعد التعديل نعيد تحميل البيانات
+                                onGoingCubit.fetchProjectWithTasks(
+                                    widget.projectClass.id);
+                              });
 
                               Navigator.pop(context);
                             }
