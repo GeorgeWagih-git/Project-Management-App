@@ -290,4 +290,38 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
   }
+
+  Future<void> updateProject({
+    required int id,
+    required String name,
+    required String description,
+    required DateTime deadline,
+  }) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.put(
+        '/api/Project/UpdateProject/$id',
+        data: {
+          "id": id,
+          "name": name,
+          "descriptions": description,
+          "deadline": deadline.toIso8601String(),
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      await fetchProjectWithTasks(id); // ⬅️ للتحديث الفوري
+
+      emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
 }
