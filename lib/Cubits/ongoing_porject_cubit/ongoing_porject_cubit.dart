@@ -217,7 +217,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       print("RESPONSE DATA: $response");
 
       final List<ProjectClass> fetchedProjects = (response as List)
-          .map((item) => ProjectClass.fromJson(item))
+          .map((item) => ProjectClass.fromJson(item, []))
           .toList();
 
       projects = fetchedProjects;
@@ -255,8 +255,39 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
           'Content-Type': 'application/json',
         },
       );
+      await fetchProjectWithTasks(projectId);
+      //emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
 
-      emit(ProjectCreateSuccess());
+  Future<void> fetchProjectWithTasks(int projectId) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final response = await api.get(
+        '/api/Project/GetOneProject/$projectId',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final data = response; // ✅ أهم سطر هنا
+
+      final projectJson = data['project'];
+      final tasksJson = data['tasks'] as List;
+
+      final project = ProjectClass.fromJson(
+        projectJson,
+        tasksJson.map((t) => TaskModel.fromJson(t)).toList(),
+      );
+
+      emit(SingleProjectFetchedSuccessfully(project: project));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }

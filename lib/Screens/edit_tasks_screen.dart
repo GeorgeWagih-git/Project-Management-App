@@ -23,7 +23,7 @@ class _EditTasksScreenState extends State<EditTasksScreen> {
           physics: BouncingScrollPhysics(),
           slivers: [
             TaskListview(
-              project: widget.projectClass,
+              projectId: widget.projectClass.id,
               showremoveiconinlist: true,
               showrenameiconinlist: true,
             ),

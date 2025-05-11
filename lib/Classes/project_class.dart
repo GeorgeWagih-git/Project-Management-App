@@ -32,13 +32,14 @@ class ProjectClass {
     );
   }
 
-  factory ProjectClass.fromJson(Map<String, dynamic> json) {
+  factory ProjectClass.fromJson(
+      Map<String, dynamic> json, List<TaskModel> tasks) {
     return ProjectClass(
-      id: json['id'], // ✅ جاي من الـ API
+      id: json['id'],
       name: json['name'] ?? 'No Name',
       projectDetails: json['descriptions'] ?? 'No Description',
       deadline: DateTime.parse(json['deadline']),
-      tasks: [], // هيتملوا لاحقًا لما تجيب الـ Tasks
+      tasks: tasks, // ✅ نمررها صح هنا
     );
   }
 

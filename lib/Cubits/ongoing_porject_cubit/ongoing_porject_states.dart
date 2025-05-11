@@ -42,3 +42,9 @@ class CompletedProjectsuccessfulState extends OngoingProjectStates {
 
   CompletedProjectsuccessfulState({required this.completedproject});
 }
+
+class SingleProjectFetchedSuccessfully extends OngoingProjectStates {
+  final ProjectClass project;
+
+  SingleProjectFetchedSuccessfully({required this.project});
+}

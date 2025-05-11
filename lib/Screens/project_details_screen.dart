@@ -7,6 +7,7 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 
 import 'package:flutter_application_1/Screens/edit_tasks_screen.dart';
+import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -14,9 +15,21 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 String globaltaskName = '';
 
 // ignore: must_be_immutable
-class ProjectDetailsScreen extends StatelessWidget {
+class ProjectDetailsScreen extends StatefulWidget {
   ProjectDetailsScreen({super.key, required this.projectClass});
   ProjectClass projectClass;
+
+  @override
+  State<ProjectDetailsScreen> createState() => _ProjectDetailsScreenState();
+}
+
+class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    OngoingProjectCubit.get(context)
+        .fetchProjectWithTasks(widget.projectClass.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +39,8 @@ class ProjectDetailsScreen extends StatelessWidget {
       child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
           var completedPercentage =
-              onGoingCubit.completedPercentage(projectClass);
-          final project = projectClass; // أو اللي جاي من Bloc
+              onGoingCubit.completedPercentage(widget.projectClass);
+          final project = widget.projectClass; // أو اللي جاي من Bloc
           final projectId = project.id;
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
@@ -45,7 +58,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                projectClass.name,
+                                widget.projectClass.name,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -133,7 +146,8 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                           .text
                                                           .isNotEmpty) {
                                                         onGoingCubit.renameProject(
-                                                            model: projectClass,
+                                                            model: widget
+                                                                .projectClass,
                                                             newname: onGoingCubit
                                                                 .projectController
                                                                 .text);
@@ -176,7 +190,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                               TextButton(
                                                   onPressed: () {
                                                     onGoingCubit.deleteProjects(
-                                                        projectClass);
+                                                        widget.projectClass);
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
                                                   },
@@ -226,7 +240,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                       fontSize: 11, color: Color(0xff8CAAB9)),
                                 ),
                                 Text(
-                                  "${projectClass.deadline}",
+                                  "${widget.projectClass.deadline}",
                                   style: TextStyle(
                                       fontSize: 17, color: Colors.white),
                                 ),
@@ -374,8 +388,8 @@ class ProjectDetailsScreen extends StatelessWidget {
                                                                   .text
                                                                   .isNotEmpty) {
                                                                 onGoingCubit.editProjectDescription(
-                                                                    model:
-                                                                        projectClass,
+                                                                    model: widget
+                                                                        .projectClass,
                                                                     newDescription:
                                                                         onGoingCubit
                                                                             .description
@@ -407,7 +421,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 15),
                         Text(
-                          projectClass.projectDetails,
+                          widget.projectClass.projectDetails,
                           style:
                               TextStyle(color: Color(0xffBCCFD8), fontSize: 12),
                         ),
@@ -447,350 +461,9 @@ class ProjectDetailsScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                MaterialButton(
-                                    minWidth: 20,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    color: Color(0xffFED36A),
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Color(0xff212832),
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom,
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(16.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  ListTile(
-                                                    title: Text(
-                                                      "Add New Task",
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                    onTap: () {
-                                                      Navigator.pop(
-                                                          context); // إغلاق القائمة
-                                                    },
-                                                  ),
-                                                  TextFormField(
-                                                    validator: (value) {
-                                                      if (value!.isEmpty) {
-                                                        return "required";
-                                                      }
-                                                      return null;
-                                                    },
-                                                    controller:
-                                                        onGoingCubit.tasKTitle,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                    decoration: InputDecoration(
-                                                      labelStyle: TextStyle(
-                                                          color: Colors.white),
-                                                      labelText: "Task Name ",
-                                                      border:
-                                                          OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          25)),
-                                                    ),
-                                                    autofocus: true,
-                                                  ),
-                                                  ListTile(
-                                                    title: Text(
-                                                      "DeadLine Time",
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 100,
-                                                        child: TextFormField(
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return "required";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .digitsOnly,
-                                                          ],
-                                                          controller:
-                                                              onGoingCubit
-                                                                  .tasKDay,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelStyle:
-                                                                TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                            labelText: "Day ",
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            25)),
-                                                          ),
-                                                          autofocus: true,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 100,
-                                                        child: TextFormField(
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return "required";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          controller:
-                                                              onGoingCubit
-                                                                  .tasKMonth,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelStyle:
-                                                                TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                            labelText: "Month ",
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            25)),
-                                                          ),
-                                                          autofocus: true,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 100,
-                                                        child: TextFormField(
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return "required";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .digitsOnly,
-                                                          ],
-                                                          controller:
-                                                              onGoingCubit
-                                                                  .tasKYear,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelStyle:
-                                                                TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                            labelText: "Year ",
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            25)),
-                                                          ),
-                                                          autofocus: true,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 300,
-                                                    child: TextFormField(
-                                                      validator: (value) {
-                                                        if (value!.isEmpty) {
-                                                          return "required";
-                                                        }
-                                                        return null;
-                                                      },
-                                                      controller: onGoingCubit
-                                                          .tasKdescription,
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelStyle: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                        labelText:
-                                                            "Disciption ",
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        25)),
-                                                      ),
-                                                      autofocus: true,
-                                                      maxLines: null,
-                                                      keyboardType:
-                                                          TextInputType
-                                                              .multiline,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 50,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 300,
-                                                        child: TextFormField(
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return "required";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          controller: onGoingCubit
-                                                              .tasKAssignedTo,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelStyle:
-                                                                TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                            labelText:
-                                                                "Assigned To ",
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            25)),
-                                                          ),
-                                                          autofocus: true,
-                                                        ),
-                                                      ),
-                                                      MaterialButton(
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20.0)),
-                                                        color:
-                                                            Color(0xffFED36A),
-                                                        onPressed: () {
-                                                          if (onGoingCubit.tasKTitle.text.isNotEmpty &&
-                                                              onGoingCubit
-                                                                  .tasKDay
-                                                                  .text
-                                                                  .isNotEmpty &&
-                                                              onGoingCubit
-                                                                  .tasKMonth
-                                                                  .text
-                                                                  .isNotEmpty &&
-                                                              onGoingCubit
-                                                                  .tasKYear
-                                                                  .text
-                                                                  .isNotEmpty &&
-                                                              onGoingCubit
-                                                                  .tasKdescription
-                                                                  .text
-                                                                  .isNotEmpty &&
-                                                              onGoingCubit
-                                                                  .tasKAssignedTo
-                                                                  .text
-                                                                  .isNotEmpty) {
-                                                            final int day =
-                                                                int.parse(
-                                                                    onGoingCubit
-                                                                        .tasKDay
-                                                                        .text);
-                                                            final int month =
-                                                                int.parse(
-                                                                    onGoingCubit
-                                                                        .tasKMonth
-                                                                        .text);
-                                                            final int year =
-                                                                int.parse(
-                                                                    onGoingCubit
-                                                                        .tasKYear
-                                                                        .text);
-
-                                                            final DateTime
-                                                                deadline =
-                                                                DateTime(year,
-                                                                    month, day);
-                                                            onGoingCubit.createTaskOnServer(
-                                                                title:
-                                                                    onGoingCubit
-                                                                        .tasKTitle
-                                                                        .text,
-                                                                description:
-                                                                    onGoingCubit
-                                                                        .tasKdescription
-                                                                        .text,
-                                                                deadline:
-                                                                    deadline,
-                                                                projectId:
-                                                                    projectId,
-                                                                assignedTo:
-                                                                    onGoingCubit
-                                                                        .tasKAssignedTo
-                                                                        .text);
-                                                            Navigator.pop(
-                                                                context);
-                                                          }
-                                                        },
-                                                        child: Text('Add'),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 16),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.add,
-                                    )),
+                                AddTaskButton(
+                                    onGoingCubit: onGoingCubit,
+                                    projectId: projectId),
                                 SizedBox(
                                   width: 15,
                                 ),
@@ -805,7 +478,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return EditTasksScreen(
-                                            projectClass: projectClass,
+                                            projectClass: widget.projectClass,
                                           );
                                         },
                                       ),
@@ -823,7 +496,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 TaskListview(
-                  project: projectClass,
+                  projectId: widget.projectClass.id,
                   showcheckboxinlist: true,
                 ),
               ],
