@@ -26,6 +26,7 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryData,
     bool isFormData = false,
+    Map<String, String>? headers,
   });
 
   // ✅ أضف دي:

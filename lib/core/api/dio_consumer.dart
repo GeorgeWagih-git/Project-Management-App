@@ -23,11 +23,15 @@ class DioConsumer extends ApiConsumer {
   Future delete(String path,
       {dynamic data,
       Map<String, dynamic>? queryData,
+      Map<String, String>? headers,
       bool isFormData = false}) async {
     try {
-      final response = await dio.delete(path,
-          data: isFormData ? FormData.fromMap(data) : data,
-          queryParameters: queryData);
+      final response = await dio.delete(
+        path,
+        data: isFormData ? FormData.fromMap(data) : data,
+        queryParameters: queryData,
+        options: Options(headers: headers),
+      );
       return response;
     } on DioException catch (e) {
       handleDioExceptions(e);

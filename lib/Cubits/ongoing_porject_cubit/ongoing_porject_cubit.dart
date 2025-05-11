@@ -192,7 +192,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       );
       await fetchAllProjects(); // ✅ هتجيب أحدث المشاريع بعد الإضافة
 
-      emit(ProjectCreateSuccess());
+      emit(ProjectsSuccessfulState(project: projects));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
@@ -318,6 +318,30 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       );
 
       await fetchProjectWithTasks(id); // ⬅️ للتحديث الفوري
+
+      emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
+
+  Future<void> deleteProjectFromServer(int projectId) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.delete(
+        '/api/Project/DeleteProject/$projectId',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      // تحديث القائمة بعد الحذف
+      await fetchAllProjects();
 
       emit(ProjectCreateSuccess());
     } catch (e) {

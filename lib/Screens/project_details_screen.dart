@@ -57,7 +57,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: ConstrainedBox(
                     constraints:
-                        BoxConstraints(minHeight: constraints.maxHeight),
+                        BoxConstraints(minHeight: constraints.minHeight),
                     child: CustomScrollView(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),

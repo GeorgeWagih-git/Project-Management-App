@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Screens/home_screen.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DeleteProjectButtonWidget extends StatelessWidget {
   const DeleteProjectButtonWidget({
@@ -34,12 +36,22 @@ class DeleteProjectButtonWidget extends StatelessWidget {
                     child: Text('Cancel'),
                   ),
                   TextButton(
-                      onPressed: () {
-                        onGoingCubit.deleteProjects(widget.projectClass);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Text('Delete'))
+                    onPressed: () async {
+                      await onGoingCubit.deleteProjectFromServer(
+                          widget.projectClass.id); // لو عندك حذف من السيرفر
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BlocProvider.value(
+                                  value: onGoingCubit
+                                    ..fetchAllProjects(), // ✅ تحميل المشاريع من نفس الـ Cubit
+                                  child: const HomeScreen(),
+                                )),
+                        (route) => false,
+                      );
+                    },
+                    child: Text('Delete'),
+                  )
                 ],
               );
             },
