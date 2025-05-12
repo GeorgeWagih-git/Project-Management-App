@@ -42,19 +42,21 @@ class TaskListview extends StatelessWidget {
               },
             ),
           );
-        } else if (state is ProjectCreateLoading) {
+        } else
+        //if (state is ProjectCreateLoading)
+        {
           return const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator()),
           );
-        } else {
-          return const SliverToBoxAdapter(
-            child: Center(
-              child: Text(
-                'No Tasks Yet !',
-                style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
-              ),
-            ),
-          );
+          // } else if (state is ProjectCreateFailure) {
+          //   return const SliverToBoxAdapter(
+          //     child: Center(
+          //       child: Text(
+          //         'No Tasks Yet !',
+          //         style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
+          //       ),
+          //     ),
+          //   );
         }
       },
     );

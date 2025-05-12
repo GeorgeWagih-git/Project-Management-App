@@ -4,7 +4,6 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
-import 'package:flutter_application_1/Screens/edit_tasks_screen.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/delete_project_button_widget.dart';
@@ -24,11 +23,26 @@ class ProjectDetailsScreen extends StatefulWidget {
 }
 
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
+  late ProjectClass _project;
+
   @override
   void initState() {
     super.initState();
-    OngoingProjectCubit.get(context)
-        .fetchProjectWithTasks(widget.projectClass.id);
+    _project = widget.projectClass; // نخزن المشروع مبدئيًا
+    fetchProject(); // جلب بيانات المشروع الأحدث
+  }
+
+  Future<void> fetchProject() async {
+    final cubit = OngoingProjectCubit.get(context);
+    await cubit.fetchProjectWithTasks(_project.id);
+
+    // استقبل البيانات من Cubit إذا نجحت العملية
+    final state = cubit.state;
+    if (state is SingleProjectFetchedSuccessfully) {
+      setState(() {
+        _project = state.project; // تحديث بيانات المشروع
+      });
+    }
   }
 
   @override
@@ -222,25 +236,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                       projectId: projectId),
                                   SizedBox(
                                     width: 15,
-                                  ),
-                                  MaterialButton(
-                                    minWidth: 20,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    color: Color(0xffFED36A),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return EditTasksScreen(
-                                              projectClass: widget.projectClass,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    child: Icon(Icons.edit),
                                   ),
                                 ],
                               ),

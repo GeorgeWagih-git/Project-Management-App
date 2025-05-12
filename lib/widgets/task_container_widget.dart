@@ -4,7 +4,6 @@ import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/task_details_screen.dart';
-import 'package:flutter_application_1/core/functions/navigate_to.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,13 +37,16 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
       builder: (context, state) {
         return GestureDetector(
-          onTap: () {
-            navigateTo(
-                context,
-                TaskDetailsScreen(
+          onTap: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskDetailsScreen(
                   taskitem: widget.taskitem,
                   onGoingCubit: onGoingCubit,
-                ));
+                ),
+              ),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),

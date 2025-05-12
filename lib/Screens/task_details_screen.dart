@@ -93,6 +93,38 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                       const SizedBox(height: 30),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(color: Color(0xffFED36A)),
+                            child: Icon(Icons.calendar_month),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Dead Date',
+                                style: TextStyle(
+                                    fontSize: 11, color: Color(0xff8CAAB9)),
+                              ),
+                              Text(
+                                "${_task!.deadline}",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 50,
+                          ),
+                        ],
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
