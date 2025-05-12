@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
-import 'package:flutter_application_1/widgets/edit_task_description.dart';
+import 'package:flutter_application_1/widgets/edit_task_button_widget.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   const TaskDetailsScreen(
@@ -49,10 +49,7 @@ class TaskDetailsScreen extends StatelessWidget {
                   'Task Details',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
-                EditTaskDescriptionButton(
-                  onGoingCubit: onGoingCubit,
-                  taskitem: taskitem,
-                ),
+                EditTaskButtonWidget(),
               ],
             ),
             SizedBox(height: 15),
