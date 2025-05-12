@@ -5,8 +5,12 @@ import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/edit_task_button_widget.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
-  const TaskDetailsScreen(
-      {super.key, required this.taskitem, required this.onGoingCubit});
+  const TaskDetailsScreen({
+    super.key,
+    required this.taskitem,
+    required this.onGoingCubit,
+  });
+
   final TaskModel taskitem;
   final OngoingProjectCubit onGoingCubit;
 
@@ -15,35 +19,28 @@ class TaskDetailsScreen extends StatefulWidget {
 }
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
+  TaskModel? _task;
+
   @override
   void initState() {
     super.initState();
-    OngoingProjectCubit.get(context).updateTaskOnServer(
-      assignedTo: widget.taskitem.assignedTo,
-      deadline: widget.taskitem.deadline,
-      description: widget.taskitem.description,
-      projectId: widget.taskitem.projectId,
-      taskId: widget.taskitem.id,
-      title: widget.taskitem.title,
-    );
+    _task = widget.taskitem;
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_task == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return CustomScaffold(
       screenName: 'Task Details',
       child: Padding(
         padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
         child: RefreshIndicator(
           onRefresh: () async {
-            await OngoingProjectCubit.get(context).updateTaskOnServer(
-              assignedTo: widget.taskitem.assignedTo,
-              deadline: widget.taskitem.deadline,
-              description: widget.taskitem.description,
-              projectId: widget.taskitem.projectId,
-              taskId: widget.taskitem.id,
-              title: widget.taskitem.title,
-            );
+            await widget.onGoingCubit.fetchProjectWithTasks(_task!.projectId);
+            setState(() {}); // عشان يعيد بناء التفاصيل من جديد لو حصل تعديل
           },
           child: CustomScrollView(
             shrinkWrap: true,
@@ -59,8 +56,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         children: [
                           Expanded(
                             child: Text(
-                              widget.taskitem.title,
-                              style: TextStyle(
+                              _task!.title,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 25,
@@ -77,46 +74,64 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           Container(
                             width: 60,
                             height: 60,
-                            decoration: BoxDecoration(color: Color(0xffFED36A)),
-                            child: Icon(Icons.people),
+                            decoration:
+                                const BoxDecoration(color: Color(0xffFED36A)),
+                            child: const Icon(Icons.people),
                           ),
-                          SizedBox(
-                            width: 15,
-                          ),
+                          const SizedBox(width: 15),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Employee name : ${widget.taskitem.assignedTo}',
-                                style: TextStyle(
+                                'Employee name : ${_task!.assignedTo}',
+                                style: const TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Task Details',
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          EditTaskButtonWidget(
-                            cubit: widget.onGoingCubit,
-                            projectId: widget.taskitem.projectId,
-                            task: widget.taskitem,
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.white),
+                            onPressed: () async {
+                              final updatedTask =
+                                  await showModalBottomSheet<TaskModel>(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: const Color(0xff212832),
+                                builder: (BuildContext context) {
+                                  return EditTaskButtonWidget(
+                                    task: _task!,
+                                    projectId: _task!.projectId,
+                                    cubit: widget.onGoingCubit,
+                                  );
+                                },
+                              );
+
+                              if (updatedTask != null) {
+                                setState(() {
+                                  _task = updatedTask;
+                                });
+                              }
+                            },
                           ),
                         ],
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Text(
-                        widget.taskitem.description,
-                        style:
-                            TextStyle(color: Color(0xffBCCFD8), fontSize: 19),
+                        _task!.description,
+                        style: const TextStyle(
+                            color: Color(0xffBCCFD8), fontSize: 19),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),

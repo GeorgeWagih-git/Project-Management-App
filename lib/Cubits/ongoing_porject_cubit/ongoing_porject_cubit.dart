@@ -148,11 +148,21 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
-  void renameTaskName(
-      {required ProjectClass projectRelatedToTask,
-      required TaskModel model,
-      required String newName}) {
-    model.title = newName;
+  void renameTaskName({
+    required ProjectClass projectRelatedToTask,
+    required TaskModel model,
+    required int taskId,
+    required String title,
+    required String description,
+    required String assignedTo,
+    required DateTime deadline,
+    required int projectId,
+  }) {
+    model.title = title;
+    model.description = description;
+    model.deadline = deadline;
+    model.assignedTo = assignedTo;
+
     emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 

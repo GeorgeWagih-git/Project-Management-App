@@ -182,7 +182,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                                   .tasKTitle
                                                   .text
                                                   .isNotEmpty) {
-                                                OngoingProjectCubit.get(context)
+                                                /*OngoingProjectCubit.get(context)
                                                     .renameTaskName(
                                                         projectRelatedToTask:
                                                             widget.project,
@@ -192,7 +192,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                                                     .get(
                                                                         context)
                                                                 .tasKTitle
-                                                                .text);
+                                                                .text);*/
 
                                                 Navigator.pop(context);
                                               }
