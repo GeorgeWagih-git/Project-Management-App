@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 
 class EditTaskButtonWidget extends StatelessWidget {
-  const EditTaskButtonWidget({super.key});
+  final TaskModel task;
+  final int projectId;
+  final OngoingProjectCubit cubit;
+
+  const EditTaskButtonWidget({
+    super.key,
+    required this.task,
+    required this.projectId,
+    required this.cubit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
-    final TextEditingController deadlineYearController =
-        TextEditingController();
-    final TextEditingController deadlineMonthController =
-        TextEditingController();
-    final TextEditingController deadlineDayController = TextEditingController();
-    final TextEditingController assignedtoController = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: task.title);
+    final descriptionController = TextEditingController(text: task.description);
+    final deadlineYearController =
+        TextEditingController(text: task.deadline.year.toString());
+    final deadlineMonthController =
+        TextEditingController(text: task.deadline.month.toString());
+    final deadlineDayController =
+        TextEditingController(text: task.deadline.day.toString());
+    final assignedToController = TextEditingController(text: task.assignedTo);
+
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     return MaterialButton(
       minWidth: 20,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -32,12 +46,12 @@ class EditTaskButtonWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: Column(
                       children: [
                         const ListTile(
                           title: Text(
-                            'Update Task',
+                            'Edit Task',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -105,37 +119,50 @@ class EditTaskButtonWidget extends StatelessWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: assignedToController,
+                          validator: (value) =>
+                              value!.isEmpty ? 'Required' : null,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelStyle: const TextStyle(color: Colors.white),
+                            labelText: "Description",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                          maxLines: null,
+                        ),
                         const SizedBox(height: 20),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 300,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "required";
-                                    }
-                                    return null;
-                                  },
-                                  controller: assignedtoController,
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: Colors.white),
-                                    labelText: "Assigned To ",
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                  ),
-                                  autofocus: true,
-                                ),
-                              ),
-                            ]),
                         MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0)),
                           color: const Color(0xffFED36A),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              final int day =
+                                  int.parse(deadlineDayController.text);
+                              final int month =
+                                  int.parse(deadlineMonthController.text);
+                              final int year =
+                                  int.parse(deadlineYearController.text);
+
+                              final DateTime deadline =
+                                  DateTime(year, month, day);
+
+                              cubit.updateTaskOnServer(
+                                taskId: task.id,
+                                title: nameController.text,
+                                description: descriptionController.text,
+                                deadline: deadline,
+                                projectId: projectId,
+                                assignedTo: assignedToController.text,
+                              );
+
+                              Navigator.pop(context);
+                            }
+                          },
                           child: const Text('Save'),
                         ),
                       ],

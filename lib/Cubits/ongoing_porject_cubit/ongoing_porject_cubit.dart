@@ -282,7 +282,9 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
       final project = ProjectClass.fromJson(
         projectJson,
-        tasksJson.map((t) => TaskModel.fromJson(t)).toList(),
+        tasksJson
+            .map((t) => TaskModel.fromJson({...t, 'projectId': projectId}))
+            .toList(),
       );
 
       emit(SingleProjectFetchedSuccessfully(project: project));
@@ -343,6 +345,42 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       // تحديث القائمة بعد الحذف
       await fetchAllProjects();
 
+      emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
+
+  Future<void> updateTaskOnServer({
+    required int taskId,
+    required String title,
+    required String description,
+    required String assignedTo,
+    required DateTime deadline,
+    required int projectId,
+  }) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.put(
+        '/api/Task/UpdateTask/$taskId',
+        data: {
+          "id": taskId,
+          "title": title,
+          "description": description,
+          "deadline": deadline.toIso8601String(),
+          "assignedTo": assignedTo,
+        },
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      await fetchProjectWithTasks(projectId); // لإعادة تحميل المشروع بتاسكاته
       emit(ProjectCreateSuccess());
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));

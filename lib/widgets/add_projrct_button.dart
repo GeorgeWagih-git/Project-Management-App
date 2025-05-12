@@ -74,31 +74,28 @@ class AddProjectButton extends StatelessWidget {
                           children: [
                             SizedBox(
                               width: 100,
-                              child: TextFormField(
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "required";
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                controller:
-                                    ongoingCubit.projectControllerdayDead,
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  labelText: "Day ",
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25)),
+                              child: Expanded(
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "required";
+                                    }
+                                    return null;
+                                  },
+                                  controller:
+                                      ongoingCubit.projectControllerdayDead,
+                                  decoration:
+                                      const InputDecoration(labelText: 'Day'),
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(color: Colors.white),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                 ),
-                                autofocus: true,
                               ),
                             ),
-                            SizedBox(
-                              width: 100,
+                            const SizedBox(width: 8),
+                            Expanded(
                               child: TextFormField(
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -108,18 +105,13 @@ class AddProjectButton extends StatelessWidget {
                                 },
                                 controller:
                                     ongoingCubit.projectControllermonthDead,
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  labelText: "Month ",
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                ),
-                                autofocus: true,
+                                decoration:
+                                    const InputDecoration(labelText: 'Month'),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
-                            SizedBox(
-                              width: 100,
+                            const SizedBox(width: 8),
+                            Expanded(
                               child: TextFormField(
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -127,20 +119,15 @@ class AddProjectButton extends StatelessWidget {
                                   }
                                   return null;
                                 },
+                                controller:
+                                    ongoingCubit.projectControlleryearDead,
+                                decoration:
+                                    const InputDecoration(labelText: 'Year'),
                                 keyboardType: TextInputType.number,
+                                style: const TextStyle(color: Colors.white),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
-                                controller:
-                                    ongoingCubit.projectControlleryearDead,
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  labelText: "Year ",
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                ),
-                                autofocus: true,
                               ),
                             ),
                           ],
