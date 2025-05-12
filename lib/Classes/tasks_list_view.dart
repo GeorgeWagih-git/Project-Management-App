@@ -33,9 +33,6 @@ class TaskListview extends StatelessWidget {
               childCount: project.tasks.length,
               (context, index) {
                 return TaskContainerWidget(
-                  showcheckbox: showcheckboxinlist,
-                  showremoveicon: showremoveiconinlist,
-                  showrenameicon: showrenameiconinlist,
                   taskitem: project.tasks[index],
                   project: project,
                 );

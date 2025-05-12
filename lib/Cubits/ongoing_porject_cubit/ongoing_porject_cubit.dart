@@ -396,4 +396,27 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
   }
+
+  Future<void> updateTaskStatusOnly({
+    required int taskId,
+    required bool isDone,
+    required int projectId,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.put(
+        '/api/Task/UpdateIsDone/$taskId,$isDone',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      await fetchProjectWithTasks(projectId); // ✅ تحديث المهمة بعد التعديل
+    } catch (e) {
+      print("❌ Error updating task status: $e");
+    }
+  }
 }
