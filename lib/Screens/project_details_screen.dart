@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/delete_project_button_widget.dart';
@@ -25,11 +27,19 @@ class ProjectDetailsScreen extends StatefulWidget {
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   late ProjectClass _project;
 
+  UserModel? user;
+
   @override
   void initState() {
     super.initState();
     _project = widget.projectClass;
     fetchProject();
+    loadUser(); // 🟢 تحميل بيانات المستخدم الحالي
+  }
+
+  Future<void> loadUser() async {
+    user = await AppPrefs.getUser();
+    setState(() {});
   }
 
   Future<void> fetchProject() async {
@@ -46,18 +56,17 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var onGoingCubit = OngoingProjectCubit.get(context);
     return CustomScaffold(
       screenName: 'Project Details',
       child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
-          ProjectClass project = widget.projectClass;
-          if (state is SingleProjectFetchedSuccessfully) {
-            _project = state.project;
-          }
-          var completedPercentage = onGoingCubit.completedPercentage(_project);
+          final onGoingCubit = OngoingProjectCubit.get(context);
 
-          final projectId = project.id;
+          final project = state is SingleProjectFetchedSuccessfully
+              ? state.project
+              : widget.projectClass;
+
+          final completedPercentage = onGoingCubit.completedPercentage(project);
 
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
@@ -231,12 +240,13 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  AddTaskButton(
-                                      onGoingCubit: onGoingCubit,
-                                      projectId: projectId),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
+                                  user?.userName == project.managerUserName
+                                      ? AddTaskButton(
+                                          onGoingCubit: onGoingCubit,
+                                          projectId: project.id,
+                                        )
+                                      : const SizedBox(),
+                                  SizedBox(width: 15),
                                 ],
                               ),
                             ],

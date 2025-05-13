@@ -33,7 +33,7 @@ class OngoingProjectsWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               width: 405,
-              height: 125,
+              height: 150,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
@@ -44,6 +44,14 @@ class OngoingProjectsWidget extends StatelessWidget {
                       children: [
                         Text(
                           projectClass.name,
+                          style: TextStyle(
+                            color: projectClass.isSelected
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Manager :  ${projectClass.managerUserName}',
                           style: TextStyle(
                             color: projectClass.isSelected
                                 ? Colors.black
@@ -74,6 +82,15 @@ class OngoingProjectsWidget extends StatelessWidget {
                               },
                               itemCount: personImages.length,
                             ),
+                          ),
+                        ),
+                        Text(
+                          'Created Date : ${projectClass.createdDate}',
+                          style: TextStyle(
+                            color: projectClass.isSelected
+                                ? Colors.black
+                                : Colors.white,
+                            fontSize: 11,
                           ),
                         ),
                         Text(
