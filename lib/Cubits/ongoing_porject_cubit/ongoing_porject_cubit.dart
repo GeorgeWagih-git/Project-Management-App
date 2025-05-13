@@ -222,13 +222,42 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
           'Content-Type': 'application/json',
         },
       );
+
       print("RESPONSE DATA: $response");
 
-      final List<ProjectClass> fetchedProjects = (response as List)
-          .map((item) => ProjectClass.fromJson(item, []))
-          .toList();
+      List<ProjectClass> allProjects = [];
 
-      projects = fetchedProjects;
+      for (var item in response) {
+        final projectJson = item['project'];
+        final tasksJson = item['tasks'] ?? [];
+
+        try {
+          final List<TaskModel> parsedTasks = tasksJson
+              .map<TaskModel>((task) =>
+                  TaskModel.fromJson({...task, 'projectId': projectJson['id']}))
+              .toList();
+
+          final project = ProjectClass.fromJson(projectJson, parsedTasks);
+
+          allProjects.add(project);
+          print("✅ Project parsed: ${project.name}");
+        } catch (e, s) {
+          print("❌ Error parsing project: $e");
+          print("📍 Stack: $s");
+          print("🧪 projectJson: $projectJson");
+          print("🧪 tasksJson: $tasksJson");
+        }
+      }
+
+      // أقسم المشاريع بناءً على نسبة الإنجاز
+      projects =
+          allProjects.where((p) => completedPercentage(p) < 100).toList();
+      completedprojects =
+          allProjects.where((p) => completedPercentage(p) == 100).toList();
+      print('🟢 All Projects Fetched = ${allProjects.length}');
+      print('🟡 Ongoing Projects = ${projects.length}');
+      print('🔵 Completed Projects = ${completedprojects.length}');
+
       emit(ProjectsSuccessfulState(project: projects));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));

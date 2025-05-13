@@ -31,7 +31,7 @@ class _SigninScreenState extends State<SigninScreen> {
         listener: (context, state) {
           if (state is SignInSuccess) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text("Welcomr")));
+                .showSnackBar(SnackBar(content: Text("Welcome")));
             navigateTo(context, HomeScreen());
           } else if (state is SignInFailure) {
             ScaffoldMessenger.of(context)
