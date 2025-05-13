@@ -34,7 +34,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     super.initState();
     _project = widget.projectClass;
     fetchProject();
-    loadUser(); // 🟢 تحميل بيانات المستخدم الحالي
+    loadUser(); //
   }
 
   Future<void> loadUser() async {
@@ -58,7 +58,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       screenName: 'Project Details',
-      child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+      child: BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+        listener: (context, state) {
+          if (state is SingleProjectFetchedSuccessfully) {
+            setState(() {
+              _project = state.project;
+            });
+          }
+        },
         builder: (context, state) {
           final onGoingCubit = OngoingProjectCubit.get(context);
 
@@ -66,7 +73,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ? state.project
               : widget.projectClass;
 
-          final completedPercentage = onGoingCubit.completedPercentage(project);
+          final completedPercentage =
+              onGoingCubit.completedPercentage(_project);
 
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
@@ -90,7 +98,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  project.name,
+                                  _project.name,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -103,13 +111,35 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             ],
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Manager :  ${_project.managerUserName}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              RenameProjectButtonWidget(
-                                  onGoingCubit: onGoingCubit, widget: widget),
+                              user?.userName == project.managerUserName
+                                  ? RenameProjectButtonWidget(
+                                      onGoingCubit: onGoingCubit,
+                                      widget: widget)
+                                  : const SizedBox(),
                               SizedBox(width: 15),
-                              DeleteProjectButtonWidget(
-                                  onGoingCubit: onGoingCubit, widget: widget),
+                              user?.userName == project.managerUserName
+                                  ? DeleteProjectButtonWidget(
+                                      onGoingCubit: onGoingCubit,
+                                      widget: widget)
+                                  : SizedBox(width: 15),
                             ],
                           ),
                           SizedBox(height: 30),
@@ -135,7 +165,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                         fontSize: 11, color: Color(0xff8CAAB9)),
                                   ),
                                   Text(
-                                    "${project.deadline}",
+                                    "${_project.deadline}",
                                     style: TextStyle(
                                         fontSize: 17, color: Colors.white),
                                   ),
@@ -198,7 +228,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           SizedBox(height: 15),
                           Text(
-                            project.projectDetails,
+                            _project.projectDetails,
                             style: TextStyle(
                                 color: Color(0xffBCCFD8), fontSize: 12),
                           ),

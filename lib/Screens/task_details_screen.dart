@@ -85,7 +85,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               Text(
                                 'Employee name : ${_task!.assignedTo}',
                                 style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
+                                    fontSize: 15, color: Colors.white),
                               ),
                             ],
                           ),
