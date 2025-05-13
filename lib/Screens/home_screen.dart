@@ -192,11 +192,6 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                    'See all',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xffFED36A)),
-                                  ),
                                 ],
                               ),
                             ),
@@ -255,11 +250,6 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     width: 60,
                                   ),
                                   AddProjectButton(),
-                                  Text(
-                                    'See all',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xffFED36A)),
-                                  ),
                                 ],
                               ),
                             ),

@@ -27,7 +27,25 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
   Widget build(BuildContext context) {
     var onGoingCubit = OngoingProjectCubit.get(context);
 
-    return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+    return BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
+      listener: (context, state) {
+        if (state is StayusChangeFailure) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("This is not your Task"),
+              duration: Duration(seconds: 2),
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ),
+          );
+          return;
+        }
+      },
       builder: (context, state) {
         return GestureDetector(
           onTap: () async {

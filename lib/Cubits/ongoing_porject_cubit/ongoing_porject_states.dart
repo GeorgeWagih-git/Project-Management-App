@@ -48,3 +48,9 @@ class SingleProjectFetchedSuccessfully extends OngoingProjectStates {
 
   SingleProjectFetchedSuccessfully({required this.project});
 }
+
+final class StayusChangeFailure extends OngoingProjectStates {
+  final String errMessage;
+
+  StayusChangeFailure({required this.errMessage});
+}

@@ -95,22 +95,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(ProjectsSuccessfulState(project: projects));
   }
 
-  /*void addProjects() {
-    var model = ProjectClass(
-      tasks: [],
-      day: int.parse(projectControllerday.text),
-      deadday: int.parse(projectControllerdayDead.text),
-      deadmonth: projectControllermonthDead.text,
-      deadyear: int.parse(projectControllerdayDead.text),
-      month: projectControllermonth.text,
-      name: projectControllername.text,
-      projectDetails: projectControllerDiscription.text,
-      year: int.parse(projectControlleryear.text),
-    );
-    projects.add(model);
-    emit(ProjectsSuccessfulState(project: projects));
-  }*/
-
   void addCompletedProjects(ProjectClass model) {
     if (!completedprojects.contains(model) &&
         completedPercentage(model) == 100) {
@@ -132,15 +116,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     projects.add(newModel);
     emit(ProjectsSuccessfulState(project: projects));
   }
-
-  // void addTaskIntoProject({required ProjectClass projectRelatedToTask}) {
-  //   var task = TaskModel(isDone: false, name: taskController.text);
-  //   projectRelatedToTask.tasks.add(task);
-  //   emit(
-  //     AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask),
-  //   );
-  //   getProjects();
-  // }
 
   void deleteTaskIntoProject(
       {required TaskModel task, required ProjectClass projectRelatedToTask}) {
@@ -445,7 +420,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
 
       await fetchProjectWithTasks(projectId); // ✅ تحديث المهمة بعد التعديل
     } catch (e) {
-      print("❌ Error updating task status: $e");
+      emit(StayusChangeFailure(errMessage: e.toString()));
     }
   }
 }
