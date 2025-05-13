@@ -296,7 +296,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
             .map((t) => TaskModel.fromJson({...t, 'projectId': projectId}))
             .toList(),
       );
-
+      print(response);
       emit(SingleProjectFetchedSuccessfully(project: project));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));

@@ -28,19 +28,18 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _project = widget.projectClass; // نخزن المشروع مبدئيًا
-    fetchProject(); // جلب بيانات المشروع الأحدث
+    _project = widget.projectClass;
+    fetchProject();
   }
 
   Future<void> fetchProject() async {
     final cubit = OngoingProjectCubit.get(context);
     await cubit.fetchProjectWithTasks(_project.id);
 
-    // استقبل البيانات من Cubit إذا نجحت العملية
     final state = cubit.state;
     if (state is SingleProjectFetchedSuccessfully) {
       setState(() {
-        _project = state.project; // تحديث بيانات المشروع
+        _project = state.project;
       });
     }
   }
@@ -52,13 +51,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       screenName: 'Project Details',
       child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
-          var completedPercentage =
-              onGoingCubit.completedPercentage(widget.projectClass);
           ProjectClass project = widget.projectClass;
           if (state is SingleProjectFetchedSuccessfully) {
-            project = state.project;
+            _project = state.project;
           }
+          var completedPercentage = onGoingCubit.completedPercentage(_project);
+
           final projectId = project.id;
+
           return Padding(
             padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
             child: RefreshIndicator(
@@ -247,8 +247,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     ),
                   ),
                   TaskListview(
-                    projectId: project.id,
-                    showcheckboxinlist: true,
+                    project: _project,
                   ),
                 ],
               ),

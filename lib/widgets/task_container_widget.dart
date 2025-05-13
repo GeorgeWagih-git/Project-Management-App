@@ -40,6 +40,9 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                 ),
               ),
             );
+
+            await OngoingProjectCubit.get(context)
+                .fetchProjectWithTasks(widget.project.id);
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
@@ -83,6 +86,8 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                               isDone: newValue,
                               projectId: widget.project.id,
                             );
+                            await OngoingProjectCubit.get(context)
+                                .fetchProjectWithTasks(widget.project.id);
                           }),
                     ],
                   )
