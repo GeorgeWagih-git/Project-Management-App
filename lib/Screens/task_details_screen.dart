@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/edit_task_button_widget.dart';
@@ -9,10 +10,12 @@ class TaskDetailsScreen extends StatefulWidget {
     super.key,
     required this.taskitem,
     required this.onGoingCubit,
+    required this.user,
   });
 
   final TaskModel taskitem;
   final OngoingProjectCubit onGoingCubit;
+  final UserModel user;
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -124,6 +127,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -131,37 +135,82 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             'Task Details',
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.white),
-                            onPressed: () async {
-                              final updatedTask =
-                                  await showModalBottomSheet<TaskModel>(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: const Color(0xff212832),
-                                builder: (BuildContext context) {
-                                  return EditTaskButtonWidget(
-                                    task: _task!,
-                                    projectId: _task!.projectId,
-                                    cubit: widget.onGoingCubit,
-                                  );
-                                },
-                              );
+                          Row(
+                            children: widget.user.userName == _task!.assignedTo
+                                ? [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit,
+                                          color: Colors.white),
+                                      onPressed: () async {
+                                        final updatedTask =
+                                            await showModalBottomSheet<
+                                                TaskModel>(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          backgroundColor:
+                                              const Color(0xff212832),
+                                          builder: (BuildContext context) {
+                                            return EditTaskButtonWidget(
+                                              task: _task!,
+                                              projectId: _task!.projectId,
+                                              cubit: widget.onGoingCubit,
+                                            );
+                                          },
+                                        );
 
-                              if (updatedTask != null) {
-                                setState(() {
-                                  _task = updatedTask;
-                                });
-                              }
-                            },
+                                        if (updatedTask != null) {
+                                          setState(() {
+                                            _task = updatedTask;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
+                                      onPressed: () async {
+                                        final confirm = await showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Confirm Delete'),
+                                            content: const Text(
+                                                'Are you sure you want to delete this task?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, false),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, true),
+                                                child: const Text('Delete'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+
+                                        if (confirm == true) {
+                                          OngoingProjectCubit.get(context)
+                                              .deleteTaskFromServer(
+                                            taskId: widget.taskitem.id,
+                                            projectId:
+                                                widget.taskitem.projectId,
+                                          );
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                    ),
+                                  ]
+                                : [],
                           ),
                         ],
                       ),
                       const SizedBox(height: 15),
                       Text(
                         _task!.description,
-                        style: const TextStyle(
-                            color: Color(0xffBCCFD8), fontSize: 19),
+                        style:
+                            const TextStyle(color: Colors.amber, fontSize: 19),
                       ),
                       const SizedBox(height: 30),
                     ],

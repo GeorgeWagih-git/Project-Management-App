@@ -423,4 +423,31 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       emit(StayusChangeFailure(errMessage: e.toString()));
     }
   }
+
+  Future<void> deleteTaskFromServer({
+    required int taskId,
+    required int projectId,
+  }) async {
+    try {
+      emit(ProjectCreateLoading());
+
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      await api.delete(
+        '/api/Task/DeleteTask/$taskId',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      // جلب المشروع بعد الحذف لتحديث الواجهة
+      await fetchProjectWithTasks(projectId);
+
+      emit(ProjectCreateSuccess());
+    } catch (e) {
+      emit(ProjectCreateFailure(errMessage: e.toString()));
+    }
+  }
 }

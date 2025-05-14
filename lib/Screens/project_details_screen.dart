@@ -67,6 +67,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           }
         },
         builder: (context, state) {
+          if (user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final onGoingCubit = OngoingProjectCubit.get(context);
 
           final project = state is SingleProjectFetchedSuccessfully
@@ -288,6 +291,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   ),
                   TaskListview(
                     project: _project,
+                    user: user!,
                   ),
                 ],
               ),

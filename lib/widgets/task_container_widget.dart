@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/task_details_screen.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,10 +15,12 @@ class TaskContainerWidget extends StatefulWidget {
     super.key,
     required this.taskitem,
     required this.project,
+    required this.user,
   });
 
   final TaskModel taskitem;
   final ProjectClass project;
+  final UserModel user;
 
   @override
   State<TaskContainerWidget> createState() => _TaskContainerWidgetState();
@@ -55,6 +59,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                 builder: (context) => TaskDetailsScreen(
                   taskitem: widget.taskitem,
                   onGoingCubit: onGoingCubit,
+                  user: widget.user,
                 ),
               ),
             );

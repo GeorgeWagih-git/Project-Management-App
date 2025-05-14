@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/widgets/task_container_widget.dart';
 
 class TaskListview extends StatelessWidget {
@@ -9,7 +10,9 @@ class TaskListview extends StatelessWidget {
   const TaskListview({
     super.key,
     required this.project,
+    required this.user,
   });
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +25,7 @@ class TaskListview extends StatelessWidget {
           return TaskContainerWidget(
             taskitem: project.tasks[index],
             project: project,
+            user: user,
           );
         },
       ),
