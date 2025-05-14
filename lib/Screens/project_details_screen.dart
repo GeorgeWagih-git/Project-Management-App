@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/delete_project_button_widget.dart';
 import 'package:flutter_application_1/widgets/rename_project_button_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 String globaltaskName = '';
@@ -67,6 +67,10 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           }
         },
         builder: (context, state) {
+          String deadDate =
+              DateFormat('dd MMM yyyy - h:mm a').format(_project.deadline);
+          String createdDate =
+              DateFormat('dd MMM yyyy - h:mm a').format(_project.createdDate);
           if (user == null) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -154,6 +158,40 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 height: 60,
                                 decoration:
                                     BoxDecoration(color: Color(0xffFED36A)),
+                                child: Icon(Icons.start_sharp),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'created Date',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Color(0xff8CAAB9)),
+                                  ),
+                                  Text(
+                                    createdDate,
+                                    style: TextStyle(
+                                        fontSize: 17, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 50,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration:
+                                    BoxDecoration(color: Color(0xffFED36A)),
                                 child: Icon(Icons.calendar_month),
                               ),
                               SizedBox(
@@ -168,7 +206,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                         fontSize: 11, color: Color(0xff8CAAB9)),
                                   ),
                                   Text(
-                                    "${_project.deadline}",
+                                    deadDate,
                                     style: TextStyle(
                                         fontSize: 17, color: Colors.white),
                                   ),
@@ -176,45 +214,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                               ),
                               SizedBox(
                                 width: 50,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration:
-                                    BoxDecoration(color: Color(0xffFED36A)),
-                                child: Icon(Icons.people),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Project Team',
-                                    style: TextStyle(
-                                        fontSize: 11, color: Color(0xff8CAAB9)),
-                                  ),
-                                  SizedBox(
-                                      height: 20,
-                                      width: 81,
-                                      child: ListView.builder(
-                                        //shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Image.asset(
-                                            personImages[index],
-                                            fit: BoxFit.fill,
-                                          );
-                                        },
-                                        itemCount: personImages.length,
-                                      ))
-                                ],
                               ),
                             ],
                           ),

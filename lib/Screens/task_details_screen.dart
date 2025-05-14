@@ -4,6 +4,7 @@ import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/edit_task_button_widget.dart';
+import 'package:intl/intl.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   const TaskDetailsScreen({
@@ -35,6 +36,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     if (_task == null) {
       return const Center(child: CircularProgressIndicator());
     }
+    String formattedDate =
+        DateFormat('dd MMM yyyy - h:mm a').format(_task!.deadline);
 
     return CustomScaffold(
       screenName: 'Task Details',
@@ -116,7 +119,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     fontSize: 11, color: Color(0xff8CAAB9)),
                               ),
                               Text(
-                                "${_task!.deadline}",
+                                formattedDate,
                                 style: TextStyle(
                                     fontSize: 17, color: Colors.white),
                               ),

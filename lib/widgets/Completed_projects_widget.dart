@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
@@ -33,59 +32,31 @@ class _CompletedProjectssWidgetState extends State<CompletedProjectssWidget> {
           child: Container(
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(right: 8),
-            width: 183,
-            height: 175,
+            width: 200,
+            height: 500,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(18)),
-              color: widget.projectClass.isSelected
-                  ? Color(0xffFED36A)
-                  : Color(0xff455A64),
+              color: Color(0xff455A64),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.projectClass.name,
-                  style: TextStyle(
-                    color: widget.projectClass.isSelected
-                        ? Colors.black
-                        : Colors.white,
-                    fontSize: 21,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  maxLines: 2,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Team members',
-                      style: TextStyle(
-                          color: widget.projectClass.isSelected
-                              ? Colors.black
-                              : Colors.white,
-                          fontSize: 11),
+                Center(
+                  child: Text(
+                    widget.projectClass.name,
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                      fontSize: 18,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                        height: 20,
-                        width: 81,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Image.asset(
-                              personImages[index],
-                              fit: BoxFit.fill,
-                            );
-                          },
-                          itemCount: personImages.length,
-                        ))
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  height: 15,
+                Text(
+                  'Manager : ${widget.projectClass.managerUserName}',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,16 +86,11 @@ class _CompletedProjectssWidgetState extends State<CompletedProjectssWidget> {
                       child: LinearProgressIndicator(
                         borderRadius: BorderRadius.circular(25),
                         minHeight: 8,
-                        color: widget.projectClass.isSelected
-                            ? Colors.black
-                            : Color(0xffFED36A),
+                        color: Colors.lightGreenAccent,
                         backgroundColor: Colors.transparent,
                         value: onGoingCubit
                                 .completedPercentage(widget.projectClass) /
                             100,
-                        // semanticsLabel: onGoingCubit
-                        //     .completedPercentage(widget.projectClass)
-                        //     .toString(),
                       ),
                     );
                   },

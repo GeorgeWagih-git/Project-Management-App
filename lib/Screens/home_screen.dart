@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                               padding: const EdgeInsets.only(left: 12, top: 12),
                               child: SizedBox(
                                 width: double.infinity,
-                                height: 175,
+                                height: 170,
                                 child: BlocBuilder<OngoingProjectCubit,
                                     OngoingProjectStates>(
                                   builder: (context, state) {

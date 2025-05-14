@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Classes/persons_images_list.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class OngoingProjectsWidget extends StatelessWidget {
@@ -24,6 +24,11 @@ class OngoingProjectsWidget extends StatelessWidget {
         },
         child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
           builder: (context, state) {
+            String deadDate = DateFormat('dd MMM yyyy - h:mm a')
+                .format(projectClass.deadline);
+            String createdDate = DateFormat('dd MMM yyyy - h:mm a')
+                .format(projectClass.createdDate);
+
             return Container(
               margin: EdgeInsets.only(left: 12, top: 12),
               decoration: BoxDecoration(
@@ -44,12 +49,10 @@ class OngoingProjectsWidget extends StatelessWidget {
                       children: [
                         Text(
                           projectClass.name,
-                          style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                          ),
+                          style:
+                              TextStyle(color: Colors.lightBlue, fontSize: 20),
                         ),
+                        SizedBox(height: 8),
                         Text(
                           'Manager :  ${projectClass.managerUserName}',
                           style: TextStyle(
@@ -59,47 +62,17 @@ class OngoingProjectsWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Team members',
+                          'Created Date : ${createdDate}',
                           style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                            fontSize: 11,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: SizedBox(
-                            height: 20,
-                            width: 81,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Image.asset(
-                                  personImages[index],
-                                  fit: BoxFit.fill,
-                                );
-                              },
-                              itemCount: personImages.length,
-                            ),
+                            color: Colors.white,
+                            fontSize: 15,
                           ),
                         ),
                         Text(
-                          'Created Date : ${projectClass.createdDate}',
+                          'DeadLine : ${deadDate}',
                           style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                            fontSize: 11,
-                          ),
-                        ),
-                        Text(
-                          'DeadLine : ${projectClass.deadline}',
-                          style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                            fontSize: 11,
+                            color: Colors.white,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -107,12 +80,13 @@ class OngoingProjectsWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 20.0),
                       child: CircularPercentIndicator(
-                        progressColor: Color(0xffFED36A),
+                        progressColor: Colors.lightBlue,
                         radius: 50,
                         percent: (completedPercentage / 100).toDouble(),
                         center: Text(
                           "${completedPercentage.toString()}%",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style:
+                              TextStyle(color: Colors.lightBlue, fontSize: 18),
                         ),
                       ),
                     ),

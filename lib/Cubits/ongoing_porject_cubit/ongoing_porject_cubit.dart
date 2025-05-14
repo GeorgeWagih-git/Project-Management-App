@@ -27,6 +27,12 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       TextEditingController();
   final TextEditingController projectControlleryearDead =
       TextEditingController();
+  final TextEditingController projectControllerHourDead =
+      TextEditingController();
+  final TextEditingController projectControllerMinuteDead =
+      TextEditingController();
+  String selectedAmPm = 'AM';
+
   final GlobalKey<FormState> ongoingFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> projectDetailsScreenFormKey =
       GlobalKey<FormState>();

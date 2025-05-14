@@ -5,7 +5,6 @@ import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/task_details_screen.dart';
-import 'package:flutter_application_1/core/functions/navigate_to.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 

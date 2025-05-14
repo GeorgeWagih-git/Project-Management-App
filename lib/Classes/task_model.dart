@@ -5,7 +5,7 @@ class TaskModel {
   DateTime deadline;
   String assignedTo;
   bool isDone;
-  int projectId; // 👈 أضف ده
+  int projectId;
 
   TaskModel({
     required this.id,
@@ -14,7 +14,7 @@ class TaskModel {
     required this.deadline,
     required this.assignedTo,
     required this.isDone,
-    required this.projectId, // 👈 أضف ده
+    required this.projectId,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
@@ -25,7 +25,7 @@ class TaskModel {
       deadline: DateTime.parse(json['deadline']),
       assignedTo: json['assignedTo'],
       isDone: json['isDone'],
-      projectId: json['projectId'], // 👈 تأكد إن ده موجود في الـ API
+      projectId: json['projectId'],
     );
   }
 }
