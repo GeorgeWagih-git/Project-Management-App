@@ -24,7 +24,7 @@ class TaskListview extends StatelessWidget {
         (context, index) {
           return TaskContainerWidget(
             taskitem: project.tasks[index],
-            project: project,
+            project2: project,
             user: user,
           );
         },

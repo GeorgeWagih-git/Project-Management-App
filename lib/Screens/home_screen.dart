@@ -131,50 +131,49 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(width: 300, child: InlineSearchBar()),
-                                Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffFED36A),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () async {
-                                        bool confirm = await showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text(
-                                                'logout confirmation'),
-                                            content: const Text(
-                                                'are you sure ypu want to logout ?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, false),
-                                                child: const Text('cancel'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, true),
-                                                child: const Text('log out'),
-                                              ),
-                                            ],
+                                IconButton(
+                                  onPressed: () async {
+                                    bool confirm = await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title:
+                                            const Text('logout confirmation'),
+                                        content: const Text(
+                                            'are you sure ypu want to logout ?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, false),
+                                            child: const Text('cancel'),
                                           ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, true),
+                                            child: const Text('log out'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+
+                                    if (confirm == true) {
+                                      await AppPrefs.logout();
+
+                                      if (mounted) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const SigninScreen()),
+                                          (route) => false,
                                         );
-
-                                        if (confirm == true) {
-                                          await AppPrefs.logout();
-
-                                          if (mounted) {
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const SigninScreen()),
-                                              (route) => false,
-                                            );
-                                          }
-                                        }
-                                      },
-                                      icon: const Icon(Icons.logout),
-                                    ))
+                                      }
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.logout,
+                                    color: Colors.white,
+                                  ),
+                                )
                               ],
                             ),
                             SizedBox(height: 25),

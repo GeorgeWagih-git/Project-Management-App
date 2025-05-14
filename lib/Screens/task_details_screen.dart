@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
@@ -12,11 +13,13 @@ class TaskDetailsScreen extends StatefulWidget {
     required this.taskitem,
     required this.onGoingCubit,
     required this.user,
+    required this.projectClass,
   });
 
   final TaskModel taskitem;
   final OngoingProjectCubit onGoingCubit;
   final UserModel user;
+  final ProjectClass projectClass;
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -38,6 +41,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     }
     String formattedDate =
         DateFormat('dd MMM yyyy - h:mm a').format(_task!.deadline);
+    print('user name 👍 = ${widget.user.userName}');
+    print('manger user name 👍 = ${widget.projectClass.managerUserName}');
 
     return CustomScaffold(
       screenName: 'Task Details',
@@ -117,7 +122,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     fontSize: 11, color: Color(0xff8CAAB9)),
                               ),
                               Text(
-                                "${DateFormat('dd/MM/yyyy - hh:mm a').format(_task!.createdDate)}",
+                                DateFormat('dd/MM/yyyy - hh:mm a')
+                                    .format(_task!.createdDate),
                                 style: TextStyle(
                                     fontSize: 17, color: Colors.white),
                               ),
@@ -167,7 +173,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                           Row(
-                            children: widget.user.userName == _task!.assignedTo
+                            children: widget.user.userName ==
+                                    widget.projectClass.managerUserName
                                 ? [
                                     IconButton(
                                       icon: const Icon(Icons.edit,

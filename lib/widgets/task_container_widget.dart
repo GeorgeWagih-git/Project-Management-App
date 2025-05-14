@@ -13,12 +13,12 @@ class TaskContainerWidget extends StatefulWidget {
   const TaskContainerWidget({
     super.key,
     required this.taskitem,
-    required this.project,
+    required this.project2,
     required this.user,
   });
 
   final TaskModel taskitem;
-  final ProjectClass project;
+  final ProjectClass project2;
   final UserModel user;
 
   @override
@@ -56,6 +56,7 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
               context,
               MaterialPageRoute(
                 builder: (context) => TaskDetailsScreen(
+                  projectClass: widget.project2,
                   taskitem: widget.taskitem,
                   onGoingCubit: onGoingCubit,
                   user: widget.user,
@@ -64,33 +65,33 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
             );
 
             await OngoingProjectCubit.get(context)
-                .fetchProjectWithTasks(widget.project.id);
+                .fetchProjectWithTasks(widget.project2.id);
           },
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Container(
               width: double.infinity,
-              height: 58,
+              height: 80,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(15),
                 ),
                 color: Color(0xff455A64),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: Center(
-                      child: Text(
-                        widget.taskitem.title,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ),
-                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18.0),
+                        child: Center(
+                          child: Text(
+                            widget.taskitem.title,
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                        ),
+                      ),
                       Checkbox(
                           activeColor: Color(0xffFED36A),
                           checkColor: Colors.black,
@@ -106,11 +107,20 @@ class _TaskContainerWidgetState extends State<TaskContainerWidget> {
                                 .updateTaskStatusOnly(
                               taskId: widget.taskitem.id,
                               isDone: newValue,
-                              projectId: widget.project.id,
+                              projectId: widget.project2.id,
                             );
                             await OngoingProjectCubit.get(context)
-                                .fetchProjectWithTasks(widget.project.id);
-                          }),
+                                .fetchProjectWithTasks(widget.project2.id);
+                          })
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Employee : ${widget.taskitem.assignedTo}',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                     ],
                   )
                 ],

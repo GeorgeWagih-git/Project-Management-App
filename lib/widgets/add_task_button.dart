@@ -84,7 +84,10 @@ class AddTaskButton extends StatelessWidget {
                               ],
                               controller: onGoingCubit.tasKDay,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(labelText: 'Day'),
+                              decoration: InputDecoration(
+                                labelText: 'Day',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               autofocus: true,
                             ),
                           ),
@@ -99,8 +102,15 @@ class AddTaskButton extends StatelessWidget {
                               },
                               controller: onGoingCubit.tasKMonth,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(labelText: 'Month'),
+                              decoration: InputDecoration(
+                                labelText: 'Month',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               autofocus: true,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -118,7 +128,10 @@ class AddTaskButton extends StatelessWidget {
                               ],
                               controller: onGoingCubit.tasKYear,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(labelText: 'Year'),
+                              decoration: InputDecoration(
+                                labelText: 'Year',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               autofocus: true,
                             ),
                           ),
@@ -134,7 +147,10 @@ class AddTaskButton extends StatelessWidget {
                               controller: onGoingCubit.taskHourController,
                               keyboardType: TextInputType.number,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(labelText: 'Hour'),
+                              decoration: InputDecoration(
+                                labelText: 'Hour',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly
                               ],
@@ -147,7 +163,10 @@ class AddTaskButton extends StatelessWidget {
                               controller: onGoingCubit.taskMinuteController,
                               keyboardType: TextInputType.number,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(labelText: 'Minute'),
+                              decoration: InputDecoration(
+                                labelText: 'Minute',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly
                               ],
@@ -173,8 +192,12 @@ class AddTaskButton extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 50),
-                      SizedBox(
-                        width: 300,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight:
+                              300, // حد أقصى للارتفاع (اختياري حسب ما تحب)
+                          minHeight: 100, // ارتفاع مبدئي
+                        ),
                         child: TextFormField(
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -185,7 +208,7 @@ class AddTaskButton extends StatelessWidget {
                           controller: onGoingCubit.tasKdescription,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            labelStyle: TextStyle(color: Colors.white),
+                            labelStyle: TextStyle(color: Colors.amber),
                             labelText: "Disciption ",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25)),
@@ -213,7 +236,9 @@ class AddTaskButton extends StatelessWidget {
                               controller: onGoingCubit.tasKAssignedTo,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                  labelText: 'Assigned To (Email)'),
+                                labelText: 'Assigned To (Email)',
+                                labelStyle: TextStyle(color: Colors.amber),
+                              ),
                               autofocus: true,
                             ),
                           ),

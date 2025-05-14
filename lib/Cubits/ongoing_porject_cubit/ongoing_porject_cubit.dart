@@ -242,7 +242,8 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       print('🟡 Ongoing Projects = ${projects.length}');
       print('🔵 Completed Projects = ${completedprojects.length}');
 
-      emit(ProjectsSuccessfulState(project: projects));
+      filteredProjects = projects;
+      emit(ProjectsSuccessfulState(project: filteredProjects));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
@@ -458,5 +459,17 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
     }
+  }
+
+  List<ProjectClass> filteredProjects = [];
+  void filterProjects(String query) {
+    if (query.isEmpty) {
+      filteredProjects = projects;
+    } else {
+      filteredProjects = projects
+          .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+    emit(ProjectsSuccessfulState(project: filteredProjects));
   }
 }

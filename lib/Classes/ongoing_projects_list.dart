@@ -11,13 +11,15 @@ class OngoingTasksList extends StatelessWidget {
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
         builder: (context, state) {
       if (state is ProjectsSuccessfulState) {
+        var projectList = state.project;
         return SliverList(
-            delegate: SliverChildBuilderDelegate(
-                childCount: state.project.length, (context, index) {
-          return OngoingProjectsWidget(
-            projectClass: state.project[index],
-          );
-        }));
+          delegate: SliverChildBuilderDelegate(
+            childCount: projectList.length,
+            (context, index) {
+              return OngoingProjectsWidget(projectClass: projectList[index]);
+            },
+          ),
+        );
       } else {
         return SliverToBoxAdapter(
           child: SizedBox(
