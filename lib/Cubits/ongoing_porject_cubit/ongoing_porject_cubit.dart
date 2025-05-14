@@ -45,6 +45,9 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   final TextEditingController tasKMonth = TextEditingController();
   final TextEditingController tasKYear = TextEditingController();
   final TextEditingController tasKAssignedTo = TextEditingController();
+  TextEditingController taskHourController = TextEditingController();
+  TextEditingController taskMinuteController = TextEditingController();
+  String taskPeriod = 'AM';
 
   final TextEditingController description = TextEditingController();
   List<ProjectClass> projects = [];

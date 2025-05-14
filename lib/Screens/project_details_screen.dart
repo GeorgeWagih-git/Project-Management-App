@@ -158,7 +158,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 height: 60,
                                 decoration:
                                     BoxDecoration(color: Color(0xffFED36A)),
-                                child: Icon(Icons.start_sharp),
+                                child: Icon(Icons.access_time),
                               ),
                               SizedBox(
                                 width: 15,

@@ -105,6 +105,34 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(color: Color(0xffFED36A)),
+                            child: Icon(Icons.access_time),
+                          ),
+                          SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Created At',
+                                style: TextStyle(
+                                    fontSize: 11, color: Color(0xff8CAAB9)),
+                              ),
+                              Text(
+                                "${DateFormat('dd/MM/yyyy - hh:mm a').format(_task!.createdDate)}",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(color: Color(0xffFED36A)),
                             child: Icon(Icons.calendar_month),
                           ),
                           SizedBox(

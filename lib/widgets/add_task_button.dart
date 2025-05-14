@@ -139,9 +139,55 @@ class AddTaskButton extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 50,
+                      SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            width: 80,
+                            child: TextFormField(
+                              controller: onGoingCubit.taskHourController,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(labelText: 'Hour'),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          SizedBox(
+                            width: 80,
+                            child: TextFormField(
+                              controller: onGoingCubit.taskMinuteController,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(labelText: 'Minute'),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          DropdownButton<String>(
+                            value: onGoingCubit.taskPeriod,
+                            dropdownColor: Color(0xff212832),
+                            items: ['AM', 'PM'].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value,
+                                    style: TextStyle(color: Colors.white)),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              onGoingCubit.taskPeriod = newValue!;
+                              // لإجبار إعادة البناء
+                              (context as Element).markNeedsBuild();
+                            },
+                          ),
+                        ],
                       ),
+                      SizedBox(height: 50),
                       SizedBox(
                         width: 300,
                         child: TextFormField(
@@ -209,8 +255,20 @@ class AddTaskButton extends StatelessWidget {
                                 final int year =
                                     int.parse(onGoingCubit.tasKYear.text);
 
+                                int hour = int.tryParse(
+                                        onGoingCubit.taskHourController.text) ??
+                                    0;
+                                int minute = int.tryParse(onGoingCubit
+                                        .taskMinuteController.text) ??
+                                    0;
+                                String period = onGoingCubit.taskPeriod;
+
+                                if (period == 'PM' && hour < 12) hour += 12;
+                                if (period == 'AM' && hour == 12) hour = 0;
+
                                 final DateTime deadline =
-                                    DateTime(year, month, day);
+                                    DateTime(year, month, day, hour, minute);
+
                                 onGoingCubit.createTaskOnServer(
                                     title: onGoingCubit.tasKTitle.text,
                                     description:

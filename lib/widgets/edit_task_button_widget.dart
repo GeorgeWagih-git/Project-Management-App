@@ -142,6 +142,7 @@ class EditTaskButtonWidget extends StatelessWidget {
                           assignedTo: assignedToController.text,
                           isDone: task.isDone,
                           projectId: task.id,
+                          createdDate: task.createdDate,
                         ),
                       );
                     }
