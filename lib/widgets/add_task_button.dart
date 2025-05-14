@@ -84,12 +84,7 @@ class AddTaskButton extends StatelessWidget {
                               ],
                               controller: onGoingCubit.tasKDay,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Day ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
+                              decoration: InputDecoration(labelText: 'Day'),
                               autofocus: true,
                             ),
                           ),
@@ -104,12 +99,7 @@ class AddTaskButton extends StatelessWidget {
                               },
                               controller: onGoingCubit.tasKMonth,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Month ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
+                              decoration: InputDecoration(labelText: 'Month'),
                               autofocus: true,
                             ),
                           ),
@@ -128,12 +118,7 @@ class AddTaskButton extends StatelessWidget {
                               ],
                               controller: onGoingCubit.tasKYear,
                               style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Year ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
+                              decoration: InputDecoration(labelText: 'Year'),
                               autofocus: true,
                             ),
                           ),
@@ -228,11 +213,7 @@ class AddTaskButton extends StatelessWidget {
                               controller: onGoingCubit.tasKAssignedTo,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                labelStyle: TextStyle(color: Colors.white),
-                                labelText: "Assigned To ",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                              ),
+                                  labelText: 'Assigned To (Email)'),
                               autofocus: true,
                             ),
                           ),
