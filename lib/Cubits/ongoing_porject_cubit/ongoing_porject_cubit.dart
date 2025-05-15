@@ -52,6 +52,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   final TextEditingController description = TextEditingController();
   List<ProjectClass> projects = [];
   List<ProjectClass> completedprojects = [];
+
   int completedPercentage(ProjectClass model) {
     if (model.tasks.isEmpty) {
       return 0;
@@ -61,102 +62,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     emit(ProjectsSuccessfulState(project: projects));
 
     return finalnum;
-  }
-
-  void editProjectDescription(
-      {required ProjectClass model, required String newDescription}) {
-    model.projectDetails = newDescription;
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void transformProject(ProjectClass model) {
-    if (completedPercentage(model) == 100) {
-      deleteProjects(model);
-      addCompletedProjects(model);
-    }
-    if (completedprojects.contains(model) && completedPercentage(model) < 100) {
-      deleteCompletedProjects(model);
-      transformOngingProjects(model);
-    }
-    emit(CompletedProjectsuccessfulState(completedproject: completedprojects));
-  }
-
-  void getProjects() {
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void deleteProjects(ProjectClass model) {
-    if (projects.contains(model)) {
-      projects.remove(model);
-    } else if (completedprojects.contains(model)) {
-      completedprojects.remove(model);
-    }
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void deleteCompletedProjects(ProjectClass model) {
-    completedprojects.remove(model);
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void renameProject({required ProjectClass model, required String newname}) {
-    model.name = newname;
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void addCompletedProjects(ProjectClass model) {
-    if (!completedprojects.contains(model) &&
-        completedPercentage(model) == 100) {
-      completedprojects.add(model);
-      emit(ProjectsSuccessfulState(project: projects));
-    }
-  }
-
-  void transformOngingProjects(ProjectClass model) {
-    if (!projects.contains(model)) {
-      projects.add(model);
-      emit(ProjectsSuccessfulState(project: projects));
-    }
-  }
-
-  void editProject(
-      {required ProjectClass newModel, required ProjectClass oldModel}) {
-    projects.remove(oldModel);
-    projects.add(newModel);
-    emit(ProjectsSuccessfulState(project: projects));
-  }
-
-  void deleteTaskIntoProject(
-      {required TaskModel task, required ProjectClass projectRelatedToTask}) {
-    projectRelatedToTask.tasks.remove(task);
-    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
-  }
-
-  void renameTaskName({
-    required ProjectClass projectRelatedToTask,
-    required TaskModel model,
-    required int taskId,
-    required String title,
-    required String description,
-    required String assignedTo,
-    required DateTime deadline,
-    required int projectId,
-  }) {
-    model.title = title;
-    model.description = description;
-    model.deadline = deadline;
-    model.assignedTo = assignedTo;
-
-    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
-  }
-
-  void editTaskIntoProject(
-      {required TaskModel oldTask,
-      required TaskModel newTask,
-      required ProjectClass projectRelatedToTask}) {
-    projectRelatedToTask.tasks.remove(oldTask);
-    projectRelatedToTask.tasks.add(newTask);
-    emit(AddTaskIntoProjectSuccessfulState(project: projectRelatedToTask));
   }
 
   /////////////////////////////////////////////////////////////API////////////////////////////////////////////////
@@ -313,6 +218,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
             .toList(),
       );
       print(response);
+      filteredTasks = project.tasks;
       emit(SingleProjectFetchedSuccessfully(project: project));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
@@ -473,15 +379,51 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     } else {
       filteredProjects = projects
           .where((project) =>
-              project.name.toLowerCase().contains(query.toLowerCase()))
+              project.name.toLowerCase().contains(query.toLowerCase()) ||
+              project.managerUserName
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              project.projectDetails
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              project.projectDetails
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
           .toList();
 
       filteredCompletedProjects = completedprojects
           .where((project) =>
-              project.name.toLowerCase().contains(query.toLowerCase()))
+              project.name.toLowerCase().contains(query.toLowerCase()) ||
+              project.managerUserName
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              project.projectDetails
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              project.projectDetails
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
           .toList();
     }
 
     emit(ProjectsSuccessfulState(project: filteredProjects));
+  }
+
+  List<TaskModel> filteredTasks = [];
+  void filterTasks(String keyword, int projectId) {
+    List<ProjectClass> allProjects = projects + completedprojects;
+    final targetProject = allProjects.firstWhere((p) => p.id == projectId);
+    if (keyword.isEmpty) {
+      filteredTasks = targetProject.tasks;
+    } else {
+      filteredTasks = targetProject.tasks
+          .where((task) =>
+              task.title.toLowerCase().contains(keyword.toLowerCase()) ||
+              task.assignedTo.toLowerCase().contains(keyword.toLowerCase()) ||
+              task.description.toLowerCase().contains(keyword.toLowerCase()))
+          .toList();
+    }
+
+    emit(SingleProjectFetchedSuccessfully(project: targetProject));
   }
 }

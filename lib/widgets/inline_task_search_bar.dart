@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 
-class InlineSearchBar extends StatelessWidget {
-  const InlineSearchBar({super.key});
+class InlineTaskSearchBar extends StatelessWidget {
+  const InlineTaskSearchBar({super.key, required this.projectid});
+  final int projectid;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       onChanged: (value) {
-        OngoingProjectCubit.get(context).filterProjects(value);
+        OngoingProjectCubit.get(context).filterTasks(value, projectid);
       },
       decoration: InputDecoration(
-        hintText: 'Search projects...',
+        hintText: 'Search tasks...',
         hintStyle: TextStyle(color: Colors.white),
         prefixIcon: Icon(Icons.search, color: Colors.white),
         filled: true,
