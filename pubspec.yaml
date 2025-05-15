@@ -78,6 +78,8 @@ flutter:
     - assets/person 3.png
     - assets/person 4.png
     - assets/person 5.png
+    - assets/forgot-password.png
+    - assets/reset-password.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

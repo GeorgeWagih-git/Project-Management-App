@@ -6,33 +6,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OngoingTasksList extends StatelessWidget {
   const OngoingTasksList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
-        builder: (context, state) {
-      if (state is ProjectsSuccessfulState) {
-        var projectList = state.project;
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            childCount: projectList.length,
-            (context, index) {
-              return OngoingProjectsWidget(projectClass: projectList[index]);
-            },
-          ),
-        );
-      } else {
-        return SliverToBoxAdapter(
-          child: SizedBox(
-            height: 150,
-            child: Center(
-              child: Text(
-                'No Ongoing Projects Yet !',
-                style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
+      builder: (context, state) {
+        final filtered = OngoingProjectCubit.get(context).filteredProjects;
+
+        if (state is ProjectsSuccessfulState && filtered.isNotEmpty) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return OngoingProjectsWidget(
+                  projectClass: filtered[index],
+                );
+              },
+              childCount: filtered.length,
+            ),
+          );
+        } else {
+          return const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 150,
+              child: Center(
+                child: Text(
+                  'No Ongoing Projects Yet!',
+                  style: TextStyle(color: Color(0xffFED36A), fontSize: 25),
+                ),
               ),
             ),
-          ),
-        );
-      }
-    });
+          );
+        }
+      },
+    );
   }
 }

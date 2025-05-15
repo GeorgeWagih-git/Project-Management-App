@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Screens/forget_password_page.dart';
+import 'package:flutter_application_1/Screens/Forget_Password_screens/forget_password_page.dart';
 
 class ForgetPasswordWidget extends StatelessWidget {
   const ForgetPasswordWidget({super.key, required this.size});
