@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Cubits/Forget_Password_cubit/forget_password_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
@@ -23,6 +24,9 @@ void main() {
         ),
         BlocProvider(
           create: (context) => SignUpCubit(DioConsumer(dio: Dio())),
+        ),
+        BlocProvider(
+          create: (context) => ForgetPasswordCubit(DioConsumer(dio: Dio())),
         ),
       ],
       child: ProjectManagement(),

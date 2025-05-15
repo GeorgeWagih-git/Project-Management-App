@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
-import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_states.dart';
+import 'package:flutter_application_1/Cubits/Forget_Password_cubit/forget_password_cubit.dart';
+import 'package:flutter_application_1/Cubits/Forget_Password_cubit/forget_password_states.dart';
 import 'package:flutter_application_1/Screens/Forget_Password_screens/reset_password_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
@@ -22,8 +22,17 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       screenName: 'Forget Password',
-      child: BlocConsumer<SignInCubit, SignInStates>(
-        listener: (context, state) {},
+      child: BlocConsumer<ForgetPasswordCubit, ForgetPasswordStates>(
+        listener: (context, state) {
+          if (state is SendResetCodeSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("you recived an OTP in your inbox")));
+            navigateTo(context, ResetPasswordScreen());
+          } else if (state is SendResetCodeFailure) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errMessage)));
+          }
+        },
         builder: (context, state) {
           return Column(
             children: [
@@ -36,18 +45,29 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       ),
                       const SizedBox(height: 16),
                       CustomInputField(
-                        controller:
-                            context.read<SignInCubit>().forgetPasswordEmail,
+                        controller: context
+                            .read<ForgetPasswordCubit>()
+                            .forgetPasswordEmail,
                         labelText: 'Email',
                         hintText: 'Your Email',
                       ),
                       const SizedBox(height: 16),
-                      CustomFormButton(
-                        innerText: 'Confirm',
-                        onPressed: () {
-                          navigateTo(context, ResetPasswordScreen());
-                        },
-                      ),
+                      state is SendResetCodeLoading
+                          ? const CircularProgressIndicator()
+                          : CustomFormButton(
+                              innerText: 'Confirm',
+                              onPressed: () {
+                                if (forgetPasswordFormKey.currentState!
+                                    .validate()) {
+                                  context
+                                      .read<ForgetPasswordCubit>()
+                                      .sendResetCode(context
+                                          .read<ForgetPasswordCubit>()
+                                          .forgetPasswordEmail
+                                          .text);
+                                }
+                              },
+                            ),
                     ],
                   ))
             ],
