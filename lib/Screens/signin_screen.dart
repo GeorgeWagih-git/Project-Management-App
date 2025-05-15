@@ -41,7 +41,9 @@ class _SigninScreenState extends State<SigninScreen> {
         builder: (context, state) {
           return Column(
             children: [
-              const PageHeader(),
+              const PageHeader(
+                assetUrl: 'assets/person.png',
+              ),
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(

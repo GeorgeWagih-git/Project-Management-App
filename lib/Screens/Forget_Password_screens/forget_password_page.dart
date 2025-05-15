@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_states.dart';
+import 'package:flutter_application_1/Screens/Forget_Password_screens/reset_password_screen.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -29,7 +31,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   key: forgetPasswordFormKey,
                   child: Column(
                     children: [
-                      const PageHeader(),
+                      const PageHeader(
+                        assetUrl: 'assets/forgot-password.png',
+                      ),
                       const SizedBox(height: 16),
                       CustomInputField(
                         controller:
@@ -40,8 +44,10 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       const SizedBox(height: 16),
                       CustomFormButton(
                         innerText: 'Confirm',
-                        onPressed: () {},
-                      )
+                        onPressed: () {
+                          navigateTo(context, ResetPasswordScreen());
+                        },
+                      ),
                     ],
                   ))
             ],
