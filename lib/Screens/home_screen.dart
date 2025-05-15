@@ -202,24 +202,25 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                 child: BlocBuilder<OngoingProjectCubit,
                                     OngoingProjectStates>(
                                   builder: (context, state) {
-                                    var completedprojects =
+                                    var filteredCompleted =
                                         OngoingProjectCubit.get(context)
-                                            .completedprojects;
-                                    if (completedprojects.isNotEmpty) {
+                                            .filteredCompletedProjects;
+
+                                    if (filteredCompleted.isNotEmpty) {
                                       return ListView.builder(
-                                        itemCount: completedprojects.length,
+                                        itemCount: filteredCompleted.length,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, index) {
                                           return CompletedProjectssWidget(
                                             projectClass:
-                                                completedprojects[index],
+                                                filteredCompleted[index],
                                           );
                                         },
                                       );
                                     } else {
-                                      return Center(
+                                      return const Center(
                                         child: Text(
-                                          'No Completed Projects Yet !',
+                                          'No Completed Projects Yet!',
                                           style: TextStyle(
                                               color: Color(0xffFED36A),
                                               fontSize: 25),

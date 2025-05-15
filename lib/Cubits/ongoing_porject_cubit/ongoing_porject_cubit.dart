@@ -243,6 +243,8 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       print('🔵 Completed Projects = ${completedprojects.length}');
 
       filteredProjects = projects;
+      filteredCompletedProjects = completedprojects;
+
       emit(ProjectsSuccessfulState(project: filteredProjects));
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
@@ -452,7 +454,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         },
       );
 
-      // جلب المشروع بعد الحذف لتحديث الواجهة
       await fetchProjectWithTasks(projectId);
 
       emit(ProjectCreateSuccess());
@@ -462,14 +463,25 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
   }
 
   List<ProjectClass> filteredProjects = [];
+
+  List<ProjectClass> filteredCompletedProjects = [];
+
   void filterProjects(String query) {
     if (query.isEmpty) {
       filteredProjects = projects;
+      filteredCompletedProjects = completedprojects;
     } else {
       filteredProjects = projects
-          .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+          .where((project) =>
+              project.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      filteredCompletedProjects = completedprojects
+          .where((project) =>
+              project.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
+
     emit(ProjectsSuccessfulState(project: filteredProjects));
   }
 }
