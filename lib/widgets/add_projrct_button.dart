@@ -19,8 +19,7 @@ class AddProjectButton extends StatelessWidget {
           backgroundColor: Color(0xff212832),
           context: context,
           builder: (BuildContext context) {
-            String localSelectedAmPm =
-                ongoingCubit.selectedAmPm; // 👈 نسخة محلية
+            String localSelectedAmPm = ongoingCubit.selectedAmPm;
 
             return StatefulBuilder(builder: (context, setState) {
               return Padding(
@@ -59,7 +58,6 @@ class AddProjectButton extends StatelessWidget {
                             autofocus: true,
                           ),
                           SizedBox(height: 16),
-
                           ListTile(
                             title: Text(
                               "DeadLine Time",
@@ -209,9 +207,8 @@ class AddProjectButton extends StatelessWidget {
                           ),
                           ConstrainedBox(
                             constraints: BoxConstraints(
-                              maxHeight:
-                                  300, // حد أقصى للارتفاع (اختياري حسب ما تحب)
-                              minHeight: 100, // ارتفاع مبدئي
+                              maxHeight: 300,
+                              minHeight: 100,
                             ),
                             child: TextFormField(
                               validator: (value) {
@@ -234,7 +231,7 @@ class AddProjectButton extends StatelessWidget {
                               keyboardType: TextInputType.multiline,
                             ),
                           ),
-                          SizedBox(height: 16), // مسافة بين الحقل والزر
+                          SizedBox(height: 16),
                           BlocConsumer<OngoingProjectCubit,
                               OngoingProjectStates>(
                             listener: (context, state) {

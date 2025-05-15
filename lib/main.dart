@@ -33,7 +33,6 @@ void main() {
 class ProjectManagement extends StatelessWidget {
   const ProjectManagement({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

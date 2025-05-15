@@ -8,7 +8,6 @@ import 'package:flutter_application_1/Screens/task_details_screen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
 class TaskContainerWidget extends StatefulWidget {
   const TaskContainerWidget({
     super.key,

@@ -17,6 +17,8 @@ class SignInCubit extends Cubit<SignInStates> {
   final TextEditingController signInEmail = TextEditingController();
   //Sign in password
   final TextEditingController signInPassword = TextEditingController();
+  //forget password email
+  final TextEditingController forgetPasswordEmail = TextEditingController();
   signIn() async {
     try {
       emit(SignInLoading());

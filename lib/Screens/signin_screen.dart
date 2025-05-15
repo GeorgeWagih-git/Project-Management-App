@@ -55,14 +55,12 @@ class _SigninScreenState extends State<SigninScreen> {
                       key: signInFormKey,
                       child: Column(
                         children: [
-                          //!Email
                           CustomInputField(
                             labelText: 'Email',
                             hintText: 'Your email',
                             controller: context.read<SignInCubit>().signInEmail,
                           ),
                           const SizedBox(height: 16),
-                          //!Password
                           CustomInputField(
                             labelText: 'Password',
                             hintText: 'Your password',
@@ -72,10 +70,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                 context.read<SignInCubit>().signInPassword,
                           ),
                           const SizedBox(height: 16),
-                          //! Forget password?
                           ForgetPasswordWidget(size: size),
                           const SizedBox(height: 20),
-                          //!Sign In Button
                           state is SignInLoading
                               ? const CircularProgressIndicator()
                               : CustomFormButton(
@@ -85,7 +81,6 @@ class _SigninScreenState extends State<SigninScreen> {
                                   },
                                 ),
                           const SizedBox(height: 18),
-                          //! Dont Have An Account ?
                           DontHaveAnAccountWidget(size: size),
                           const SizedBox(height: 20),
                         ],
