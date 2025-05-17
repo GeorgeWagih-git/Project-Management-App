@@ -3,6 +3,8 @@ import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Screens/profile_screen.dart';
+import 'package:flutter_application_1/Screens/settings_screen.dart';
 import 'package:flutter_application_1/Screens/signin_screen.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/main.dart';
@@ -112,17 +114,28 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                         ),
                                       ],
                                     ),
-                                    user?.imageUrl != null
-                                        ? CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage:
-                                                NetworkImage(user!.imageUrl!),
-                                          )
-                                        : CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage:
-                                                AssetImage('assets/person.png'),
-                                          ),
+                                    InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProfileScreen()),
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(
+                                    40), // Matches the CircleAvatar shape
+                                child: user?.imageUrl != null
+                                    ? CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage:
+                                            NetworkImage(user!.imageUrl!),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage:
+                                            AssetImage('assets/person.png'),
+                                      ),
+                              ),
                                   ],
                                 ),
                               ),
@@ -131,6 +144,21 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(width: 300, child: InlineSearchBar()),
+                                Container(
+                            decoration: BoxDecoration(
+                              
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SettingsScreen()),
+                                );
+                              },
+                              icon: Icon(Icons.settings,color: Colors.white,),
+                            ),
+                          ),
                                 IconButton(
                                   onPressed: () async {
                                     bool confirm = await showDialog(
@@ -139,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                         title:
                                             const Text('logout confirmation'),
                                         content: const Text(
-                                            'are you sure ypu want to logout ?'),
+                                            'are you sure you want to logout ?'),
                                         actions: [
                                           TextButton(
                                             onPressed: () =>
