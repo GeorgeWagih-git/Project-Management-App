@@ -5,7 +5,6 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/profile_screen.dart';
 import 'package:flutter_application_1/Screens/settings_screen.dart';
-import 'package:flutter_application_1/Screens/signin_screen.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';
@@ -115,27 +114,28 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                       ],
                                     ),
                                     InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileScreen()),
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(
-                                    40), // Matches the CircleAvatar shape
-                                child: user?.imageUrl != null
-                                    ? CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage:
-                                            NetworkImage(user!.imageUrl!),
-                                      )
-                                    : CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage:
-                                            AssetImage('assets/person.png'),
-                                      ),
-                              ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileScreen()),
+                                        );
+                                      },
+                                      borderRadius: BorderRadius.circular(
+                                          40), // Matches the CircleAvatar shape
+                                      child: user?.imageUrl != null
+                                          ? CircleAvatar(
+                                              radius: 30,
+                                              backgroundImage:
+                                                  NetworkImage(user!.imageUrl!),
+                                            )
+                                          : CircleAvatar(
+                                              radius: 30,
+                                              backgroundImage: AssetImage(
+                                                  'assets/person.png'),
+                                            ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -143,65 +143,24 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(width: 300, child: InlineSearchBar()),
+                                SizedBox(width: 360, child: InlineSearchBar()),
                                 Container(
-                            decoration: BoxDecoration(
-                              
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SettingsScreen()),
-                                );
-                              },
-                              icon: Icon(Icons.settings,color: Colors.white,),
-                            ),
-                          ),
-                                IconButton(
-                                  onPressed: () async {
-                                    bool confirm = await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title:
-                                            const Text('logout confirmation'),
-                                        content: const Text(
-                                            'are you sure you want to logout ?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, false),
-                                            child: const Text('cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
-                                            child: const Text('log out'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-
-                                    if (confirm == true) {
-                                      await AppPrefs.logout();
-
-                                      if (mounted) {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  const SigninScreen()),
-                                          (route) => false,
-                                        );
-                                      }
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    Icons.logout,
-                                    color: Colors.white,
+                                  decoration: BoxDecoration(),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SettingsScreen()),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.settings,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             SizedBox(height: 25),
