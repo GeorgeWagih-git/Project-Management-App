@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/notifications_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsToggle extends StatefulWidget {
   final String title;
@@ -11,6 +13,32 @@ class NotificationsToggle extends StatefulWidget {
 
 class _NotificationsToggleState extends State<NotificationsToggle> {
   bool isSwitched = false;
+  final NotificationsService _notificationsService = NotificationsService();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeToggle();
+  }
+
+  Future<void> _initializeToggle() async {
+    // Step 3: Ensure notifications are initialized before usage
+    await _notificationsService.initNotifications();
+
+    // Load saved state
+    bool enabled = await _notificationsService.areNotificationsEnabled();
+    setState(() {
+      isSwitched = enabled;
+    });
+  }
+
+  void _onToggleChanged(bool value) async {
+    setState(() {
+      isSwitched = value;
+    });
+    final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('notifications_enabled', value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +58,13 @@ class _NotificationsToggleState extends State<NotificationsToggle> {
       ),
       child: ListTile(
         leading: Icon(Icons.notifications, color: Colors.black),
-        title: Text( "Notifications", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-          ),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        ),
         trailing: Switch(
           value: isSwitched,
-          onChanged: (value) {
-            setState(() {
-              isSwitched = value;
-            });
-          },
+          onChanged: _onToggleChanged,
         ),
       ),
     );

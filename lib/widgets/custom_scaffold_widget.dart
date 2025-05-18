@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/calender_screen.dart';
 import 'package:flutter_application_1/Screens/chat_screen.dart';
 import 'package:flutter_application_1/Screens/home_screen.dart';
-import 'package:flutter_application_1/Screens/notfifcations_screen.dart';
 import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
 // ignore: must_be_immutable
@@ -104,21 +103,6 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                         icon: Icons.calendar_today,
                         label: "Calendar",
                         isSelected: widget.calenderSelected),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.notificationSelected = true;
-                      });
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationsScreen()));
-                    },
-                    child: BuildNavItem(
-                        icon: Icons.notifications,
-                        label: "Notification",
-                        isSelected: widget.notificationSelected),
                   ),
                 ],
               ),
