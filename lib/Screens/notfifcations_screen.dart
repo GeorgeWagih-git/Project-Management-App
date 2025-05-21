@@ -82,7 +82,7 @@ class NotificationsScreenState extends State<NotificationsScreen>
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return CustomScaffold(
+    return CustomScaffoldWidget(
       screenName: "Notifications",
       showBackButton: false,
       showhomebottombar: true,

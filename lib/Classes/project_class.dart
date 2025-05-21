@@ -1,7 +1,7 @@
 import 'task_model.dart';
 
 class ProjectClass {
-  int id; // ✅ رقم المشروع
+  int id;
   String name;
   DateTime deadline;
   String projectDetails;
@@ -11,7 +11,7 @@ class ProjectClass {
   DateTime createdDate;
 
   ProjectClass({
-    required this.id, // ✅ مطلوب
+    required this.id,
     required this.tasks,
     required this.deadline,
     required this.name,

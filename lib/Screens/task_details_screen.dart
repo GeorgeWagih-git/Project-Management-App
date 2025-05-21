@@ -26,7 +26,7 @@ class TaskDetailsScreen extends StatefulWidget {
 }
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
-  TaskModel? _task;
+  late TaskModel _task;
 
   @override
   void initState() {
@@ -36,229 +36,195 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_task == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    String formattedDate =
-        DateFormat('dd MMM yyyy - h:mm a').format(_task!.deadline);
-    print('user name 👍 = ${widget.user.userName}');
-    print('manger user name 👍 = ${widget.projectClass.managerUserName}');
+    final formattedDeadline =
+        DateFormat('dd MMM yyyy - h:mm a').format(_task.deadline);
+    final formattedCreatedDate =
+        DateFormat('dd MMM yyyy - h:mm a').format(_task.createdDate);
 
-    return CustomScaffold(
+    final isManager =
+        widget.user.userName == widget.projectClass.managerUserName;
+
+    return CustomScaffoldWidget(
       screenName: 'Task Details',
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await widget.onGoingCubit.fetchProjectWithTasks(_task!.projectId);
-            setState(() {}); // عشان يعيد بناء التفاصيل من جديد لو حصل تعديل
-          },
-          child: CustomScrollView(
-            shrinkWrap: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Form(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _task!.title,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await widget.onGoingCubit.fetchProjectWithTasks(_task.projectId);
+          setState(() {}); // Refresh data if modified
+        },
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 12, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Title
+                    Text(
+                      _task.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration:
-                                const BoxDecoration(color: Color(0xffFED36A)),
-                            child: const Icon(Icons.people),
-                          ),
-                          const SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Employee name : ${_task!.assignedTo}',
-                                style: const TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(color: Color(0xffFED36A)),
-                            child: Icon(Icons.access_time),
-                          ),
-                          SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Created At',
-                                style: TextStyle(
-                                    fontSize: 11, color: Color(0xff8CAAB9)),
-                              ),
-                              Text(
-                                DateFormat('dd/MM/yyyy - hh:mm a')
-                                    .format(_task!.createdDate),
-                                style: TextStyle(
-                                    fontSize: 17, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(color: Color(0xffFED36A)),
-                            child: Icon(Icons.calendar_month),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Dead Date',
-                                style: TextStyle(
-                                    fontSize: 11, color: Color(0xff8CAAB9)),
-                              ),
-                              Text(
-                                formattedDate,
-                                style: TextStyle(
-                                    fontSize: 17, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 50,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Task Details',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          Row(
-                            children: widget.user.userName ==
-                                    widget.projectClass.managerUserName
-                                ? [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.white),
-                                      onPressed: () async {
-                                        final updatedTask =
-                                            await showModalBottomSheet<
-                                                TaskModel>(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          backgroundColor:
-                                              const Color(0xff212832),
-                                          builder: (BuildContext context) {
-                                            return EditTaskButtonWidget(
-                                              task: _task!,
-                                              projectId: _task!.projectId,
-                                              cubit: widget.onGoingCubit,
-                                            );
-                                          },
-                                        );
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 20),
 
-                                        if (updatedTask != null) {
-                                          setState(() {
-                                            _task = updatedTask;
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-                                      onPressed: () async {
-                                        final confirm = await showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: const Text('Confirm Delete'),
-                                            content: const Text(
-                                                'Are you sure you want to delete this task?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, false),
-                                                child: const Text('Cancel'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(
-                                                    context, true),
-                                                child: const Text('Delete'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
+                    /// Employee
+                    _buildInfoRow(
+                      icon: Icons.people,
+                      label: 'Employee',
+                      value: _task.assignedTo,
+                    ),
+                    const SizedBox(height: 20),
 
-                                        if (confirm == true) {
-                                          OngoingProjectCubit.get(context)
-                                              .deleteTaskFromServer(
-                                            taskId: widget.taskitem.id,
-                                            projectId:
-                                                widget.taskitem.projectId,
-                                          );
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    ),
-                                  ]
-                                : [],
-                          ),
-                        ],
+                    /// Created Date
+                    _buildInfoRow(
+                      icon: Icons.access_time,
+                      label: 'Created At',
+                      value: formattedCreatedDate,
+                    ),
+                    const SizedBox(height: 20),
+
+                    /// Deadline
+                    _buildInfoRow(
+                      icon: Icons.calendar_month,
+                      label: 'Deadline',
+                      value: formattedDeadline,
+                    ),
+                    const SizedBox(height: 30),
+
+                    /// Task Details + Edit/Delete
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Task Details',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        if (isManager) _buildEditDeleteButtons(),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+
+                    /// Description
+                    Text(
+                      _task.description,
+                      style: const TextStyle(
+                        color: Colors.amber,
+                        fontSize: 18,
+                        height: 1.5,
                       ),
-                      const SizedBox(height: 15),
-                      Text(
-                        _task!.description,
-                        style:
-                            const TextStyle(color: Colors.amber, fontSize: 19),
-                      ),
-                      const SizedBox(height: 30),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: const BoxDecoration(
+            color: Color(0xffFED36A),
+            shape: BoxShape.rectangle,
+          ),
+          child: Icon(icon),
+        ),
+        const SizedBox(width: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xff8CAAB9),
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditDeleteButtons() {
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.white),
+          onPressed: () async {
+            final updatedTask = await showModalBottomSheet<TaskModel>(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: const Color(0xff212832),
+              builder: (context) {
+                return EditTaskButtonWidget(
+                  task: _task,
+                  projectId: _task.projectId,
+                  cubit: widget.onGoingCubit,
+                );
+              },
+            );
+
+            if (updatedTask != null) {
+              setState(() => _task = updatedTask);
+            }
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete, color: Colors.red),
+          onPressed: () async {
+            final confirm = await showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: const Text('Confirm Delete'),
+                content:
+                    const Text('Are you sure you want to delete this task?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              ),
+            );
+
+            if (confirm == true) {
+              widget.onGoingCubit.deleteTaskFromServer(
+                taskId: _task.id,
+                projectId: _task.projectId,
+              );
+              Navigator.pop(context);
+            }
+          },
+        ),
+      ],
     );
   }
 }

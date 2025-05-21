@@ -15,88 +15,98 @@ class OngoingProjectsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var onGoingCubit = OngoingProjectCubit.get(context);
-    return BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
-        builder: (context, state) {
-      var completedPercentage = onGoingCubit.completedPercentage(projectClass);
-      return GestureDetector(
-        onTap: () {
-          navigateTo(context, ProjectDetailsScreen(projectClass: projectClass));
-        },
-        child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
-          builder: (context, state) {
-            String deadDate = DateFormat('dd MMM yyyy - h:mm a')
-                .format(projectClass.deadline);
-            String createdDate = DateFormat('dd MMM yyyy - h:mm a')
-                .format(projectClass.createdDate);
+    // double screenWidth = MediaQuery.of(context).size.width;
 
-            return Container(
-              margin: EdgeInsets.only(left: 12, top: 12),
-              decoration: BoxDecoration(
-                color: projectClass.isSelected
-                    ? Color(0xffFED36A)
-                    : Color(0xff455A64),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              width: 405,
-              height: 150,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          projectClass.name,
-                          style:
-                              TextStyle(color: Colors.lightBlue, fontSize: 20),
+    return GestureDetector(
+      onTap: () {
+        navigateTo(context, ProjectDetailsScreen(projectClass: projectClass));
+      },
+      child: BlocBuilder<OngoingProjectCubit, OngoingProjectStates>(
+        builder: (context, state) {
+          String deadDate =
+              DateFormat('dd MMM yyyy - h:mm a').format(projectClass.deadline);
+          String createdDate = DateFormat('dd MMM yyyy - h:mm a')
+              .format(projectClass.createdDate);
+          var completedPercentage =
+              onGoingCubit.completedPercentage(projectClass);
+
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xff455A64),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                /// Left Column (Text Info)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        projectClass.name,
+                        style: const TextStyle(
+                          color: Colors.lightBlue,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Manager :  ${projectClass.managerUserName}',
-                          style: TextStyle(
-                            color: projectClass.isSelected
-                                ? Colors.black
-                                : Colors.white,
-                          ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Manager: ${projectClass.managerUserName}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
                         ),
-                        Text(
-                          'Created Date : ${createdDate}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          'DeadLine : ${deadDate}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: CircularPercentIndicator(
-                        progressColor: Colors.lightBlue,
-                        radius: 50,
-                        percent: (completedPercentage / 100).toDouble(),
-                        center: Text(
-                          "${completedPercentage.toString()}%",
-                          style:
-                              TextStyle(color: Colors.lightBlue, fontSize: 18),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Created: $createdDate',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 2),
+                      Text(
+                        'Deadline: $deadDate',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      );
-    });
+
+                /// Right Circular Progress
+                Padding(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: CircularPercentIndicator(
+                    radius: 45,
+                    lineWidth: 6,
+                    animation: true,
+                    percent: (completedPercentage / 100).clamp(0.0, 1.0),
+                    center: Text(
+                      "$completedPercentage%",
+                      style: const TextStyle(
+                          color: Colors.lightBlue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    progressColor: Colors.lightBlue,
+                    backgroundColor: Colors.white12,
+                    circularStrokeCap: CircularStrokeCap.round,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
+//import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+//import 'package:flutter_application_1/Screens/task_details_screen.dart';
+//import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -56,7 +59,10 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 380;
+
+    return CustomScaffoldWidget(
       screenName: 'Project Details',
       child: BlocConsumer<OngoingProjectCubit, OngoingProjectStates>(
         listener: (context, state) {
@@ -64,30 +70,39 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             setState(() {
               _project = state.project;
             });
+          } else if (state is ProjectCreateSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Task added successfully')),
+            );
+          } else if (state is ProjectCreateFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Failed to add task: ${state.errMessage}')),
+            );
           }
         },
         builder: (context, state) {
-          String deadDate =
-              DateFormat('dd MMM yyyy - h:mm a').format(_project.deadline);
-          String createdDate =
-              DateFormat('dd MMM yyyy - h:mm a').format(_project.createdDate);
-          if (user == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
           final onGoingCubit = OngoingProjectCubit.get(context);
-
           final project = state is SingleProjectFetchedSuccessfully
               ? state.project
               : widget.projectClass;
 
           final completedPercentage =
               onGoingCubit.completedPercentage(_project);
+          final String deadDate =
+              DateFormat('dd MMM yyyy - h:mm a').format(_project.deadline);
+          final String createdDate =
+              DateFormat('dd MMM yyyy - h:mm a').format(_project.createdDate);
+
+          if (user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
           return Padding(
-            padding: const EdgeInsets.fromLTRB(40, 12, 12, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: RefreshIndicator(
               onRefresh: () async {
-                await OngoingProjectCubit.get(context)
+                await onGoingCubit
                     .fetchProjectWithTasks(widget.projectClass.id);
               },
               child: CustomScrollView(
@@ -100,194 +115,131 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  _project.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ],
+                          /// Title
+                          Text(
+                            _project.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: isSmallScreen ? 20 : 25,
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Manager :  ${_project.managerUserName}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ],
+                          const SizedBox(height: 8),
+                          Text(
+                            'Manager: ${_project.managerUserName}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: isSmallScreen ? 16 : 20,
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              user?.userName == project.managerUserName
-                                  ? RenameProjectButtonWidget(
-                                      onGoingCubit: onGoingCubit,
-                                      widget: widget)
-                                  : const SizedBox(),
-                              SizedBox(width: 15),
-                              user?.userName == project.managerUserName
-                                  ? DeleteProjectButtonWidget(
-                                      onGoingCubit: onGoingCubit,
-                                      widget: widget)
-                                  : SizedBox(width: 15),
-                            ],
+
+                          /// Action buttons
+                          if (user?.userName == project.managerUserName)
+                            Row(
+                              children: [
+                                RenameProjectButtonWidget(
+                                    onGoingCubit: onGoingCubit, widget: widget),
+                                const SizedBox(width: 15),
+                                DeleteProjectButtonWidget(
+                                    onGoingCubit: onGoingCubit, widget: widget),
+                              ],
+                            ),
+                          const SizedBox(height: 30),
+
+                          /// Created date
+                          _buildIconTextRow(
+                            icon: Icons.access_time,
+                            title: 'Created Date',
+                            value: createdDate,
                           ),
-                          SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration:
-                                    BoxDecoration(color: Color(0xffFED36A)),
-                                child: Icon(Icons.access_time),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'created Date',
-                                    style: TextStyle(
-                                        fontSize: 11, color: Color(0xff8CAAB9)),
-                                  ),
-                                  Text(
-                                    createdDate,
-                                    style: TextStyle(
-                                        fontSize: 17, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 50,
-                              ),
-                            ],
+                          const SizedBox(height: 20),
+
+                          /// Deadline
+                          _buildIconTextRow(
+                            icon: Icons.calendar_month,
+                            title: 'Dead Date',
+                            value: deadDate,
                           ),
-                          SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration:
-                                    BoxDecoration(color: Color(0xffFED36A)),
-                                child: Icon(Icons.calendar_month),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Dead Date',
-                                    style: TextStyle(
-                                        fontSize: 11, color: Color(0xff8CAAB9)),
-                                  ),
-                                  Text(
-                                    deadDate,
-                                    style: TextStyle(
-                                        fontSize: 17, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 50,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Project Details',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 30),
+
+                          /// Project Details
+                          _buildSectionTitle('Project Details'),
+                          const SizedBox(height: 10),
                           Text(
                             _project.projectDetails,
-                            style: TextStyle(
-                                color: Color(0xffBCCFD8), fontSize: 12),
+                            style: const TextStyle(
+                                color: Color(0xffBCCFD8), fontSize: 13),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
+
+                          /// Progress
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Project Progrss',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 20.0),
-                                child: CircularPercentIndicator(
-                                  progressColor: Color(0xffFED36A),
-                                  radius: 50,
-                                  percent:
-                                      (completedPercentage / 100).toDouble(),
-                                  center: Text(
-                                    "${completedPercentage.toString()}%",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  ),
+                              _buildSectionTitle('Project Progress'),
+                              CircularPercentIndicator(
+                                radius: 50,
+                                percent: (completedPercentage / 100).toDouble(),
+                                progressColor: const Color(0xffFED36A),
+                                center: Text(
+                                  "$completedPercentage%",
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 18),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
+
+                          /// All Tasks + Add button
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'All Tasks',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  user?.userName == project.managerUserName
-                                      ? AddTaskButton(
-                                          onGoingCubit: onGoingCubit,
-                                          projectId: project.id,
-                                        )
-                                      : const SizedBox(),
-                                  SizedBox(width: 15),
-                                ],
-                              ),
+                              _buildSectionTitle('All Tasks'),
+                              if (user?.userName == project.managerUserName)
+                                state is ProjectCreateLoading
+                                    ? const Padding(
+                                        padding: EdgeInsets.only(right: 16),
+                                        child: CircularProgressIndicator(
+                                            color: Colors.amber),
+                                      )
+                                    : AddTaskButton(
+                                        onGoingCubit: onGoingCubit,
+                                        projectId: project.id,
+                                      ),
+                              /*MaterialButton(
+                                  minWidth: 20,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  color: Colors.blue,
+                                  child: Icon(Icons.text_snippet_outlined),
+                                  onPressed: () {
+                                    navigateTo(
+                                        context,
+                                        TaskDetailsScreen(
+                                            taskitem: TaskModel(
+                                                id: 1,
+                                                title: 'offline test',
+                                                description: 'offline test',
+                                                deadline: date,
+                                                assignedTo: 'offline test',
+                                                isDone: true,
+                                                projectId: 1,
+                                                createdDate: date),
+                                            onGoingCubit: onGoingCubit,
+                                            user: user!,
+                                            projectClass: widget.projectClass));
+                                  }),*/
                             ],
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ),
+
+                  /// Task ListView
                   TaskListview(
                     project: _project,
                     user: user!,
@@ -300,4 +252,48 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       ),
     );
   }
+
+  Widget _buildIconTextRow(
+      {required IconData icon, required String title, required String value}) {
+    return Row(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: const BoxDecoration(color: Color(0xffFED36A)),
+          child: Icon(icon),
+        ),
+        const SizedBox(width: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title,
+                style: const TextStyle(fontSize: 11, color: Color(0xff8CAAB9))),
+            Text(value,
+                style: const TextStyle(fontSize: 17, color: Colors.white)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle(String text) {
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.white, fontSize: 18),
+    );
+  }
 }
+
+final int day = 11;
+final int month = 10;
+final int year = 2025;
+int hour = 4;
+final int minute = 55;
+final DateTime date = DateTime(
+  year,
+  month,
+  day,
+  hour,
+  minute,
+);

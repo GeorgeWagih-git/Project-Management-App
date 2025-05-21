@@ -40,7 +40,7 @@ class AddTaskButton extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                         onTap: () {
-                          Navigator.pop(context); // إغلاق القائمة
+                          Navigator.pop(context);
                         },
                       ),
                       TextFormField(
@@ -185,7 +185,6 @@ class AddTaskButton extends StatelessWidget {
                             }).toList(),
                             onChanged: (newValue) {
                               onGoingCubit.taskPeriod = newValue!;
-                              // لإجبار إعادة البناء
                               (context as Element).markNeedsBuild();
                             },
                           ),
@@ -194,9 +193,8 @@ class AddTaskButton extends StatelessWidget {
                       SizedBox(height: 50),
                       ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight:
-                              300, // حد أقصى للارتفاع (اختياري حسب ما تحب)
-                          minHeight: 100, // ارتفاع مبدئي
+                          maxHeight: 300,
+                          minHeight: 100,
                         ),
                         child: TextFormField(
                           validator: (value) {

@@ -6,8 +6,8 @@ import 'package:flutter_application_1/Screens/notfifcations_screen.dart';
 import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
 // ignore: must_be_immutable
-class CustomScaffold extends StatefulWidget {
-  CustomScaffold({
+class CustomScaffoldWidget extends StatefulWidget {
+  CustomScaffoldWidget({
     super.key,
     required this.child,
     this.screenName = '',
@@ -19,7 +19,8 @@ class CustomScaffold extends StatefulWidget {
     this.notificationSelected = false,
     this.showBackButton = true,
   });
-  final Widget? child;
+
+  final Widget child;
   final bool? showappbar;
   final bool? showhomebottombar;
   final String? screenName;
@@ -30,141 +31,117 @@ class CustomScaffold extends StatefulWidget {
   bool showBackButton;
 
   @override
-  State<CustomScaffold> createState() => _CustomScaffoldState();
+  State<CustomScaffoldWidget> createState() => _CustomScaffoldWidgetState();
 }
 
-class _CustomScaffoldState extends State<CustomScaffold> {
-  final TextEditingController _projectController = TextEditingController();
-
-  @override
-  void dispose() {
-    _projectController.dispose();
-    super.dispose();
-  }
-
-  bool back = false;
+class _CustomScaffoldWidgetState extends State<CustomScaffoldWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: widget.showhomebottombar!
-          ? BottomAppBar(
-              color: Color(0xff263238),
-              elevation: 0,
-              shape: CircularNotchedRectangle(),
-              notchMargin: 8,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.homeSelected = true;
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ),
-                      );
-                    },
-                    child: BuildNavItem(
-                      icon: Icons.home,
-                      label: "Home",
-                      isSelected: widget.homeSelected,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.chatSelected = true;
-                      });
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatScreen()));
-                    },
-                    child: BuildNavItem(
-                      icon: Icons.chat,
-                      label: "Chat",
-                      isSelected: widget.chatSelected,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.calenderSelected = true;
-                      });
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CalenderScreen()));
-                    },
-                    child: BuildNavItem(
-                        icon: Icons.calendar_today,
-                        label: "Calendar",
-                        isSelected: widget.calenderSelected),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        widget.notificationSelected = true;
-                      });
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotificationsScreen()));
-                    },
-                    child: BuildNavItem(
-                        icon: Icons.notifications,
-                        label: "Notification",
-                        isSelected: widget.notificationSelected),
-                  ),
-                ],
-              ),
-            )
-          : null,
-
+      backgroundColor: const Color(0xff212832),
+      extendBodyBehindAppBar: true,
       appBar: widget.showappbar!
           ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               automaticallyImplyLeading: false,
               leading: widget.showBackButton
                   ? IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        Navigator.pop(context); // الرجوع إلى الشاشة السابقة
-                      },
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: () => Navigator.pop(context),
                     )
                   : null,
               title: Center(
                 child: Text(
                   widget.screenName!,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+              iconTheme: const IconThemeData(color: Colors.white),
+            )
+          : null,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width < 600
+                  ? double.infinity
+                  : 600,
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+              child: widget.child,
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: widget.showhomebottombar!
+          ? BottomAppBar(
+              color: const Color(0xff263238),
               elevation: 0,
-              backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(
-                color: Colors.white,
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    context,
+                    icon: Icons.home,
+                    label: 'Home',
+                    selected: widget.homeSelected,
+                    screen: const HomeScreen(),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.chat,
+                    label: 'Chat',
+                    selected: widget.chatSelected,
+                    screen: const ChatScreen(),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.calendar_today,
+                    label: 'Calendar',
+                    selected: widget.calenderSelected,
+                    screen: const CalenderScreen(),
+                  ),
+                  _buildNavItem(
+                    context,
+                    icon: Icons.notifications,
+                    label: 'Notification',
+                    selected: widget.notificationSelected,
+                    screen: const NotificationsScreen(),
+                  ),
+                ],
               ),
             )
           : null,
+    );
+  }
 
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(color: Color(0xff212832)),
-          ),
-          SafeArea(
-            child: widget.child!,
-          )
-        ],
+  Widget _buildNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool selected,
+    required Widget screen,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => screen),
+        );
+      },
+      child: BuildNavItem(
+        icon: icon,
+        label: label,
+        isSelected: selected,
       ),
-      // Stack
-    ); // Scaffold;
+    );
   }
 }
