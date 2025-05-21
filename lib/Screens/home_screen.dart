@@ -4,6 +4,7 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Screens/profile_screen.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/Screens/signin_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
@@ -116,17 +117,27 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     ),
                                   ],
                                 ),
-                                user?.imageUrl != null
-                                    ? CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage:
-                                            NetworkImage(user!.imageUrl!),
-                                      )
-                                    : const CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage:
-                                            AssetImage('assets/person.png'),
-                                      ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileScreen()),
+                                    );
+                                  },
+                                  child: user?.imageUrl != null
+                                      ? CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage:
+                                              NetworkImage(user!.imageUrl!),
+                                        )
+                                      : const CircleAvatar(
+                                          radius: 30,
+                                          backgroundImage:
+                                              AssetImage('assets/person.png'),
+                                        ),
+                                ),
                               ],
                             ),
                           ),

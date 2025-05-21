@@ -107,7 +107,7 @@ class _CustomScaffoldWidgetState extends State<CustomScaffoldWidget> {
                     icon: Icons.calendar_today,
                     label: 'Calendar',
                     selected: widget.calenderSelected,
-                    screen: const CalenderScreen(),
+                    screen: CalenderScreen(),
                   ),
                   _buildNavItem(
                     context,

@@ -38,7 +38,7 @@ dependencies:
   icons_plus: ^5.0.0
   flutter_launcher_icons: ^0.14.3
   font_awesome_flutter: ^10.8.0
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^19.2.1
   percent_indicator: ^4.2.4
   provider: ^6.1.2
   collection: ^1.19.1
@@ -48,6 +48,10 @@ dependencies:
   shared_preferences: ^2.5.3
   jwt_decoder: ^2.0.1
   intl: ^0.20.2
+  http: ^1.4.0
+  signalr_core: ^1.1.2
+  permission_handler: ^12.0.0+1
+  flutter_timezone: ^4.1.1
 
 dev_dependencies:
   flutter_test:
