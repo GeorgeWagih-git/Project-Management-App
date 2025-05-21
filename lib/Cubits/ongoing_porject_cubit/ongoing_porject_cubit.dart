@@ -71,7 +71,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
     required DateTime deadline,
   }) async {
     try {
-      emit(ProjectCreateLoading()); // حالة تحميل، اعملها عندك لو مش موجودة
+      emit(ProjectCreateLoading());
 
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -82,14 +82,14 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         data: {
           "name": name,
           "descriptions": description,
-          "deadline": deadline.toIso8601String(), // بصيغة JSON
+          "deadline": deadline.toIso8601String(),
         },
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
-      await fetchAllProjects(); // ✅ هتجيب أحدث المشاريع بعد الإضافة
+      await fetchAllProjects();
 
       emit(ProjectsSuccessfulState(project: projects));
     } catch (e) {
@@ -138,7 +138,6 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         }
       }
 
-      // أقسم المشاريع بناءً على نسبة الإنجاز
       projects =
           allProjects.where((p) => completedPercentage(p) < 100).toList();
       completedprojects =
@@ -206,7 +205,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         },
       );
 
-      final data = response; // ✅ أهم سطر هنا
+      final data = response;
 
       final projectJson = data['project'];
       final tasksJson = data['tasks'] as List;
@@ -251,7 +250,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         },
       );
 
-      await fetchProjectWithTasks(id); // ⬅️ للتحديث الفوري
+      await fetchProjectWithTasks(id);
 
       emit(ProjectCreateSuccess());
     } catch (e) {
@@ -312,7 +311,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         },
       );
 
-      await fetchProjectWithTasks(projectId); // لإعادة تحميل المشروع بتاسكاته
+      await fetchProjectWithTasks(projectId);
       emit(ProjectCreateSuccess());
     } catch (e) {
       emit(ProjectCreateFailure(errMessage: e.toString()));
@@ -336,7 +335,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
         },
       );
 
-      await fetchProjectWithTasks(projectId); // ✅ تحديث المهمة بعد التعديل
+      await fetchProjectWithTasks(projectId);
     } catch (e) {
       emit(StayusChangeFailure(errMessage: e.toString()));
     }

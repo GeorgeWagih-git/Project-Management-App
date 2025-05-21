@@ -98,7 +98,7 @@ class ChatScreenState extends State<ChatScreen> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return CustomScaffoldWidget(
       screenName: "Messages",
       showhomebottombar: true,
       showBackButton: false,

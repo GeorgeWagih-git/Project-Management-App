@@ -33,7 +33,7 @@ class _CalenderScreenState extends State<CalenderScreen> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return CustomScaffoldWidget(
         showhomebottombar: true,
         calenderSelected: true,
         homeSelected: isReturning,

@@ -17,60 +17,75 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  GlobalKey<FormState> forgetPasswordFormKey = GlobalKey();
+  final GlobalKey<FormState> forgetPasswordFormKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return CustomScaffoldWidget(
       screenName: 'Forget Password',
       child: BlocConsumer<ForgetPasswordCubit, ForgetPasswordStates>(
         listener: (context, state) {
           if (state is SendResetCodeSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("you recived an OTP in your inbox")));
-            navigateTo(context, ResetPasswordScreen());
+              SnackBar(content: Text("You received an OTP in your inbox")),
+            );
+            navigateTo(context, const ResetPasswordScreen());
           } else if (state is SendResetCodeFailure) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.errMessage)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errMessage)),
+            );
           }
         },
         builder: (context, state) {
-          return Column(
-            children: [
-              Form(
-                  key: forgetPasswordFormKey,
-                  child: Column(
-                    children: [
-                      const PageHeader(
-                        assetUrl: 'assets/forgot-password.png',
+          final forgetPasswordCubit = context.read<ForgetPasswordCubit>();
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final isWideScreen = screenWidth >= 600;
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: isWideScreen ? 500 : double.infinity),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 24),
+                    child: Form(
+                      key: forgetPasswordFormKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const PageHeader(
+                              assetUrl: 'assets/forgot-password.png'),
+                          const SizedBox(height: 24),
+                          CustomInputField(
+                            controller: forgetPasswordCubit.forgetPasswordEmail,
+                            labelText: 'Email',
+                            hintText: 'Your Email',
+                          ),
+                          const SizedBox(height: 24),
+                          state is SendResetCodeLoading
+                              ? const CircularProgressIndicator()
+                              : CustomFormButton(
+                                  innerText: 'Send Reset Code',
+                                  onPressed: () {
+                                    if (forgetPasswordFormKey.currentState!
+                                        .validate()) {
+                                      forgetPasswordCubit.sendResetCode(
+                                        forgetPasswordCubit
+                                            .forgetPasswordEmail.text,
+                                      );
+                                    }
+                                  },
+                                ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      CustomInputField(
-                        controller: context
-                            .read<ForgetPasswordCubit>()
-                            .forgetPasswordEmail,
-                        labelText: 'Email',
-                        hintText: 'Your Email',
-                      ),
-                      const SizedBox(height: 16),
-                      state is SendResetCodeLoading
-                          ? const CircularProgressIndicator()
-                          : CustomFormButton(
-                              innerText: 'Confirm',
-                              onPressed: () {
-                                if (forgetPasswordFormKey.currentState!
-                                    .validate()) {
-                                  context
-                                      .read<ForgetPasswordCubit>()
-                                      .sendResetCode(context
-                                          .read<ForgetPasswordCubit>()
-                                          .forgetPasswordEmail
-                                          .text);
-                                }
-                              },
-                            ),
-                    ],
-                  ))
-            ],
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

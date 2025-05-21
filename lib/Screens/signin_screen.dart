@@ -24,8 +24,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return CustomScaffold(
+    return CustomScaffoldWidget(
       screenName: 'Sign In',
       child: BlocConsumer<SignInCubit, SignInStates>(
         listener: (context, state) {
@@ -39,24 +38,24 @@ class _SigninScreenState extends State<SigninScreen> {
           }
         },
         builder: (context, state) {
-          return Column(
-            children: [
-              const PageHeader(
-                assetUrl: 'assets/person.png',
-              ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              double maxWidth = constraints.maxWidth;
+
+              double contentWidth = maxWidth > 600 ? 500 : maxWidth * 0.9;
+
+              return Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: contentWidth),
                     child: Form(
                       key: signInFormKey,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          const PageHeader(assetUrl: 'assets/person.png'),
+                          const SizedBox(height: 24),
                           CustomInputField(
                             labelText: 'Email',
                             hintText: 'Your email',
@@ -72,8 +71,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                 context.read<SignInCubit>().signInPassword,
                           ),
                           const SizedBox(height: 16),
-                          ForgetPasswordWidget(size: size),
-                          const SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.center,
+                            child: ForgetPasswordWidget(
+                                size: MediaQuery.of(context).size),
+                          ),
+                          const SizedBox(height: 24),
                           state is SignInLoading
                               ? const CircularProgressIndicator()
                               : CustomFormButton(
@@ -83,15 +86,22 @@ class _SigninScreenState extends State<SigninScreen> {
                                   },
                                 ),
                           const SizedBox(height: 18),
-                          DontHaveAnAccountWidget(size: size),
-                          const SizedBox(height: 20),
+                          DontHaveAnAccountWidget(
+                              size: MediaQuery.of(context).size),
+                          /*const SizedBox(height: 20),
+                          CustomFormButton(
+                            innerText: 'Sign In offline',
+                            onPressed: () {
+                              navigateTo(context, HomeScreen());
+                            },
+                          ),*/
                         ],
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           );
         },
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Screens/signin_screen.dart'
+    show SigninScreen;
 
 class AlreadyHaveAnAccount extends StatelessWidget {
   const AlreadyHaveAnAccount({super.key});
@@ -19,7 +21,14 @@ class AlreadyHaveAnAccount extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () => {Navigator.pop(context)},
+            onTap: () => {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SigninScreen(),
+                ),
+              ),
+            },
             child: const Text(
               'Log-in',
               style: TextStyle(

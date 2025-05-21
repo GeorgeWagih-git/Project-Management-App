@@ -12,7 +12,6 @@ class SignInCubit extends Cubit<SignInStates> {
   SignInCubit(this.api) : super(SignInInitialState());
   static SignInCubit get(BuildContext context) => BlocProvider.of(context);
   final ApiConsumer api;
-  //Sign in Form key
   //Sign in email
   final TextEditingController signInEmail = TextEditingController();
   //Sign in password
