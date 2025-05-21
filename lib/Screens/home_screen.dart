@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 25,
+                                        fontSize: 20,
                                       ),
                                     ),
                                   ],
