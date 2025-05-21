@@ -125,15 +125,26 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            'Manager: ${_project.managerUserName}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: isSmallScreen ? 16 : 20,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Manager: ${_project.managerUserName}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isSmallScreen ? 16 : 20,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.messenger,
+                                  color: Colors.white,
+                                ),
+                                highlightColor: Colors.amber,
+                              ),
+                            ],
                           ),
 
-                          /// Action buttons
                           if (user?.userName == project.managerUserName)
                             Row(
                               children: [
@@ -146,7 +157,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             ),
                           const SizedBox(height: 30),
 
-                          /// Created date
                           _buildIconTextRow(
                             icon: Icons.access_time,
                             title: 'Created Date',
@@ -154,7 +164,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           const SizedBox(height: 20),
 
-                          /// Deadline
                           _buildIconTextRow(
                             icon: Icons.calendar_month,
                             title: 'Dead Date',
@@ -162,7 +171,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           const SizedBox(height: 30),
 
-                          /// Project Details
                           _buildSectionTitle('Project Details'),
                           const SizedBox(height: 10),
                           Text(
@@ -172,7 +180,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           const SizedBox(height: 30),
 
-                          /// Progress
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -191,7 +198,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           const SizedBox(height: 30),
 
-                          /// All Tasks + Add button
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -238,8 +244,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       ),
                     ),
                   ),
-
-                  /// Task ListView
                   TaskListview(
                     project: _project,
                     user: user!,

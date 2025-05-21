@@ -75,6 +75,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       icon: Icons.people,
                       label: 'Employee',
                       value: _task.assignedTo,
+                      chat: true,
                     ),
                     const SizedBox(height: 20),
                     _buildInfoRow(
@@ -122,6 +123,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     required IconData icon,
     required String label,
     required String value,
+    bool chat = false,
   }) {
     return Row(
       children: [
@@ -154,6 +156,21 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             ),
           ],
         ),
+        SizedBox(
+          width: 15,
+        ),
+        if (chat == true)
+          IconButton(
+              highlightColor: Colors.amber,
+              onPressed: () {},
+              icon: Icon(
+                Icons.messenger,
+                color: Colors.white,
+              ))
+        else
+          SizedBox(
+            width: 1,
+          ),
       ],
     );
   }

@@ -89,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //! Header
                         SizedBox(
                           width: double.infinity,
                           height: 80,
@@ -132,8 +131,6 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                             ),
                           ),
                         ),
-
-                        //! Search and Logout
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
@@ -191,9 +188,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 25),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
@@ -240,9 +235,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 25),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Row(

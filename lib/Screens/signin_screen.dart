@@ -3,7 +3,6 @@ import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_states.dart';
 
 import 'package:flutter_application_1/Screens/home_screen.dart';
-import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -25,13 +24,15 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
+      showBackButton: false,
       screenName: 'Sign In',
       child: BlocConsumer<SignInCubit, SignInStates>(
         listener: (context, state) {
           if (state is SignInSuccess) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text("Welcome")));
-            navigateTo(context, HomeScreen());
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
           } else if (state is SignInFailure) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errMessage)));
