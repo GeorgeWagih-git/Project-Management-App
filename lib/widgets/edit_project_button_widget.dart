@@ -58,10 +58,19 @@ class EditProjectButtonWidget extends StatelessWidget {
                         label: 'Project Name',
                       ),
                       const SizedBox(height: 12),
-                      _buildTextField(
+                      TextFormField(
                         controller: descriptionController,
-                        label: 'Description',
-                        maxLines: 3,
+                        validator: (value) =>
+                            value!.isEmpty ? 'Required' : null,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          labelStyle: const TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                        ),
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
                       ),
                       const SizedBox(height: 12),
                       const Align(

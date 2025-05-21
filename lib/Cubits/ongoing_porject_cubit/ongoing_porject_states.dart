@@ -54,3 +54,5 @@ final class StayusChangeFailure extends OngoingProjectStates {
 
   StayusChangeFailure({required this.errMessage});
 }
+////////////////////////////////////////////////////////////
+///final class ProjectCreateLoading extends OngoingProjectStates {}

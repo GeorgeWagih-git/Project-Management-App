@@ -49,7 +49,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       child: RefreshIndicator(
         onRefresh: () async {
           await widget.onGoingCubit.fetchProjectWithTasks(_task.projectId);
-          setState(() {}); // Refresh data if modified
+          setState(() {});
         },
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -60,7 +60,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Title
                     Text(
                       _task.title,
                       style: const TextStyle(
@@ -72,32 +71,24 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       maxLines: 1,
                     ),
                     const SizedBox(height: 20),
-
-                    /// Employee
                     _buildInfoRow(
                       icon: Icons.people,
                       label: 'Employee',
                       value: _task.assignedTo,
                     ),
                     const SizedBox(height: 20),
-
-                    /// Created Date
                     _buildInfoRow(
                       icon: Icons.access_time,
                       label: 'Created At',
                       value: formattedCreatedDate,
                     ),
                     const SizedBox(height: 20),
-
-                    /// Deadline
                     _buildInfoRow(
                       icon: Icons.calendar_month,
                       label: 'Deadline',
                       value: formattedDeadline,
                     ),
                     const SizedBox(height: 30),
-
-                    /// Task Details + Edit/Delete
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -109,8 +100,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ],
                     ),
                     const SizedBox(height: 15),
-
-                    /// Description
                     Text(
                       _task.description,
                       style: const TextStyle(
@@ -179,17 +168,36 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               context: context,
               isScrollControlled: true,
               backgroundColor: const Color(0xff212832),
-              builder: (context) {
-                return EditTaskButtonWidget(
-                  task: _task,
-                  projectId: _task.projectId,
-                  cubit: widget.onGoingCubit,
+              builder: (BuildContext context) {
+                return DraggableScrollableSheet(
+                  expand: false, // أهم حاجة دي
+                  initialChildSize: 0.7, // ممكن تبدأ بحجم متوسط
+                  minChildSize: 0.4,
+                  maxChildSize: 0.95, // مش هيتعدى الشاشة
+                  builder: (context, scrollController) {
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                        top: 16,
+                        left: 16,
+                        right: 16,
+                      ),
+                      child: EditTaskButtonWidget(
+                        task: _task,
+                        projectId: _task.projectId,
+                        cubit: widget.onGoingCubit,
+                      ),
+                    );
+                  },
                 );
               },
             );
 
             if (updatedTask != null) {
-              setState(() => _task = updatedTask);
+              setState(() {
+                _task = updatedTask;
+              });
             }
           },
         ),

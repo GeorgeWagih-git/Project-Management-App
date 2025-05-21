@@ -1,0 +1,2 @@
+C:/Users/hp/Desktop/graduation V2/Project-Management-App/android/app/.cxx/RelWithDebInfo/5rf523v6/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/hp/Desktop/graduation V2/Project-Management-App/android/app/.cxx/RelWithDebInfo/5rf523v6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
