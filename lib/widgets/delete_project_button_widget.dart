@@ -37,14 +37,13 @@ class DeleteProjectButtonWidget extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () async {
-                      await onGoingCubit.deleteProjectFromServer(
-                          widget.projectClass.id); // لو عندك حذف من السيرفر
+                      await onGoingCubit
+                          .deleteProjectFromServer(widget.projectClass.id);
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (context) => BlocProvider.value(
-                                  value: onGoingCubit
-                                    ..fetchAllProjects(), // ✅ تحميل المشاريع من نفس الـ Cubit
+                                  value: onGoingCubit..fetchAllProjects(),
                                   child: const HomeScreen(),
                                 )),
                         (route) => false,

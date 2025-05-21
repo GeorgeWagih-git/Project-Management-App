@@ -11,7 +11,7 @@ import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/delete_project_button_widget.dart';
-import 'package:flutter_application_1/widgets/rename_project_button_widget.dart';
+import 'package:flutter_application_1/widgets/edit_project_button_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -137,7 +137,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           if (user?.userName == project.managerUserName)
                             Row(
                               children: [
-                                RenameProjectButtonWidget(
+                                EditProjectButtonWidget(
                                     onGoingCubit: onGoingCubit, widget: widget),
                                 const SizedBox(width: 15),
                                 DeleteProjectButtonWidget(

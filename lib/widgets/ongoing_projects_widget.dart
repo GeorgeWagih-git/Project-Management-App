@@ -39,7 +39,6 @@ class OngoingProjectsWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                /// Left Column (Text Info)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,8 +80,6 @@ class OngoingProjectsWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                /// Right Circular Progress
                 Padding(
                   padding: const EdgeInsets.only(left: 12),
                   child: CircularPercentIndicator(

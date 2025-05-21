@@ -17,7 +17,7 @@ class SignUpCubit extends Cubit<SignUpStates> {
   XFile? profilePic;
   void uploadProfilePic(XFile pickedFile) {
     profilePic = pickedFile;
-    emit(OngoingProjectImageSelected()); // تأكد من وجود هذا الستيت
+    emit(OngoingProjectImageSelected());
   }
 
   //Sign up name
