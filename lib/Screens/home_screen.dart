@@ -6,7 +6,7 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/profile_screen.dart';
 import 'package:flutter_application_1/Screens/project_details_screen.dart';
-import 'package:flutter_application_1/Screens/signin_screen.dart';
+import 'package:flutter_application_1/Screens/settings_screen.dart';
 import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/main.dart';
@@ -126,6 +126,8 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                               ProfileScreen()),
                                     );
                                   },
+                                  borderRadius: BorderRadius.circular(
+                                          40),
                                   child: user?.imageUrl != null
                                       ? CircleAvatar(
                                           radius: 30,
@@ -152,48 +154,23 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     child: InlineSearchBar(),
                                   ),
                                   const SizedBox(width: 10),
-                                  IconButton(
-                                    onPressed: () async {
-                                      final confirm = await showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title:
-                                              const Text('Logout Confirmation'),
-                                          content: const Text(
-                                              'Are you sure you want to logout?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, false),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, true),
-                                              child: const Text('Logout'),
-                                            ),
-                                          ],
-                                        ),
+                                   Container(
+                                  decoration: BoxDecoration(),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SettingsScreen()),
                                       );
-
-                                      if (confirm == true) {
-                                        await AppPrefs.logout();
-                                        if (mounted) {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    const SigninScreen()),
-                                            (route) => false,
-                                          );
-                                        }
-                                      }
                                     },
-                                    icon: const Icon(
-                                      Icons.logout,
+                                    icon: Icon(
+                                      Icons.settings,
                                       color: Colors.white,
                                     ),
                                   ),
+                                ),
                                 ],
                               ),
                             ],
