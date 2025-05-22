@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Screens/calender_screen.dart';
 import 'package:flutter_application_1/Screens/chat_screen.dart';
 import 'package:flutter_application_1/Screens/home_screen.dart';
-import 'package:flutter_application_1/Screens/notfifcations_screen.dart';
 import 'package:flutter_application_1/widgets/build_nav_item.dart';
 
 // ignore: must_be_immutable
@@ -108,13 +107,6 @@ class _CustomScaffoldWidgetState extends State<CustomScaffoldWidget> {
                     label: 'Calendar',
                     selected: widget.calenderSelected,
                     screen: CalenderScreen(),
-                  ),
-                  _buildNavItem(
-                    context,
-                    icon: Icons.notifications,
-                    label: 'Notification',
-                    selected: widget.notificationSelected,
-                    screen: const NotificationsScreen(),
                   ),
                 ],
               ),
