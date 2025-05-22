@@ -19,4 +19,13 @@ class MessageModel {
       timestamp: json['timestamp'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'senderId': senderId,
+      'receiverId': receiverId,
+      'message': message,
+      'timestamp': timestamp,
+    };
+  }
 }
