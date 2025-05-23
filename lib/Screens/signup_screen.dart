@@ -16,6 +16,8 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  PasswordStrength passwordStrength = PasswordStrength.Weak;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignUpCubit, SignUpStates>(
@@ -88,6 +90,40 @@ class _SignupScreenState extends State<SignupScreen> {
                             suffixIcon: true,
                             controller:
                                 context.read<SignUpCubit>().signUpPassword,
+                            onChanged: (value) {
+                              setState(() {
+                                passwordStrength = getPasswordStrength(value);
+                              });
+                            },
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Text(
+                                'Password Strength: ',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                              Text(
+                                passwordStrength == PasswordStrength.Strong
+                                    ? "Strong 💪"
+                                    : passwordStrength ==
+                                            PasswordStrength.Medium
+                                        ? "Medium ⚠️"
+                                        : "Weak ❌",
+                                style: TextStyle(
+                                  color: passwordStrength ==
+                                          PasswordStrength.Strong
+                                      ? Colors.green
+                                      : passwordStrength ==
+                                              PasswordStrength.Medium
+                                          ? Colors.orange
+                                          : Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 16),
                           CustomInputField(
@@ -102,6 +138,19 @@ class _SignupScreenState extends State<SignupScreen> {
                               : CustomFormButton(
                                   innerText: 'Signup',
                                   onPressed: () {
+                                    if (getPasswordStrength(context
+                                            .read<SignUpCubit>()
+                                            .signUpPassword
+                                            .text) !=
+                                        PasswordStrength.Strong) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Password is not strong enough')),
+                                      );
+                                      return;
+                                    }
                                     context.read<SignUpCubit>().signUp();
                                   },
                                 ),
@@ -119,5 +168,31 @@ class _SignupScreenState extends State<SignupScreen> {
         );
       },
     );
+  }
+}
+
+enum PasswordStrength { Weak, Medium, Strong }
+
+PasswordStrength getPasswordStrength(String password) {
+  if (password.length < 6) return PasswordStrength.Weak;
+
+  final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+  final hasLowercase = password.contains(RegExp(r'[a-z]'));
+  final hasDigits = password.contains(RegExp(r'\d'));
+  final hasSpecialCharacters = password.contains(RegExp(r'[!@#\$&*~]'));
+
+  final conditionsMet = [
+    hasUppercase,
+    hasLowercase,
+    hasDigits,
+    hasSpecialCharacters,
+  ].where((c) => c).length;
+
+  if (conditionsMet >= 3 && password.length >= 8) {
+    return PasswordStrength.Strong;
+  } else if (conditionsMet >= 2) {
+    return PasswordStrength.Medium;
+  } else {
+    return PasswordStrength.Weak;
   }
 }

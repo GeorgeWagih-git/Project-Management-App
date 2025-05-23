@@ -7,6 +7,7 @@ class CustomInputField extends StatefulWidget {
   final bool? isDense;
   final bool obscureText;
   final TextEditingController? controller;
+  final Function(String)? onChanged;
   const CustomInputField({
     super.key,
     required this.labelText,
@@ -15,6 +16,7 @@ class CustomInputField extends StatefulWidget {
     this.isDense,
     this.obscureText = false,
     this.controller,
+    this.onChanged,
   });
 
   @override
@@ -42,6 +44,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
             ),
           ),
           TextFormField(
+            onChanged: widget.onChanged,
             style: TextStyle(color: Colors.amber),
             cursorErrorColor: Colors.red,
             obscureText: (widget.obscureText && _obscureText),
