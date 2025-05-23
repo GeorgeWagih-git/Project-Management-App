@@ -3,6 +3,7 @@ import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_states.dart';
 
 import 'package:flutter_application_1/Screens/home_screen.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/widgets/custom_form_button.dart';
 import 'package:flutter_application_1/widgets/custom_input_field.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -89,13 +90,13 @@ class _SigninScreenState extends State<SigninScreen> {
                           const SizedBox(height: 18),
                           DontHaveAnAccountWidget(
                               size: MediaQuery.of(context).size),
-                          /*const SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           CustomFormButton(
                             innerText: 'Sign In offline',
                             onPressed: () {
                               navigateTo(context, HomeScreen());
                             },
-                          ),*/
+                          ),
                         ],
                       ),
                     ),

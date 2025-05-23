@@ -29,7 +29,6 @@ abstract class ApiConsumer {
     Map<String, String>? headers,
   });
 
-  // ✅ أضف دي:
   Future<dynamic> put(
     String path, {
     Object? data,

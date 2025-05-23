@@ -1,12 +1,19 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/project_class.dart';
-//import 'package:flutter_application_1/Classes/task_model.dart';
+import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/tasks_list_view.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
-//import 'package:flutter_application_1/Screens/task_details_screen.dart';
-//import 'package:flutter_application_1/core/functions/navigate_to.dart';
+import 'package:flutter_application_1/Cubits/project_files_cubit/project_files_cubit.dart';
+import 'package:flutter_application_1/Cubits/project_files_cubit/project_files_states.dart';
+import 'package:flutter_application_1/Screens/task_details_screen.dart';
+import 'package:flutter_application_1/core/api/dio_consumer.dart';
+import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
@@ -197,7 +204,71 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             ],
                           ),
                           const SizedBox(height: 30),
+                          BlocProvider(
+                            create: (context) =>
+                                ProjectFilesCubit(DioConsumer(dio: Dio())),
+                            child: BlocConsumer<ProjectFilesCubit,
+                                ProjectFilesState>(
+                              listener: (context, state) {
+                                if (state is ProjectFileError) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(state.errorMessage)),
+                                  );
+                                } else if (state is ProjectFileUploadSuccess) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('File uploaded successfully')),
+                                  );
+                                }
+                              },
+                              builder: (context, state) {
+                                final fileCubit =
+                                    ProjectFilesCubit.get(context);
+                                final isManager =
+                                    user?.userName == project.managerUserName;
 
+                                return Row(
+                                  children: [
+                                    if (isManager) ...[
+                                      ElevatedButton.icon(
+                                        icon: Icon(Icons.upload_file),
+                                        label: Text("Upload"),
+                                        onPressed: () async {
+                                          final result = await FilePicker
+                                              .platform
+                                              .pickFiles();
+                                          if (result != null) {
+                                            fileCubit.setFile(File(
+                                                result.files.single.path!));
+                                            await fileCubit.uploadFile(
+                                              projectId: project.id,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(width: 10),
+                                      ElevatedButton.icon(
+                                        icon: Icon(Icons.delete),
+                                        label: Text("Delete"),
+                                        onPressed: () =>
+                                            fileCubit.deleteFile(project.id),
+                                      ),
+                                    ],
+                                    SizedBox(width: 10),
+                                    ElevatedButton.icon(
+                                      icon: Icon(Icons.open_in_new),
+                                      label: Text("Open"),
+                                      onPressed: () =>
+                                          fileCubit.openFile(project.id),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -213,7 +284,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                         onGoingCubit: onGoingCubit,
                                         projectId: project.id,
                                       ),
-                              /*MaterialButton(
+                              MaterialButton(
                                   minWidth: 20,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -236,7 +307,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                             onGoingCubit: onGoingCubit,
                                             user: user!,
                                             projectClass: widget.projectClass));
-                                  }),*/
+                                  }),
                             ],
                           ),
                           const SizedBox(height: 20),
