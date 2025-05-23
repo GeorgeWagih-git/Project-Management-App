@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 class ProjectFilesCubit extends Cubit<ProjectFilesState> {
   final ApiConsumer api;
+  bool fileExists = false;
 
   ProjectFilesCubit(this.api) : super(ProjectFilesInitial());
 
@@ -42,7 +43,7 @@ class ProjectFilesCubit extends Cubit<ProjectFilesState> {
           'Authorization': 'Bearer $token',
         },
       );
-
+      fileExists = true;
       emit(ProjectFileUploadSuccess());
     } catch (e) {
       emit(ProjectFileError(errorMessage: e.toString()));
@@ -62,7 +63,7 @@ class ProjectFilesCubit extends Cubit<ProjectFilesState> {
           'Authorization': 'Bearer $token',
         },
       );
-
+      fileExists = false;
       emit(ProjectFileDeleteSuccess());
     } catch (e) {
       emit(ProjectFileError(errorMessage: e.toString()));
@@ -83,10 +84,17 @@ class ProjectFilesCubit extends Cubit<ProjectFilesState> {
         },
       );
 
-      final bytes = response.bodyBytes;
-      final dir = await getTemporaryDirectory();
-      final filePath = '${dir.path}/project_document.pdf';
+      final fileUrl = response.toString().trim();
 
+      final downloadResponse = await Dio().get(
+        fileUrl,
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      final bytes = downloadResponse.data;
+
+      final dir = await getTemporaryDirectory();
+      final filePath = '${dir.path}/project_$projectId.pdf';
       final file = File(filePath);
       await file.writeAsBytes(bytes);
 
@@ -95,6 +103,28 @@ class ProjectFilesCubit extends Cubit<ProjectFilesState> {
       emit(ProjectFileOpenSuccess());
     } catch (e) {
       emit(ProjectFileError(errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> checkIfFileExists(int projectId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final response = await api.get(
+        '/api/Project/GetProjectDocument/$projectId',
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final fileUrl = response.toString().trim();
+
+      fileExists = fileUrl.isNotEmpty;
+      emit(ProjectFileCheckSuccess());
+    } catch (_) {
+      fileExists = false;
+      emit(ProjectFileCheckSuccess());
     }
   }
 }

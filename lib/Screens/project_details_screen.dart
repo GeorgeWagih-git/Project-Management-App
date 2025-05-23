@@ -205,8 +205,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           ),
                           const SizedBox(height: 30),
                           BlocProvider(
-                            create: (context) =>
-                                ProjectFilesCubit(DioConsumer(dio: Dio())),
+                            create: (context) {
+                              final cubit =
+                                  ProjectFilesCubit(DioConsumer(dio: Dio()));
+                              cubit.checkIfFileExists(project.id);
+                              return cubit;
+                            },
                             child: BlocConsumer<ProjectFilesCubit,
                                 ProjectFilesState>(
                               listener: (context, state) {
@@ -219,6 +223,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                     SnackBar(
                                         content:
                                             Text('File uploaded successfully')),
+                                  );
+                                } else if (state is ProjectFileDeleteSuccess) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('File Deleted successfully')),
                                   );
                                 }
                               },
@@ -242,26 +252,53 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                             fileCubit.setFile(File(
                                                 result.files.single.path!));
                                             await fileCubit.uploadFile(
-                                              projectId: project.id,
-                                            );
+                                                projectId: project.id);
+                                            fileCubit
+                                                .checkIfFileExists(project.id);
                                           }
                                         },
                                       ),
                                       SizedBox(width: 10),
-                                      ElevatedButton.icon(
-                                        icon: Icon(Icons.delete),
-                                        label: Text("Delete"),
-                                        onPressed: () =>
-                                            fileCubit.deleteFile(project.id),
-                                      ),
+                                      fileCubit.fileExists
+                                          ? ElevatedButton.icon(
+                                              icon: Icon(Icons.delete),
+                                              label: Text("Delete"),
+                                              onPressed: () async {
+                                                await fileCubit
+                                                    .deleteFile(project.id);
+                                                fileCubit.checkIfFileExists(
+                                                    project.id);
+                                              },
+                                            )
+                                          : Flexible(
+                                              child: Text(
+                                                "No Uploaded File ",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                              ),
+                                            ),
                                     ],
                                     SizedBox(width: 10),
-                                    ElevatedButton.icon(
-                                      icon: Icon(Icons.open_in_new),
-                                      label: Text("Open"),
-                                      onPressed: () =>
-                                          fileCubit.openFile(project.id),
-                                    ),
+                                    fileCubit.fileExists
+                                        ? ElevatedButton.icon(
+                                            icon: Icon(Icons.open_in_new),
+                                            label: Text("Open"),
+                                            onPressed: () =>
+                                                fileCubit.openFile(project.id),
+                                          )
+                                        : Flexible(
+                                            child: Text(
+                                              "No Uploaded File ",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: true,
+                                            ),
+                                          ),
                                   ],
                                 );
                               },

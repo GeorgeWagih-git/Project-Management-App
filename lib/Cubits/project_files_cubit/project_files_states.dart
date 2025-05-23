@@ -25,3 +25,5 @@ class ProjectFileDeleteSuccess extends ProjectFilesState {}
 class ProjectFileOpenSuccess extends ProjectFilesState {}
 
 class ProjectFileOpening extends ProjectFilesState {}
+
+class ProjectFileCheckSuccess extends ProjectFilesState {}
