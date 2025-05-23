@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                               ),
                               const SizedBox(width: 5),
                               AddProjectButton(),
-                              MaterialButton(
+                              /*  MaterialButton(
                                   minWidth: 20,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -281,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                                 projectDetails: 'offline test',
                                                 managerUserName: 'offline test',
                                                 createdDate: date)));
-                                  })
+                                  })*/
                             ],
                           ),
                         ),

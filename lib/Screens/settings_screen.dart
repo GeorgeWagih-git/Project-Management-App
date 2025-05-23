@@ -20,8 +20,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
+      showBackButton: false,
       screenName: "Settings",
       showappbar: true,
+      showhomebottombar: true,
       child: ListView(
         children: [
           buildButtonOption(

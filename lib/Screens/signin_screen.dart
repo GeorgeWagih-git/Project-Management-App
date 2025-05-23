@@ -84,19 +84,22 @@ class _SigninScreenState extends State<SigninScreen> {
                               : CustomFormButton(
                                   innerText: 'Sign In',
                                   onPressed: () {
-                                    context.read<SignInCubit>().signIn();
+                                    if (signInFormKey.currentState!
+                                        .validate()) {
+                                      context.read<SignInCubit>().signIn();
+                                    }
                                   },
                                 ),
                           const SizedBox(height: 18),
                           DontHaveAnAccountWidget(
                               size: MediaQuery.of(context).size),
                           const SizedBox(height: 20),
-                          CustomFormButton(
+                          /* CustomFormButton(
                             innerText: 'Sign In offline',
                             onPressed: () {
                               navigateTo(context, HomeScreen());
                             },
-                          ),
+                          ),*/
                         ],
                       ),
                     ),

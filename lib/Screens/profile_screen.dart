@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
-import 'package:flutter_application_1/Screens/settings_screen.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
-import 'package:flutter_application_1/widgets/build_button_option.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -135,12 +133,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                buildButtonOption(Icons.settings, 'Settings', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsScreen()),
-                  );
-                }),
               ],
             ),
           ),

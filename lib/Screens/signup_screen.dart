@@ -138,20 +138,26 @@ class _SignupScreenState extends State<SignupScreen> {
                               : CustomFormButton(
                                   innerText: 'Signup',
                                   onPressed: () {
-                                    if (getPasswordStrength(context
-                                            .read<SignUpCubit>()
-                                            .signUpPassword
-                                            .text) !=
-                                        PasswordStrength.Strong) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Password is not strong enough')),
-                                      );
-                                      return;
+                                    if (context
+                                        .read<SignUpCubit>()
+                                        .signUpFormKey
+                                        .currentState!
+                                        .validate()) {
+                                      if (getPasswordStrength(context
+                                              .read<SignUpCubit>()
+                                              .signUpPassword
+                                              .text) !=
+                                          PasswordStrength.Strong) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Password is not strong enough')),
+                                        );
+                                        return;
+                                      }
+                                      context.read<SignUpCubit>().signUp();
                                     }
-                                    context.read<SignUpCubit>().signUp();
                                   },
                                 ),
                           const SizedBox(height: 18),

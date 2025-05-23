@@ -321,7 +321,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                         onGoingCubit: onGoingCubit,
                                         projectId: project.id,
                                       ),
-                              MaterialButton(
+                              /* MaterialButton(
                                   minWidth: 20,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -344,7 +344,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                             onGoingCubit: onGoingCubit,
                                             user: user!,
                                             projectClass: widget.projectClass));
-                                  }),
+                                  }),*/
                             ],
                           ),
                           const SizedBox(height: 20),
