@@ -1,65 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
-import 'package:flutter_application_1/core/shared_perfs.dart';
-import '../Classes/user_model.dart';
-import '../widgets/custom_scaffold_widget.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({
-    super.key,
-  });
+  const ChatScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  ChatScreenState createState() => ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  late TextEditingController _searchController;
-  late List<UserModel> _filteredUsers;
-  late List<UserModel> allUsers;
-  UserModel? currentUser;
-  late String authtoken;
+class ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, String>> allMessages = [
+    {
+      "name": "Olen Sporer",
+      "message": "Hi! We are going out tonight, do you want to join us?",
+      "time": "5 min"
+    },
+    {
+      "name": "Maria Carry",
+      "message": "Darling, please don’t forget to eat your fruits",
+      "time": "15 min"
+    },
+    {
+      "name": "Creola",
+      "message": "Hi! We are going out tonight, do you want to join us?",
+      "time": "25 min"
+    },
+    {
+      "name": "Sofia Sporer",
+      "message": "Hi! We are going out tonight, do you want to join us?",
+      "time": "1 hour"
+    },
+    {
+      "name": "Jonathan Alls",
+      "message": "Darling, please don’t forget to eat your fruits",
+      "time": "2 hours"
+    },
+    {
+      "name": "Jessica Arnold",
+      "message": "Hi! We are going out tonight, do you want to join us?",
+      "time": "3 hours"
+    },
+  ];
+
+  List<Map<String, String>> filteredMessages = [];
+  int? selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController();
-    _searchController.addListener(_filterUsers);
-
-    // Initialize lists
-    _filteredUsers = [];
-    allUsers = [];
-
-    // Load data
-    loadUserData();
+    filteredMessages = allMessages;
+    _searchController.addListener(_filterMessages);
   }
 
-  void loadUserData() async {
-    final loadedUser = await AppPrefs.getUser();
-    if (loadedUser != null) {
-      setState(() {
-        currentUser = loadedUser;
-        idController = TextEditingController(text: currentUser!.id);
-      });
-    }
-  }
-
-  late TextEditingController idController;
-
-  void _filterUsers() {
-    final query = _searchController.text.toLowerCase();
+  void _filterMessages() {
     setState(() {
-      _filteredUsers = allUsers
-          .where((user) =>
-              user.id != currentUser!.id &&
-              (user.fullName.toLowerCase().contains(query) ||
-                  user.userName.toLowerCase().contains(query)))
-          .toList();
+      String query = _searchController.text.toLowerCase();
+      filteredMessages = query.isEmpty
+          ? allMessages
+          : allMessages
+              .where((msg) => msg["name"]!.toLowerCase().contains(query))
+              .toList();
     });
   }
 
   @override
   void dispose() {
+    _searchController.removeListener(_filterMessages);
     _searchController.dispose();
     super.dispose();
   }
@@ -72,46 +80,42 @@ class _ChatScreenState extends State<ChatScreen> {
       showhomebottombar: true,
       showBackButton: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.only(
+            bottom: 0.0), // Adjust padding to avoid overlapping with navbar
         child: Column(
           children: [
-            SizedBox(width: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: "Search",
-                      hintStyle: const TextStyle(color: Color(0xff6F8793)),
-                      prefixIcon:
-                          const Icon(Icons.search, color: Color(0xff6F8793)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      filled: true,
-                      fillColor: const Color(0xff455A64),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  hintStyle: TextStyle(color: Color(0xff6F8793)),
+                  prefixIcon: Icon(Icons.search, color: Color(0xff6F8793)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  filled: true,
+                  fillColor: Color(0xff455A64),
                 ),
-                SizedBox(width: 16),
-              ],
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                itemCount: _filteredUsers.length,
+                padding: const EdgeInsets.only(
+                    bottom: 16.0), // Ensure spacing above the navbar
+                itemCount: filteredMessages.length,
                 itemBuilder: (context, index) {
-                  final user = _filteredUsers[index];
+                  final message = filteredMessages[index];
+                  bool isSelected = selectedIndex == index;
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => InsideChatScreen(
-                            token: authtoken,
-                            receiverId: user.id,
-                          ),
+                          builder: (context) =>
+                              InsideChatScreen(name: message["name"]!),
                         ),
                       );
                     },
@@ -120,7 +124,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           horizontal: 16.0, vertical: 5),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xff455A64),
+                          color: isSelected
+                              ? Color(0xffFED36A)
+                              : Color(0xff455A64),
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
@@ -133,18 +139,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
                           leading: CircleAvatar(
-                            backgroundImage: user.imageUrl!.isNotEmpty
-                                ? NetworkImage(user.imageUrl!)
-                                : const AssetImage('assets/person.png')
-                                    as ImageProvider,
+                            backgroundImage: AssetImage('assets/person.png'),
                           ),
-                          title: Text(user.fullName,
-                              style: const TextStyle(
+                          title: Text(message["name"]!,
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          subtitle: Text(user.userName,
-                              style: const TextStyle(color: Colors.grey)),
-                          trailing: const Icon(Icons.chat, color: Colors.white),
+                                  color: isSelected
+                                      ? Colors.black
+                                      : Colors.white)),
+                          subtitle: Text(message["message"]!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color:
+                                      isSelected ? Colors.black : Colors.grey)),
+                          trailing: Text(message["time"]!,
+                              style: TextStyle(
+                                  color: isSelected
+                                      ? Colors.black
+                                      : Colors.white)),
                         ),
                       ),
                     ),
