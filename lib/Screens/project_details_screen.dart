@@ -243,7 +243,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                     if (isManager) ...[
                                       ElevatedButton.icon(
                                         icon: Icon(Icons.upload_file),
-                                        label: Text("Upload"),
+                                        label: Text(""),
                                         onPressed: () async {
                                           final result = await FilePicker
                                               .platform
@@ -262,7 +262,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                       fileCubit.fileExists
                                           ? ElevatedButton.icon(
                                               icon: Icon(Icons.delete),
-                                              label: Text("Delete"),
+                                              label: Text(""),
                                               onPressed: () async {
                                                 await fileCubit
                                                     .deleteFile(project.id);
@@ -285,7 +285,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                     fileCubit.fileExists
                                         ? ElevatedButton.icon(
                                             icon: Icon(Icons.open_in_new),
-                                            label: Text("Open"),
+                                            label: Text(""),
                                             onPressed: () =>
                                                 fileCubit.openFile(project.id),
                                           )

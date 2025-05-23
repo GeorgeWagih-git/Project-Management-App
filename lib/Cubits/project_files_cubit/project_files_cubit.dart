@@ -86,15 +86,15 @@ class ProjectFilesCubit extends Cubit<ProjectFilesState> {
 
       final fileUrl = response.toString().trim();
 
+      final fileName = fileUrl.split('/').last;
       final downloadResponse = await Dio().get(
         fileUrl,
         options: Options(responseType: ResponseType.bytes),
       );
 
       final bytes = downloadResponse.data;
-
       final dir = await getTemporaryDirectory();
-      final filePath = '${dir.path}/project_$projectId.pdf';
+      final filePath = '${dir.path}/$fileName';
       final file = File(filePath);
       await file.writeAsBytes(bytes);
 
