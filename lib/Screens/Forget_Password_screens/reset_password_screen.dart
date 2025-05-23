@@ -18,6 +18,7 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
+  PasswordStrength passwordStrength = PasswordStrength.Weak;
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +68,43 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                       const SizedBox(height: 16),
                       CustomInputField(
-                        controller: cubit.resetPasswordNewPassword,
                         labelText: 'New Password',
-                        hintText: 'Reset Password',
+                        hintText: 'Reset password',
+                        isDense: true,
                         obscureText: true,
                         suffixIcon: true,
+                        controller: cubit.resetPasswordNewPassword,
+                        onChanged: (value) {
+                          setState(() {
+                            passwordStrength = getPasswordStrength(value);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            'Password Strength: ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            passwordStrength == PasswordStrength.Strong
+                                ? "Strong 💪"
+                                : passwordStrength == PasswordStrength.Medium
+                                    ? "Medium ⚠️"
+                                    : "Weak ❌",
+                            style: TextStyle(
+                              color: passwordStrength == PasswordStrength.Strong
+                                  ? Colors.green
+                                  : passwordStrength == PasswordStrength.Medium
+                                      ? Colors.orange
+                                      : Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
                       state is ResetPasswordLoading
@@ -79,6 +112,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           : CustomFormButton(
                               innerText: 'Confirm',
                               onPressed: () {
+                                if (getPasswordStrength(
+                                        cubit.resetPasswordNewPassword.text) !=
+                                    PasswordStrength.Strong) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Password is not strong enough')),
+                                  );
+                                  return;
+                                }
                                 if (resetPasswordFormKey.currentState!
                                     .validate()) {
                                   cubit.resetPassword(
@@ -99,5 +142,31 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         },
       ),
     );
+  }
+}
+
+enum PasswordStrength { Weak, Medium, Strong }
+
+PasswordStrength getPasswordStrength(String password) {
+  if (password.length < 6) return PasswordStrength.Weak;
+
+  final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+  final hasLowercase = password.contains(RegExp(r'[a-z]'));
+  final hasDigits = password.contains(RegExp(r'\d'));
+  final hasSpecialCharacters = password.contains(RegExp(r'[!@#\$&*~]'));
+
+  final conditionsMet = [
+    hasUppercase,
+    hasLowercase,
+    hasDigits,
+    hasSpecialCharacters,
+  ].where((c) => c).length;
+
+  if (conditionsMet >= 3 && password.length >= 8) {
+    return PasswordStrength.Strong;
+  } else if (conditionsMet >= 2) {
+    return PasswordStrength.Medium;
+  } else {
+    return PasswordStrength.Weak;
   }
 }
