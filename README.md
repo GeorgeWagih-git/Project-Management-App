@@ -70,4 +70,4 @@ We developed a **simple, user-friendly mobile application** that allows:
 
 1. Clone this repo:
 ```bash
-git clone https://github.com/yourusername/project-management-app.git
+git clone https://github.com/GeorgeWagih-git/Project-Management-App
