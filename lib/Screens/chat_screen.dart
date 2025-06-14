@@ -1,75 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:flutter_application_1/Classes/home_chat_model.dart';
+import 'package:flutter_application_1/Cubits/chat%20cubit/chat_cubit.dart';
 import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
+import 'package:flutter_application_1/core/shared_perfs.dart';
+import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   @override
-  ChatScreenState createState() => ChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, String>> allMessages = [
-    {
-      "name": "Olen Sporer",
-      "message": "Hi! We are going out tonight, do you want to join us?",
-      "time": "5 min"
-    },
-    {
-      "name": "Maria Carry",
-      "message": "Darling, please don’t forget to eat your fruits",
-      "time": "15 min"
-    },
-    {
-      "name": "Creola",
-      "message": "Hi! We are going out tonight, do you want to join us?",
-      "time": "25 min"
-    },
-    {
-      "name": "Sofia Sporer",
-      "message": "Hi! We are going out tonight, do you want to join us?",
-      "time": "1 hour"
-    },
-    {
-      "name": "Jonathan Alls",
-      "message": "Darling, please don’t forget to eat your fruits",
-      "time": "2 hours"
-    },
-    {
-      "name": "Jessica Arnold",
-      "message": "Hi! We are going out tonight, do you want to join us?",
-      "time": "3 hours"
-    },
-  ];
-
-  List<Map<String, String>> filteredMessages = [];
-  int? selectedIndex;
+  List<HomeChatModel> _chatList = [];
+  List<HomeChatModel> _filteredChatList = [];
 
   @override
   void initState() {
     super.initState();
-    filteredMessages = allMessages;
-    _searchController.addListener(_filterMessages);
-  }
-
-  void _filterMessages() {
-    setState(() {
-      String query = _searchController.text.toLowerCase();
-      filteredMessages = query.isEmpty
-          ? allMessages
-          : allMessages
-              .where((msg) => msg["name"]!.toLowerCase().contains(query))
-              .toList();
-    });
+    WidgetsBinding.instance.addObserver(this);
+    _loadChats();
+    _searchController.addListener(_filterChats);
   }
 
   @override
   void dispose() {
-    _searchController.removeListener(_filterMessages);
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadChats();
+    }
+  }
+
+  void _loadChats() {
+    context.read<ChatCubit>().loadChatHome((chatList) {
+      setState(() {
+        _chatList = chatList;
+        _filteredChatList = chatList;
+      });
+    });
+  }
+
+  void _filterChats() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredChatList = _chatList
+          .where((chat) => chat.email.toLowerCase().contains(query))
+          .toList();
+    });
   }
 
   @override
@@ -79,94 +65,96 @@ class ChatScreenState extends State<ChatScreen> {
       chatSelected: true,
       showhomebottombar: true,
       showBackButton: false,
-      child: Padding(
-        padding: const EdgeInsets.only(
-            bottom: 0.0), // Adjust padding to avoid overlapping with navbar
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xff37474F),
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: TextField(
                 controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  hintStyle: TextStyle(color: Color(0xff6F8793)),
-                  prefixIcon: Icon(Icons.search, color: Color(0xff6F8793)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  filled: true,
-                  fillColor: Color(0xff455A64),
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(color: Colors.white70),
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search, color: Colors.white70),
+                  contentPadding: EdgeInsets.all(16),
                 ),
-                style: TextStyle(color: Colors.white),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(
-                    bottom: 16.0), // Ensure spacing above the navbar
-                itemCount: filteredMessages.length,
-                itemBuilder: (context, index) {
-                  final message = filteredMessages[index];
-                  bool isSelected = selectedIndex == index;
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              InsideChatScreen(name: message["name"]!),
+          ),
+          Expanded(
+            child: _filteredChatList.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No chats found.',
+                      style: TextStyle(color: Colors.white54),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _filteredChatList.length,
+                    itemBuilder: (context, index) {
+                      final chat = _filteredChatList[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          final sender = await AppPrefs.getUser();
+                          if (sender == null) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => InsideChatScreen(
+                                senderId: sender.id,
+                                receiverEmail: chat.email,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xff455A64),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(12),
+                              leading: const CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/person.png'),
+                              ),
+                              title: Text(
+                                chat.email,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              subtitle: Text(
+                                chat.latestMessage,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Color(0xffFED36A)
-                              : Color(0xff455A64),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withAlpha(51),
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(12),
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage('assets/person.png'),
-                          ),
-                          title: Text(message["name"]!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: isSelected
-                                      ? Colors.black
-                                      : Colors.white)),
-                          subtitle: Text(message["message"]!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.black : Colors.grey)),
-                          trailing: Text(message["time"]!,
-                              style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.black
-                                      : Colors.white)),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                  ),
+          ),
+        ],
       ),
     );
   }
