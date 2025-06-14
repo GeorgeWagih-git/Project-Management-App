@@ -124,11 +124,20 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     );
                                   },
                                   child: user?.imageUrl != null
-                                      ? CircleAvatar(
-                                          radius: 30,
-                                          backgroundImage:
-                                              NetworkImage(user!.imageUrl!),
-                                        )
+                                      ? FutureBuilder(
+                                          future: AppPrefs
+                                              .getProfileImageTimestamp(),
+                                          builder: (context, snapshot) {
+                                            String imageUrl = user!.imageUrl!;
+                                            if (snapshot.hasData) {
+                                              imageUrl += "?v=${snapshot.data}";
+                                            }
+                                            return CircleAvatar(
+                                              radius: 30,
+                                              backgroundImage:
+                                                  NetworkImage(imageUrl),
+                                            );
+                                          })
                                       : const CircleAvatar(
                                           radius: 30,
                                           backgroundImage:

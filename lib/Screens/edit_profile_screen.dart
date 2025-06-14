@@ -65,60 +65,127 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(state.errorMessage)));
                     }
+                    if (state is ProfileImageDeleteSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Profile picture deleted")),
+                      );
+                      // You might want to reload user data here.
+                    } else if (state is ProfileImageError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.errorMessage)),
+                      );
+                    }
                   }, builder: (context, state) {
                     return Row(
                       children: [
                         Expanded(
                           child: Center(
-                              child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage: user?.imageUrl != null
-                                ? NetworkImage(user!.imageUrl!)
-                                : AssetImage('assets/person.png'),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  bottom: 5,
-                                  right: 5,
-                                  child: GestureDetector(
-                                    onTap: () async {},
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade400,
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 3,
+                              child: FutureBuilder(
+                                  future: AppPrefs.getProfileImageTimestamp(),
+                                  builder: (context, snapshot) {
+                                    String imageUrl = user!.imageUrl!;
+                                    if (snapshot.hasData) {
+                                      imageUrl += "?v=${snapshot.data}";
+                                    }
+
+                                    return Column(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 60,
+                                          backgroundImage: user?.imageUrl !=
+                                                  null
+                                              ? NetworkImage(imageUrl)
+                                              : AssetImage('assets/person.png'),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                bottom: 5,
+                                                right: 5,
+                                                child: GestureDetector(
+                                                  onTap: () async {},
+                                                  child: Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.blue.shade400,
+                                                      border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 3,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
+                                                    ),
+                                                    child: GestureDetector(
+                                                      onTap: () async {
+                                                        ImagePicker()
+                                                            .pickImage(
+                                                                source:
+                                                                    ImageSource
+                                                                        .gallery)
+                                                            .then(
+                                                              // ignore: use_build_context_synchronously
+                                                              (value) => context
+                                                                  .read<
+                                                                      EditProfileDataCubit>()
+                                                                  .uploadProfileImage(
+                                                                      file:
+                                                                          value!),
+                                                            );
+                                                      },
+                                                      child: const Icon(
+                                                        Icons.camera_alt_sharp,
+                                                        color: Colors.white,
+                                                        size: 25,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          ImagePicker()
-                                              .pickImage(
-                                                  source: ImageSource.gallery)
-                                              .then(
-                                                // ignore: use_build_context_synchronously
-                                                (value) => context
-                                                    .read<
-                                                        EditProfileDataCubit>()
-                                                    .uploadProfileImage(
-                                                        file: value!),
-                                              );
-                                        },
-                                        child: const Icon(
-                                          Icons.camera_alt_sharp,
-                                          color: Colors.white,
-                                          size: 25,
+                                        SizedBox(
+                                          height: 10,
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
+                                        ElevatedButton.icon(
+                                          icon: Icon(Icons.delete),
+                                          label: Text("Delete"),
+                                          onPressed: () async {
+                                            final confirm = await showDialog(
+                                              context: context,
+                                              builder: (_) => AlertDialog(
+                                                title: Text("Confirm"),
+                                                content: Text(
+                                                    "Are you sure you want to delete your profile picture?"),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            context, false),
+                                                    child: Text("Cancel"),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            context, true),
+                                                    child: Text("Delete"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+
+                                            if (confirm == true) {
+                                              context
+                                                  .read<EditProfileDataCubit>()
+                                                  .deleteProfileImage();
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  })),
                         ),
                         IconButton(
                           icon: Icon(

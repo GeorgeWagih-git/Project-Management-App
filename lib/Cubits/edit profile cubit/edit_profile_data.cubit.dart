@@ -1,6 +1,5 @@
 import 'package:flutter_application_1/Cubits/edit%20profile%20cubit/edit_profile_data_state.dart';
 import 'package:flutter_application_1/core/api/api_consumer.dart';
-import 'package:flutter_application_1/core/api/endpoints.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +38,8 @@ class EditProfileDataCubit extends Cubit<EditProfileDataState> {
       );
 
       emit(ProfileImageUploadSuccess());
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      await AppPrefs.saveProfileImageTimestamp(timestamp);
     } catch (e) {
       print('upload error: $e');
       emit(ProfileImageError(errorMessage: e.toString()));
@@ -52,12 +53,15 @@ class EditProfileDataCubit extends Cubit<EditProfileDataState> {
       final token = await AppPrefs.getToken();
 
       await api.put(
-        Endpoint.deleteProfilePic,
+        '/api/User/DeleteProfilePic',
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
+
+      await AppPrefs.saveProfileImageTimestamp(
+          DateTime.now().millisecondsSinceEpoch.toString());
 
       emit(ProfileImageDeleteSuccess());
     } catch (e) {

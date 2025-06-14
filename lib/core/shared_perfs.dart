@@ -34,4 +34,14 @@ class AppPrefs {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
+  static Future<void> saveProfileImageTimestamp(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('profile_image_version', value);
+  }
+
+  static Future<String?> getProfileImageTimestamp() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('profile_image_version');
+  }
 }
