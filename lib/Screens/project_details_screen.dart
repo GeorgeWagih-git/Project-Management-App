@@ -136,7 +136,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 'Manager: ${_project.managerUserName}',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: isSmallScreen ? 16 : 20,
+                                  fontSize: 17,
                                 ),
                               ),
                               IconButton(
