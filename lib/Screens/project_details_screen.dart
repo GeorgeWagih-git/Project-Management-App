@@ -136,7 +136,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 'Manager: ${_project.Email}',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 17,
+                                  fontSize: 14,
                                 ),
                               ),
                               IconButton(
