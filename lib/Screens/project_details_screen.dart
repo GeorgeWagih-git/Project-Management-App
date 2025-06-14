@@ -10,6 +10,7 @@ import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porje
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Cubits/project_files_cubit/project_files_cubit.dart';
 import 'package:flutter_application_1/Cubits/project_files_cubit/project_files_states.dart';
+import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
 import 'package:flutter_application_1/core/api/dio_consumer.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/add_task_button.dart';
@@ -139,13 +140,26 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.messenger,
-                                  color: Colors.white,
-                                ),
-                                highlightColor: Colors.amber,
-                              ),
+                                  highlightColor: Colors.amber,
+                                  onPressed: () async {
+                                    final sender = await AppPrefs.getUser();
+                                    if (sender != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => InsideChatScreen(
+                                            senderId: sender.id,
+                                            receiverEmail:
+                                                _project.managerUserName,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.messenger,
+                                    color: Colors.white,
+                                  ))
                             ],
                           ),
 

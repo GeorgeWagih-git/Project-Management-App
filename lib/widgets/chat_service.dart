@@ -1,18 +1,21 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_application_1/Classes/message_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Classes/home_chat_model.dart';
 import 'package:signalr_core/signalr_core.dart';
+import 'package:flutter_application_1/core/shared_perfs.dart';
 
-class ChatService {
-  late HubConnection _connection;
-  Function(String senderId, String message)? onMessageReceived;
+class SignalRService {
+  HubConnection? _hubConnection;
 
-  // Start SignalR connection
-  Future<void> initSignalR(String token) async {
-    _connection = HubConnectionBuilder()
+  Future<void> init() async {
+    final token = await AppPrefs.getToken();
+    if (token == null) {
+      debugPrint("❌ No token available");
+      return;
+    }
+
+    _hubConnection = HubConnectionBuilder()
         .withUrl(
-          'https://frankly-refined-escargot.ngrok-free.app/Hubs/ChatHub',
+          "https://frankly-refined-escargot.ngrok-free.app/Hubs/ChatHub",
           HttpConnectionOptions(
             accessTokenFactory: () async => token,
           ),
@@ -20,59 +23,62 @@ class ChatService {
         .withAutomaticReconnect()
         .build();
 
-    _connection.on('ReceiveMessage', (args) {
-      if (args != null && args.length >= 2) {
-        final senderId = args[0] as String;
-        final message = args[1] as String;
-        onMessageReceived?.call(senderId, message);
-      }
+    _hubConnection!.onclose((error) {
+      debugPrint("❌ SignalR closed: $error");
     });
 
-    await _connection.start();
-  }
-
-  // Send a message
-  Future<void> sendMessage({
-    required String senderId,
-    required String receiverId,
-    required String message,
-  }) async {
-    await _connection.invoke(
-      'SendMessage',
-      args: [senderId, receiverId, message],
-    );
-  }
-
-  // (Optional) Save message locally
-  void saveMessageLocally(String message) async {
-    final prefs = await SharedPreferences.getInstance();
-    final messages = prefs.getStringList('chatMessages') ?? [];
-    messages.add(message);
-    await prefs.setStringList('chatMessages', messages);
-  }
-
-  // Load chat messages from backend API (NOT SignalR hub URL)
-  Future<List<MessageModel>> loadMessages({
-    required String token,
-    required String receiverId,
-  }) async {
-    final url = Uri.parse(
-      'https://frankly-refined-escargot.ngrok-free.app/api/User/GetAllUsers',
-    ); // replace with actual endpoint
-
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => MessageModel.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load messages: ${response.body}');
+    try {
+      await _hubConnection!.start();
+      debugPrint("✅ SignalR Connected");
+    } catch (e) {
+      debugPrint("❌ SignalR start error: $e");
     }
+  }
+
+  Future<void> sendMessage(
+      String senderId, String receiverEmail, String message) async {
+    if (_hubConnection == null ||
+        _hubConnection!.state != HubConnectionState.connected) {
+      debugPrint("⚠️ Cannot send. Not connected.");
+      return;
+    }
+
+    try {
+      await _hubConnection!
+          .invoke("SendMessage", args: [senderId, receiverEmail, message]);
+      debugPrint("📤 Sent: $message");
+    } catch (e) {
+      debugPrint("❌ Failed to send message: $e");
+    }
+  }
+
+  void receiveMessages(Function(String senderId, String message) onMessage) {
+    _hubConnection?.on("ReceiveMessage", (arguments) {
+      if (arguments == null || arguments.length < 2) return;
+      final senderId = arguments[0] as String;
+      final message = arguments[1] as String;
+      debugPrint("📥 Received from $senderId: $message");
+      onMessage(senderId, message);
+    });
+  }
+
+  void loadChatHome(Function(List<HomeChatModel>) onResult) {
+    _hubConnection?.on("ReceiveChatHome", (arguments) {
+      if (arguments == null || arguments.isEmpty) return;
+
+      final rawList = arguments.first as List;
+      final chatList = rawList.map((item) {
+        final json = Map<String, dynamic>.from(item);
+        return HomeChatModel.fromJson(json);
+      }).toList();
+
+      onResult(chatList);
+    });
+
+    _hubConnection?.invoke("LoadChatHome");
+  }
+
+  void dispose() {
+    _hubConnection?.stop();
   }
 }

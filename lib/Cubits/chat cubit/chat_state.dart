@@ -4,16 +4,19 @@ abstract class ChatState {}
 
 class ChatInitial extends ChatState {}
 
-class ChatLoading extends ChatState {}
+class ChatMessageReceived extends ChatState {
+  final MessageModel message;
 
-class ChatLoaded extends ChatState {
-  final List<MessageModel> messages;
-
-  ChatLoaded({required this.messages});
+  ChatMessageReceived(this.message);
 }
 
-class ChatError extends ChatState {
-  final String message;
+class ChatMessageSent extends ChatState {
+  final MessageModel message;
 
-  ChatError({required this.message});
+  ChatMessageSent(this.message);
+}
+
+class ChatHomeUpdated extends ChatState {
+  final Map<String, HomeChatModel> users;
+  ChatHomeUpdated(this.users);
 }

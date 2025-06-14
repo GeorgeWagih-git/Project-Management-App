@@ -100,7 +100,7 @@ class _CustomScaffoldWidgetState extends State<CustomScaffoldWidget> {
                     icon: Icons.chat,
                     label: 'Chat',
                     selected: widget.chatSelected,
-                    screen: const ChatScreen(),
+                    screen: ChatScreen(),
                   ),
                   _buildNavItem(
                     context,

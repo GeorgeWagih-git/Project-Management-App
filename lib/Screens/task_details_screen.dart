@@ -3,6 +3,8 @@ import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/task_model.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
+import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
+import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_application_1/widgets/edit_task_button_widget.dart';
 import 'package:intl/intl.dart';
@@ -162,7 +164,20 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         if (chat == true)
           IconButton(
               highlightColor: Colors.amber,
-              onPressed: () {},
+              onPressed: () async {
+                final sender = await AppPrefs.getUser();
+                if (sender != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => InsideChatScreen(
+                        senderId: sender.id,
+                        receiverEmail: _task.assignedTo,
+                      ),
+                    ),
+                  );
+                }
+              },
               icon: Icon(
                 Icons.messenger,
                 color: Colors.white,
@@ -187,10 +202,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               backgroundColor: const Color(0xff212832),
               builder: (BuildContext context) {
                 return DraggableScrollableSheet(
-                  expand: false, // أهم حاجة دي
-                  initialChildSize: 0.7, // ممكن تبدأ بحجم متوسط
+                  expand: false,
+                  initialChildSize: 0.7,
                   minChildSize: 0.4,
-                  maxChildSize: 0.95, // مش هيتعدى الشاشة
+                  maxChildSize: 0.95,
                   builder: (context, scrollController) {
                     return SingleChildScrollView(
                       controller: scrollController,

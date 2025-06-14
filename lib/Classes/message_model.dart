@@ -1,12 +1,12 @@
 class MessageModel {
   final String senderId;
-  final String receiverId;
+  final String receiverEmail;
   final String message;
-  final String timestamp;
+  final DateTime timestamp;
 
   MessageModel({
     required this.senderId,
-    required this.receiverId,
+    required this.receiverEmail,
     required this.message,
     required this.timestamp,
   });
@@ -14,9 +14,18 @@ class MessageModel {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       senderId: json['senderId'],
-      receiverId: json['receiverId'],
+      receiverEmail: json['receiverEmail'],
       message: json['message'],
       timestamp: json['timestamp'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'senderId': senderId,
+      'receiverEmail': receiverEmail,
+      'message': message,
+      'timestamp': timestamp,
+    };
   }
 }

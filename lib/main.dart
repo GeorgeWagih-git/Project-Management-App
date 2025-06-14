@@ -4,10 +4,12 @@ import 'package:flutter_application_1/Classes/notifications_service.dart';
 import 'package:flutter_application_1/Cubits/Forget_Password_cubit/forget_password_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
+import 'package:flutter_application_1/Cubits/chat%20cubit/chat_cubit.dart';
 import 'package:flutter_application_1/Cubits/edit%20profile%20cubit/edit_profile_data.cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:flutter_application_1/core/api/dio_consumer.dart';
+import 'package:flutter_application_1/widgets/chat_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -28,8 +30,8 @@ void main() async {
     await notificationService.enableNotifications(
       title: "Daily Reminder",
       body: "Don't forget to check the app!",
-      hour: 21,
-      min: 5,
+      hour: 11,
+      min: 0,
     );
   }
   runApp(
@@ -49,6 +51,15 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => ForgetPasswordCubit(DioConsumer(dio: Dio())),
+        ),
+        BlocProvider(
+          create: (_) {
+            print("🟢 Creating ChatCubit");
+            final cubit = ChatCubit(SignalRService());
+            print("📞 Calling ChatCubit.init()");
+            cubit.init(); // <- Might crash silently
+            return cubit;
+          },
         ),
       ],
       child: const ProjectManagement(),
