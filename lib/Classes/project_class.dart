@@ -7,7 +7,7 @@ class ProjectClass {
   String projectDetails;
   bool isSelected = false;
   List<TaskModel> tasks;
-  String managerUserName;
+  String Email;
   DateTime createdDate;
 
   ProjectClass({
@@ -16,7 +16,7 @@ class ProjectClass {
     required this.deadline,
     required this.name,
     required this.projectDetails,
-    required this.managerUserName,
+    required this.Email,
     required this.createdDate,
   });
 
@@ -35,7 +35,7 @@ class ProjectClass {
       tasks: tasks ?? this.tasks,
       projectDetails: projectDetails ?? this.projectDetails,
       deadline: deadline ?? this.deadline,
-      managerUserName: managerUserName ?? this.managerUserName,
+      Email: managerUserName ?? this.Email,
       createdDate: createdDate ?? this.createdDate,
     );
   }
@@ -50,7 +50,7 @@ class ProjectClass {
       projectDetails: json['descriptions'] ?? 'No Description',
       deadline: DateTime.parse(json['deadline']),
       createdDate: DateTime.parse(json['createdDate']),
-      managerUserName: json['managerUserName'] ?? '',
+      Email: json['managerUserName'] ?? '',
       tasks: tasks,
     );
   }

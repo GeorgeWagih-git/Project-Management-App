@@ -54,7 +54,7 @@ class OngoingProjectsWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Manager: ${projectClass.managerUserName}',
+                        'Manager: ${projectClass.Email}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,

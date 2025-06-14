@@ -379,9 +379,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       filteredProjects = projects
           .where((project) =>
               project.name.toLowerCase().contains(query.toLowerCase()) ||
-              project.managerUserName
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ||
+              project.Email.toLowerCase().contains(query.toLowerCase()) ||
               project.projectDetails
                   .toLowerCase()
                   .contains(query.toLowerCase()) ||
@@ -393,9 +391,7 @@ class OngoingProjectCubit extends Cubit<OngoingProjectStates> {
       filteredCompletedProjects = completedprojects
           .where((project) =>
               project.name.toLowerCase().contains(query.toLowerCase()) ||
-              project.managerUserName
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ||
+              project.Email.toLowerCase().contains(query.toLowerCase()) ||
               project.projectDetails
                   .toLowerCase()
                   .contains(query.toLowerCase()) ||

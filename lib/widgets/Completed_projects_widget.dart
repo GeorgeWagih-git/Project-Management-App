@@ -53,7 +53,7 @@ class _CompletedProjectssWidgetState extends State<CompletedProjectssWidget> {
                   ),
                 ),
                 Text(
-                  'Manager : ${widget.projectClass.managerUserName}',
+                  'Manager : ${widget.projectClass.Email}',
                   style: TextStyle(
                     color: Colors.white,
                   ),

@@ -43,8 +43,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     final formattedCreatedDate =
         DateFormat('dd MMM yyyy - h:mm a').format(_task.createdDate);
 
-    final isManager =
-        widget.user.userName == widget.projectClass.managerUserName;
+    final isManager = widget.user.email == widget.projectClass.Email;
 
     return CustomScaffoldWidget(
       screenName: 'Task Details',

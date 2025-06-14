@@ -133,7 +133,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           Row(
                             children: [
                               Text(
-                                'Manager: ${_project.managerUserName}',
+                                'Manager: ${_project.Email}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 17,
@@ -149,8 +149,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                         MaterialPageRoute(
                                           builder: (_) => InsideChatScreen(
                                             senderId: sender.id,
-                                            receiverEmail:
-                                                _project.managerUserName,
+                                            receiverEmail: _project.Email,
                                           ),
                                         ),
                                       );
@@ -163,7 +162,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             ],
                           ),
 
-                          if (user?.userName == project.managerUserName)
+                          if (user?.userName == project.Email)
                             Row(
                               children: [
                                 EditProjectButtonWidget(
@@ -247,7 +246,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 final fileCubit =
                                     ProjectFilesCubit.get(context);
                                 final isManager =
-                                    user?.userName == project.managerUserName;
+                                    user?.userName == project.Email;
 
                                 return Row(
                                   children: [
@@ -321,7 +320,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _buildSectionTitle('All Tasks'),
-                              if (user?.userName == project.managerUserName)
+                              if (user?.userName == project.Email)
                                 state is ProjectCreateLoading
                                     ? const Padding(
                                         padding: EdgeInsets.only(right: 16),
