@@ -3,6 +3,7 @@ import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
+import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
 import 'package:flutter_application_1/Screens/profile_screen.dart';
 import 'package:flutter_application_1/Screens/signin_screen.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
@@ -158,6 +159,27 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
                                     child: InlineSearchBar(),
                                   ),
                                   const SizedBox(width: 10),
+                                  IconButton(
+                                      onPressed: () async {
+                                        final sender = await AppPrefs.getUser();
+                                        if (sender != null) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => InsideChatScreen(
+                                                senderId: sender.id,
+                                                receiverEmail:
+                                                    'besho7734@gmail.com',
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.help_outline,
+                                        color: Colors.white,
+                                      )),
+                                  const SizedBox(width: 5),
                                   IconButton(
                                     onPressed: () async {
                                       final confirm = await showDialog(
