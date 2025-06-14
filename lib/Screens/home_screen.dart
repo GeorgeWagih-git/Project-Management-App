@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/ongoing_projects_list.dart';
-import 'package:flutter_application_1/Classes/project_class.dart';
 import 'package:flutter_application_1/Classes/user_model.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_states.dart';
 import 'package:flutter_application_1/Screens/profile_screen.dart';
-import 'package:flutter_application_1/Screens/project_details_screen.dart';
 import 'package:flutter_application_1/Screens/signin_screen.dart';
-import 'package:flutter_application_1/core/functions/navigate_to.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/add_projrct_button.dart';

@@ -4,6 +4,7 @@ import 'package:flutter_application_1/Classes/notifications_service.dart';
 import 'package:flutter_application_1/Cubits/Forget_Password_cubit/forget_password_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_Up_cubit/sign_up_cubit.dart';
 import 'package:flutter_application_1/Cubits/Sign_in_cubit/sign_in_cubit.dart';
+import 'package:flutter_application_1/Cubits/edit%20profile%20cubit/edit_profile_data.cubit.dart';
 import 'package:flutter_application_1/Cubits/ongoing_porject_cubit/ongoing_porject_cubit.dart';
 import 'package:flutter_application_1/Screens/welcome_screen.dart';
 import 'package:flutter_application_1/core/api/dio_consumer.dart';
@@ -36,6 +37,9 @@ void main() async {
       providers: [
         BlocProvider(
           create: (context) => OngoingProjectCubit(DioConsumer(dio: Dio())),
+        ),
+        BlocProvider(
+          create: (context) => EditProfileDataCubit(DioConsumer(dio: Dio())),
         ),
         BlocProvider(
           create: (context) => SignInCubit(DioConsumer(dio: Dio())),

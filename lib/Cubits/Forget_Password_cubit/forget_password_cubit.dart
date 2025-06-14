@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ForgetPasswordCubit extends Cubit<ForgetPasswordStates> {
   ForgetPasswordCubit(this.api) : super(ForgetPasswordInitial());
-
   static ForgetPasswordCubit get(BuildContext context) =>
       BlocProvider.of(context);
   final ApiConsumer api;

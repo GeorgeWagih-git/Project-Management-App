@@ -6,13 +6,15 @@ class Endpoint {
   static String getallProjects = "/api/Project/GetAllProjects";
   static String getmyProjects = "/api/Project/GetMyProjects";
   static String createTask = "/api/Task/CreateTask";
+  static String changeProfilePic = "/api/User/ChangeProfilePic";
+  static String deleteProfilePic = "/api/User/DeleteProfilePic";
   static String getUserDataEndPoint(id) {
     return "user/get-user/$id";
   }
 }
 
 class ApiKey {
-  ////////////signin//////////////////
+  ////////////signin//////////////////س
   static String email = "Email";
   static String password = "password";
   ///////////////////////////
