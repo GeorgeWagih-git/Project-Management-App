@@ -71,7 +71,7 @@ We developed a **simple, user-friendly mobile application** that allows:
 1. Clone this repo:
 ```bash
 git clone https://github.com/GeorgeWagih-git/Project-Management-App
-2. Download the app:
-```bash
-git clone https://github.com/GeorgeWagih-git/Project-Management-App/releases/tag/v1.0.0
+to dowonload the app https://github.com/GeorgeWagih-git/Project-Management-App/releases/tag/v1.0.0
+
+
 
