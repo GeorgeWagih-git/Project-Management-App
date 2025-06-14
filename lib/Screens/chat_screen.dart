@@ -3,6 +3,7 @@ import 'package:flutter_application_1/Classes/home_chat_model.dart';
 import 'package:flutter_application_1/Cubits/chat%20cubit/chat_cubit.dart';
 import 'package:flutter_application_1/Screens/inside_chat_screen.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,7 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen> with RouteAware {
   final TextEditingController _searchController = TextEditingController();
   List<HomeChatModel> _chatList = [];
   List<HomeChatModel> _filteredChatList = [];
@@ -21,27 +22,17 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _loadChats();
     _searchController.addListener(_filterChats);
-  }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _loadChats();
-    }
+    // Load chats when screen is first shown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadChats();
+    });
   }
 
   void _loadChats() {
     context.read<ChatCubit>().loadChatHome((chatList) {
+      if (!mounted) return;
       setState(() {
         _chatList = chatList;
         _filteredChatList = chatList;
@@ -56,6 +47,26 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           .where((chat) => chat.email.toLowerCase().contains(query))
           .toList();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Subscribe to navigation events
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when returning to this screen
+    _loadChats();
   }
 
   @override
@@ -103,7 +114,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         onTap: () async {
                           final sender = await AppPrefs.getUser();
                           if (sender == null) return;
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => InsideChatScreen(
@@ -111,7 +122,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 receiverEmail: chat.email,
                               ),
                             ),
-                          );
+                          ).then((_) {
+                            // Reload after returning
+                            if (mounted) _loadChats();
+                          });
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
