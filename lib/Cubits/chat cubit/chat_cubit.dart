@@ -1,11 +1,10 @@
 import 'dart:convert';
-
-import 'package:flutter_application_1/Classes/home_chat_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/Classes/message_model.dart';
 import 'package:flutter_application_1/core/shared_perfs.dart';
 import 'package:flutter_application_1/widgets/chat_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_application_1/Classes/home_chat_model.dart';
 
 part 'chat_state.dart';
 
@@ -14,9 +13,11 @@ class ChatCubit extends Cubit<ChatState> {
   String? senderId;
   String? senderEmail;
 
-  final Map<String, List<MessageModel>> _chatHistory = {}; // 🔹 memory store
+  final Map<String, List<MessageModel>> _chatHistory = {};
 
   ChatCubit(this._signalRService) : super(ChatInitial());
+
+  SignalRService get signalRService => _signalRService;
 
   Future<void> init() async {
     final user = await AppPrefs.getUser();
@@ -38,7 +39,8 @@ class ChatCubit extends Cubit<ChatState> {
       final chatPartner = incomingSenderId == senderId
           ? message.receiverEmail
           : incomingSenderId;
-      _addMessage(chatPartner, message); // 👈 save it locally
+
+      _addMessage(chatPartner, message);
       emit(ChatMessageReceived(message));
     });
   }
@@ -55,7 +57,7 @@ class ChatCubit extends Cubit<ChatState> {
       timestamp: DateTime.now(),
     );
 
-    _addMessage(receiverEmail, message); // 👈 save sent message
+    _addMessage(receiverEmail, message);
     emit(ChatMessageSent(message));
   }
 

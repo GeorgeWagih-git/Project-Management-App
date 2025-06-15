@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Classes/message_model.dart';
-import 'package:flutter_application_1/Cubits/chat%20cubit/chat_cubit.dart';
+import 'package:flutter_application_1/Cubits/chat cubit/chat_cubit.dart';
 import 'package:flutter_application_1/widgets/custom_scaffold_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +9,11 @@ class InsideChatScreen extends StatefulWidget {
   final String senderId;
   final String receiverEmail;
 
-  InsideChatScreen({required this.senderId, required this.receiverEmail});
+  const InsideChatScreen({
+    super.key,
+    required this.senderId,
+    required this.receiverEmail,
+  });
 
   @override
   State<InsideChatScreen> createState() => _InsideChatScreenState();
@@ -18,6 +22,8 @@ class InsideChatScreen extends StatefulWidget {
 class _InsideChatScreenState extends State<InsideChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<MessageModel> _messages = [];
+  final ScrollController _scrollController = ScrollController();
+
   late ChatCubit _chatCubit;
   StreamSubscription? _chatSubscription;
 
@@ -27,21 +33,38 @@ class _InsideChatScreenState extends State<InsideChatScreen> {
     _chatCubit = context.read<ChatCubit>();
     _loadMessages();
 
-    _chatSubscription = _chatCubit.stream.listen((state) {
-      if (state is ChatMessageReceived || state is ChatMessageSent) {
-        final msg = (state as dynamic).message as MessageModel;
-        final isRelated = (msg.receiverEmail == widget.receiverEmail &&
-                msg.senderId == widget.senderId) ||
-            (msg.receiverEmail == widget.senderId &&
-                msg.senderId == widget.receiverEmail);
+    // 👇 Register receiveMessages callback ONCE and update only on new messages
+    _chatCubit.signalRService.receiveMessages((incomingSenderId, messageText) {
+      final msg = MessageModel(
+        senderId: incomingSenderId,
+        receiverEmail: _chatCubit.senderEmail ?? '',
+        message: messageText,
+        timestamp: DateTime.now(),
+      );
 
-        if (isRelated &&
-            !_messages.any((m) =>
-                m.timestamp == msg.timestamp && m.message == msg.message)) {
+      final isRelated = (msg.receiverEmail == widget.receiverEmail &&
+              msg.senderId == widget.senderId) ||
+          (msg.receiverEmail == widget.senderId &&
+              msg.senderId == widget.receiverEmail);
+
+      if (isRelated) {
+        setState(() {
+          _messages.add(msg);
+          _messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+        });
+        _scrollToBottom();
+      }
+    });
+
+    _chatSubscription = _chatCubit.stream.listen((state) {
+      if (state is ChatMessageSent) {
+        final msg = state.message;
+        if (msg.receiverEmail == widget.receiverEmail) {
           setState(() {
             _messages.add(msg);
             _messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
           });
+          _scrollToBottom();
         }
       }
     });
@@ -54,6 +77,7 @@ class _InsideChatScreenState extends State<InsideChatScreen> {
       _messages.addAll(fetchedMessages);
       _messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     });
+    _scrollToBottom();
   }
 
   void _send() {
@@ -63,10 +87,23 @@ class _InsideChatScreenState extends State<InsideChatScreen> {
     _controller.clear();
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     _chatSubscription?.cancel();
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -80,9 +117,10 @@ class _InsideChatScreenState extends State<InsideChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               reverse: true,
-              padding: const EdgeInsets.only(bottom: 10),
               itemCount: _messages.length,
+              padding: const EdgeInsets.only(bottom: 10),
               itemBuilder: (_, index) {
                 final msg = _messages[_messages.length - 1 - index];
                 final isSender = msg.senderId == widget.senderId;

@@ -18,10 +18,16 @@ final RouteObserver<ModalRoute<void>> routeObserver =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final signalRService = SignalRService();
+  final chatCubit = ChatCubit(signalRService);
+  await chatCubit.init();
 
   tz.initializeTimeZones();
 
   final notificationService = NotificationsService();
+
+  await chatCubit.init(); // ✅ دا اللي لازم نستخدمه
+
   await notificationService.initNotifications();
   await notificationService.requestNotificationPermission();
 
@@ -34,6 +40,7 @@ void main() async {
       min: 0,
     );
   }
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -52,14 +59,8 @@ void main() async {
         BlocProvider(
           create: (context) => ForgetPasswordCubit(DioConsumer(dio: Dio())),
         ),
-        BlocProvider(
-          create: (_) {
-            print("🟢 Creating ChatCubit");
-            final cubit = ChatCubit(SignalRService());
-            print("📞 Calling ChatCubit.init()");
-            cubit.init(); // <- Might crash silently
-            return cubit;
-          },
+        BlocProvider.value(
+          value: chatCubit, // ✅ استخدم نفس اللي فوق
         ),
       ],
       child: const ProjectManagement(),
